@@ -1,0 +1,17 @@
+/db-*
+/groonga-database
+/public/1.*
+/public/2.*
+/test-unit
+/webrat.log
+/test/db-*
+/test/fixtures/ruby-refm-*
+/test/groonga-database
+/test/suggest-database
+/test/.test-result
+/test/fixtures/doctree
+/document.yaml
+/smtp.yaml
+/var/
+/.bundle/config
+.capistrano

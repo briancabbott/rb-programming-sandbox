@@ -1,0 +1,62 @@
+<div class="top-search-form">
+  <h1><%= h1 %></h1>
+
+  <table class="version-select">
+    <tr>
+    <% @version_names.each do |name| %>
+      <th class="version-select<%= version == name ? '-current' : '' %>">
+	<%= link_version_select(name) %>
+      </th>
+    <% end %>
+    </tr>
+    <tr>
+    <% @version_n_entries.each do |n_entries| %>
+      <td>
+        <span class="version-select-n-entries"><%= h(n_entries) %>件</span>
+      </td>
+    <% end %>
+    </tr>
+  </table>
+
+  <h2><%= h(catch_phrase) %></h2>
+  <form method="POST" action="./">
+    <p class="input-form">
+      <input id="query-input" type="text" class="query ui-autocomplete-input"
+             name="query" autocomplete="off"
+             value="<%= default_query_form_value %>" />
+    </p>
+    <p class="button">
+      <input type="submit" value="検索" />
+    </p>
+  </form>
+  <script type="text/javascript">
+    $("#query-input").focus();
+    $("#query-input").autocomplete({
+      source: <%= auto_complete_api_path.to_json %>
+    });
+  </script>
+</div>
+
+<div class="top-page-drilldowns">
+<% @built_in_object_drilldown_items.each do |item| %>
+  <div class="drilldown list-box">
+    <h2><%= h(item[:label]) %></h2>
+    <dl>
+    <% item[:objects].each do |(label, objects)| %>
+      <dt><%= h(label) %></dt>
+      <dd>
+	<ol>
+	<% objects.each_with_index do |object, i| %>
+	  <li class="<%= i.even? ? 'even' : 'odd' %>">
+	    <%= link_drilldown_entry(item[:type], :label => object["_key"]) %>
+	    (<%= h(object.n_sub_records) %>)
+          </li>
+	<% end %>
+	</ol>
+      </dd>
+      <hr class="separator" />
+    <% end %>
+    </dl>
+  </div>
+<% end %>
+</div>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName><%= h(site_title) %></ShortName>
+  <Description><%= h(site_description) %></Description>
+  <Image height="16" width="16" type="image/png"><%= h(base_url + "favicon.png") %></Image>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Url type="text/html" method="get" template="<%= h(version_url) %>">
+    <Param name="query" value="{searchTerms}" />
+  </Url>
+  <moz:SearchForm><%= h(version_url) %></moz:SearchForm>
+</OpenSearchDescription>

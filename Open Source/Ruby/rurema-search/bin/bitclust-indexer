@@ -1,0 +1,121 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
+#
+# License: GPLv3+
+
+require 'pathname'
+
+base_dir = Pathname.new(__FILE__).dirname.parent.cleanpath.realpath
+lib_dir = base_dir + "lib"
+
+bitclust_dir = base_dir.parent + "bitclust"
+bitclust_lib_dir = bitclust_dir + "lib"
+rroonga_dir = base_dir.parent + "rroonga"
+rroonga_lib_dir = rroonga_dir + "lib"
+rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
+
+$LOAD_PATH.unshift(bitclust_lib_dir.to_s)
+$LOAD_PATH.unshift(rroonga_ext_dir.to_s)
+$LOAD_PATH.unshift(rroonga_lib_dir.to_s)
+$LOAD_PATH.unshift(lib_dir.to_s)
+
+require 'rurema_search'
+require 'pp'
+require 'optparse'
+
+def load_bitclust_data(database, bitclust_database_paths)
+  base_time = Time.now
+  bitclust_database_paths.each do |bitclust_database_path|
+    method_database = BitClust::MethodDatabase.new(bitclust_database_path)
+    function_database = BitClust::FunctionDatabase.new(bitclust_database_path)
+    indexer = RuremaSearch::GroongaIndexer.new(database,
+                                               method_database,
+                                               function_database)
+    indexer.base_time = base_time
+    indexer.index
+  end
+  database.purge_old_records(base_time)
+end
+
+def load_suggest_data(database, suggest_database)
+  entries = database.entries
+  entries.each do |entry|
+    local_name = entry.local_name
+    next if local_name.nil?
+
+    related_names = []
+    ["class", "module", "object", "library"].each do |column_name|
+      related_names << entry[column_name].key if entry[column_name]
+    end
+    entry.related_names.each do |name|
+      next if name.nil?
+      name = name.key
+      related_names << name
+      splited_names = name.split(/(?:::|.|#|.#|\$|\/)/)
+      related_names.concat(splited_names) if splited_names.size > 1
+    end
+
+    type = entry.type.key
+    case type
+    when "class", "module", "object", "library"
+      related_entries = entries.select do |record|
+        record[type] =~ entry["name._key"]
+      end
+      related_entries.each do |related_entry|
+        related_names << related_entry.local_name.key
+      end
+    end
+    suggest_database.register_keyword(local_name.key, related_names)
+  end
+end
+
+def update_suggest_database(database, suggest_database_path, reset, load_data)
+  suggest_database = RuremaSearch::GroongaSuggestDatabase.new
+  suggest_database.open(suggest_database_path) do
+    suggest_database.purge if reset
+    load_suggest_data(database, suggest_database) if load_data
+  end
+end
+
+def main(database_path, suggest_database_path)
+  reset = false
+  load_data = true
+  parser = OptionParser.new
+  parser.banner += " bitclust-database1,..."
+  parser.on('-d', '--database=PATH',
+            'groonga database path.',
+            "(#{database_path})") do |path|
+    database_path = path
+  end
+  parser.on('--suggest-database=PATH',
+            'groonga suggest database path.',
+            "(#{suggest_database_path})") do |path|
+    suggest_database_path = path
+  end
+  parser.on('--[no-]reset',
+            'reset groonga database before indexing.',
+            "(#{reset})") do |boolean|
+    reset = boolean
+  end
+  parser.on('--[no-]load-data',
+            'load data after creating database.',
+            "(#{load_data})") do |boolean|
+    load_data = boolean
+  end
+  parser.on('--help', 'Prints this message and quit.') do
+    puts(parser)
+    exit(true)
+  end
+
+  bitclust_database_paths = parser.parse!
+  database = RuremaSearch::GroongaDatabase.new
+  database.open(database_path, "utf-8") do
+    database.purge if reset
+    load_bitclust_data(database, bitclust_database_paths) if load_data
+    update_suggest_database(database, suggest_database_path, reset, load_data)
+  end
+end
+
+main((base_dir + "groonga-database").to_s,
+     (base_dir + "var" + "lib" + "suggest").to_s)

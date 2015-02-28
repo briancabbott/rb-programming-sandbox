@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+VERSIONS = %w[
+  1.8.7
+  1.9.3
+  2.0.0
+  2.1.0
+  2.2.0
+]
+
+RUBY = "ruby"
+
+BITCLUST_BASE = "/var/rubydoc/bitclust"
+BITCLUST = "#{BITCLUST_BASE}/bin/bitclust"
+BITCLUST_LIB_DIR = "#{BITCLUST_BASE}/lib"
+BITCLUST_DATA = "#{BITCLUST_BASE}/data/bitclust"
+TEMPLATE="#{BITCLUST_DATA}/template.offline"
+CATALOG="#{BITCLUST_DATA}/catalog"
+
+REF_BASE = "/var/rubydoc/doctree/refm"
+
+DOC_ROOT = "/var/www/docs.ruby-lang.org/shared/ja"
+
+def create_document(version)
+  system(RUBY, "-I#{BITCLUST_LIB_DIR}",
+         BITCLUST,
+         "--database=#{REF_BASE}/db-#{version}",
+         "statichtml",
+         "--outputdir=/var/rubydoc/tmp/#{version}",
+         "--templatedir=#{TEMPLATE}",
+         "--catalog=#{CATALOG}",
+         "--fs-casesensitive",
+         "--quiet")
+  `rm -rf #{DOC_ROOT}/#{version}`
+  `mv /var/rubydoc/tmp/#{version} #{DOC_ROOT}`
+  puts "#{version} is done."
+end
+
+VERSIONS.reverse_each do |version|
+  create_document(version)
+end

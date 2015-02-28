@@ -1,0 +1,56 @@
+<div class="search-header">
+  <div class="version-select">
+    <ul>
+  <% @version_names.each_with_index do |_version, i| %>
+      <li class="version-select<%= version == _version ? '-current' : '' %>">
+	<%= link_version_select(_version,
+                                :label_suffix => h("(#{@version_n_entries[i]})")) %>
+      </li>
+  <% end %>
+    </ul>
+  </div>
+
+  <div class="statistics">
+    <span class="total"><%= h("#{@entries.n_records}件ヒット") %></span>
+  <% unless @entries.n_records.zero? %>
+    <span class="showen-records">
+      <%= h("[#{@entries.start_offset}-#{@entries.end_offset}件を表示]") %>
+    </span>
+  <% end %>
+    <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
+  </div>
+
+  <div class="topic-path">
+    <%= topic_path %>
+  </div>
+</div>
+
+<% unless @corrections.empty? %>
+<div class="corrections">
+  <h2>別のキーワード</h2>
+  <ol>
+<%   @corrections.each do |item| %>
+    <li><%= link_related_entry(:key => item[:key], :type => "query") %></li>
+<%   end %>
+  </ol>
+</div>
+<% end %>
+
+<% unless @suggestions.empty? %>
+<div class="suggestions">
+  <h2>関連するキーワード</h2>
+  <ol>
+<%   @suggestions.each do |item| %>
+    <li><%= link_drilldown_entry("query", :label => item[:key]) %></li>
+<%   end %>
+  </ol>
+</div>
+<% end %>
+
+<div class="search-result">
+<% if @entries.n_records.zero? %>
+<%= search_no_result %>
+<% else %>
+<%= search_result %>
+<% end %>
+</div>

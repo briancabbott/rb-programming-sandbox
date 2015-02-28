@@ -1,0 +1,9 @@
+*.rbc
+*.swp
+/TAGS
+/doc
+/lib/curses.bundle
+/lib/curses.so
+/lib/curses.dll
+/pkg
+/tmp
