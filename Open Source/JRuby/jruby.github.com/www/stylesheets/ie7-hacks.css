@@ -1,0 +1,9 @@
+#latest_release li, #hero .feature, #repo, #mailing_lists, #issue_tracker, #irc, .halfColumn, .button, .stripNav ul li {
+  zoom: 1 !important;
+  hasLayout: on !important;
+  display: inline !important;
+}
+.stripNav a {
+  display: inline !important;
+  width: auto;
+}

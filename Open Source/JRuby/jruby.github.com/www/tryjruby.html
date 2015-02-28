@@ -1,0 +1,40 @@
+---
+layout: main
+title: Try JRuby!
+---
+<h1>Try JRuby!</h1>
+<p>This applet lets you try JRuby in your browser. It's a 6 or 13MB file so it may take a few seconds to download.
+You can also download the IRB console as a WebStart app by downloading the
+<a href="http://jruby.org/tryjruby/irb.jnlp"/>WebStart JNLP file</a> and running "javaws irb.jnlp" or launch it in
+directly (on some browsers) by clicking here:
+<script src="http://www.java.com/js/deployJava.js"></script>
+<script>
+    // using JavaScript to get location of JNLP file relative to HTML page
+    var dir = location.href.substring(0, location.href.lastIndexOf('/')+1);
+    var url = dir + "tryjruby/irb.jnlp";
+    deployJava.createWebStartLaunchButton(url, '1.6.0');
+</script>
+</p>
+<script language="JavaScript"><!--
+function startApplet() {
+    appletsource='<applet code="org.jruby.JRubyApplet.class" archive="{{ site.urls.tryjruby }}/jruby-complete-signed.jar" width="700" height="500">\n';
+    appletsource+='<param name="jruby.console" value="true" />\n';
+    appletsource+='<param name="jruby.banner" value="Welcome to JRuby on the Web!" />\n';
+    appletsource+='<param name="jruby.eval" value="ARGV << \'-f\' << \'--readline\' << \'--prompt\' << \'simple\'; require \'irb\' ; require \'irb/completion\' ; Thread.new { IRB.start }" />\n';
+    appletsource+='</applet>\n';
+    document.getElementById('appletplace').innerHTML=appletsource;
+}
+//--></script> 
+ 
+
+<div id="appletplace" align="center"> 
+<table border=2> 
+<tr><td valign=center align=center height=500 width=700>
+<form name="myform"> 
+<input type="button" value="Start the applet!" onClick="startApplet()"> 
+</form>
+</td></tr> 
+</table> 
+</div>
+</body>
+</html>

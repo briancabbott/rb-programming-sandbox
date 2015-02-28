@@ -1,0 +1,44 @@
+---
+layout: post
+title: JRuby 1.7.10 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.10
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.10 is our tenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 22 issues fixed
+- Windows require_relative regression fixed.
+- Accidental SNAPSHOT dependency fixed
+- A couple of Marshalling bugs involving encoding fixed.
+
+### Github Issues resolved for 1.7.10
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1385">#1385</a> - Socket::SOMAXCONN</li>
+<li><a href="https://github.com/jruby/jruby/issues/1380">#1380</a> - test-extended failing</li>
+<li><a href="https://github.com/jruby/jruby/issues/1375">#1375</a> - Global eventually ignores assignment</li>
+<li><a href="https://github.com/jruby/jruby/issues/1374">#1374</a> - require_relative fails when called from classpath:/ path file on Windows in JRuby 1.7.9</li>
+<li><a href="https://github.com/jruby/jruby/issues/1363">#1363</a> - Compiling from source at 1.7.9 fails due to unsatisfied maven dependencies</li>
+<li><a href="https://github.com/jruby/jruby/issues/1355">#1355</a> - Exception starting new thread after set_trace_func call</li>
+<li><a href="https://github.com/jruby/jruby/issues/1349">#1349</a> - bin/{rake,rdoc,ri} broken by default in jruby 1.7.9</li>
+<li><a href="https://github.com/jruby/jruby/pull/1345">#1345</a> - UnmarshalStream: Look for encoding information in all instance variables</li>
+<li><a href="https://github.com/jruby/jruby/pull/1338">#1338</a> - UnmarshalStream: Fixed two off-by-one errors in unmarshalInt</li>
+<li><a href="https://github.com/jruby/jruby/pull/1336">#1336</a> - Fixing Enumerator#peek behaviour</li>
+<li><a href="https://github.com/jruby/jruby/pull/1335">#1335</a> - Array#repeated_permutation should have arity 1</li>
+<li><a href="https://github.com/jruby/jruby/pull/1334">#1334</a> - #enum_slice and #enum_cons are 1.8-only</li>
+<li><a href="https://github.com/jruby/jruby/issues/1323">#1323</a> - Snapshot dependency in released jruby-core 1.7.9</li>
+<li><a href="https://github.com/jruby/jruby/pull/1322">#1322</a> - Dir resolves symlinks</li>
+<li><a href="https://github.com/jruby/jruby/pull/1317">#1317</a> - 1311 datetime comparision</li>
+<li><a href="https://github.com/jruby/jruby/issues/1312">#1312</a> - File.expand_path("NUL") broken</li>
+<li><a href="https://github.com/jruby/jruby/issues/1311">#1311</a> - DateTime comparision at sub-millisecond resolution</li>
+<li><a href="https://github.com/jruby/jruby/pull/1252">#1252</a> - Range#size missing from JRuby 1.7.8 in 2.0 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/1184">#1184</a> - undefined method `__ruby_object' for interface implementation</li>
+<li><a href="https://github.com/jruby/jruby/issues/1156">#1156</a> - jruby-openssl spins endlessly trying to write to a socket which is in state CLOSE_WAIT</li>
+<li><a href="https://github.com/jruby/jruby/issues/1129">#1129</a> - IO#read_nonblock blocks sometimes for SSL Sockets</li>
+<li><a href="https://github.com/jruby/jruby/issues/480">#480</a> - JRuby does not Handle UTF-8 Source Files</li>
+</ul>

@@ -1,0 +1,183 @@
+---
+layout: post
+title: JRuby 1.7.4 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.4
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.4 is our fourth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+- Dozens of 1.9-mode compatibility fixes
+- Many IO and encoding issues fixed
+- Transcoding support for :xml entity encoding
+- Proc and block dispatch perf improvements
+- Fiber and Enumerator#next improvements and fixes
+- Fixed a regression in windows java native launcher
+- Experimental Ruby 2.0 support (most features and stdlib included)
+- 90%+ complete Ripper support
+- OpenSSL fixes and updated to newer Bouncy Castle library
+- Updates and fixes to FFI subsystem (compat with C ext, AIX support, etc)
+- Long running regexp can be interrupted by Thread#kill and raise
+- 137 issues fixed for 1.7.4
+
+Thanks to all contributors for this release:
+ 
+Alex Tambellini, Andrew Kiellor, Andy Lindeman, Anoop Sankar, Benoit Daloze,
+Bohuslav Kabrda, Charles Oliver Nutter, Daniel Noll, Dario Bertini,
+Gino Lucero, Hiro Asari, Iain Barnett, Isaiah Peng, Jake Goulding,
+James Pickering, Jeff Simpson, John Shahid, Jonathan Adams, Jose Donizetti,
+Kevin Menard, Mark McCraw, Martin Ott, Matt Wilson, Patrick Mahoney,
+Prathamesh Sonpatki, Robin Message, Ryan Blue, Sakumatti Luukkonen,
+Seth Wright, Subramanya Sastry, Sébastien Le Callonnec, Thomas E. Enebo,
+Uwe Kubosch, Vipul A M, Wayne Meissner, ryenus
+
+### Jira Issues resolved for 1.7.4
+
+<ul>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7112">JRUBY-7112</a> - Fiber exception handling regression in JRuby 1.7.3</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7121">JRUBY-7121</a> - String#encode(:xml => :attr) encoding differs from MRI</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-5742">JRUBY-5742</a> - Fails to use UTF-8 encoded source with BOM.</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7102">JRUBY-7102</a> - Time.now == "" should return false and not nil</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7117">JRUBY-7117</a> - Dir.foreach should list entries in JAR root and in JAR directories ending in slash like "file:myjar!/test/"</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7033">JRUBY-7033</a> - yielding from fiber fails when running jruby with --debug</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7127">JRUBY-7127</a> - Ripper bug when parsing "::Object"</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-4820">JRUBY-4820</a> - [windows] File.size is completely broken on Windows</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-6136">JRUBY-6136</a> - Changing jnr-posix to use errno() value unconditionally has created lots of failures in windows</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7122">JRUBY-7122</a> - File.realpath does not handle classpath:/ path on Windows</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7157">JRUBY-7157</a> - IO.copy_stream broken for non-seekable source streams</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7143">JRUBY-7143</a> - FileUtils.cp, FileUtils.copy, FileUtils.copy_stream bug on windows when copying from jar files</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7145">JRUBY-7145</a> - FileUtils.mkdir_p creates extra directory named after drive letter</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7161">JRUBY-7161</a> - NPE in socket connection</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7113">JRUBY-7113</a> - Setting ssl_timeout on a Net::HTTP instance throws an exception</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7130">JRUBY-7130</a> - Missing support for Time.getlocal(utc_offset) method in JRuby</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7134">JRUBY-7134</a> - Dir.exists? sets $! when directory does not exist</li>
+</ul>
+
+
+### Github Issues resolved for 1.7.4
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/737">#737</a> - require_relative fails in jars</li>
+<li><a href="https://github.com/jruby/jruby/issues/733">#733</a> - Inconsistency between MRI and JRuby with begin/rescue/else</li>
+<li><a href="https://github.com/jruby/jruby/issues/729">#729</a> - Fixing IO.binwrite specs, parsing options.</li>
+<li><a href="https://github.com/jruby/jruby/issues/728">#728</a> - Refactored directed graph specs</li>
+<li><a href="https://github.com/jruby/jruby/issues/726">#726</a> - IO.binwrite doesn't truncate the file if an offset is given </li>
+<li><a href="https://github.com/jruby/jruby/issues/725">#725</a> - IO.binwrite doesn't truncate the file if an offset is given </li>
+<li><a href="https://github.com/jruby/jruby/issues/724">#724</a> - When offset passed return RandomAccessFile when not return FileOutputStream</li>
+<li><a href="https://github.com/jruby/jruby/issues/717">#717</a> - Add fails tag to failing Kernel.spawn spec</li>
+<li><a href="https://github.com/jruby/jruby/issues/716">#716</a> - Add fails tags for Process.{get,set}rlimit</li>
+<li><a href="https://github.com/jruby/jruby/issues/715">#715</a> - Bignum#/ should not raise ZeroDivisionError if other is zero and is a Float</li>
+<li><a href="https://github.com/jruby/jruby/issues/714">#714</a> - Some rubyspec additions</li>
+<li><a href="https://github.com/jruby/jruby/issues/712">#712</a> - Complex#/ with a Numeric which responds to #real? with false should coerce the passed argument to Complex and divide the resulting elements</li>
+<li><a href="https://github.com/jruby/jruby/issues/711">#711</a> - Exception#== should return true if the two exceptions inherit from Exception but have different classes</li>
+<li><a href="https://github.com/jruby/jruby/issues/709">#709</a> - NullPointerException on calling java_* methods on java interface impl in Ruby</li>
+<li><a href="https://github.com/jruby/jruby/issues/708">#708</a> - Fix failing rubyspecs for Encoding#compatible?</li>
+<li><a href="https://github.com/jruby/jruby/issues/707">#707</a> - Kernel#singleton_methods should return a unique list of methods</li>
+<li><a href="https://github.com/jruby/jruby/issues/706">#706</a> - Kernel#open should correctly handle objects that responds to to_open</li>
+<li><a href="https://github.com/jruby/jruby/issues/704">#704</a> - Kernel.exec should raise an ArgumentError if the command includes a null byte</li>
+<li><a href="https://github.com/jruby/jruby/issues/703">#703</a> - Kernel.abort should set the exception message to the given message</li>
+<li><a href="https://github.com/jruby/jruby/issues/701">#701</a> - Untag passing Math.cbrt and Math.gamma specs</li>
+<li><a href="https://github.com/jruby/jruby/issues/700">#700</a> - Numeric#div should raise ZeroDivisionError for 0</li>
+<li><a href="https://github.com/jruby/jruby/issues/699">#699</a> - Range#each should raise a TypeError if the first element is a Time object</li>
+<li><a href="https://github.com/jruby/jruby/issues/698">#698</a> - Range#first should raise an ArgumentError when count is negative</li>
+<li><a href="https://github.com/jruby/jruby/issues/697">#697</a> - Supporting IO.ungetbyte</li>
+<li><a href="https://github.com/jruby/jruby/issues/696">#696</a> - Regexp#initialize should raise a SecurityError on a Regexp literal</li>
+<li><a href="https://github.com/jruby/jruby/issues/695">#695</a> - Regexp#options should include FIXEDENCODING and NOENCODING when enabled</li>
+<li><a href="https://github.com/jruby/jruby/issues/693">#693</a> - using bytelist instead of a linkedlist for a better performance</li>
+<li><a href="https://github.com/jruby/jruby/issues/691">#691</a> - Implement String#to_sym special cases.</li>
+<li><a href="https://github.com/jruby/jruby/issues/689">#689</a> - Thread#initialize should raise a ThreadError when already initialized</li>
+<li><a href="https://github.com/jruby/jruby/issues/688">#688</a> - Fixing IO.ungetc tagged specs!</li>
+<li><a href="https://github.com/jruby/jruby/issues/687">#687</a> - Time methods should coerce the day, hour, minute, or second with #to_int</li>
+<li><a href="https://github.com/jruby/jruby/issues/686">#686</a> - jcodings release needed for JRuby 1.7.4</li>
+<li><a href="https://github.com/jruby/jruby/issues/685">#685</a> - REFACTORING: supporting a list of bytes</li>
+<li><a href="https://github.com/jruby/jruby/issues/684">#684</a> - Fix some failing rubyspecs for String#encode</li>
+<li><a href="https://github.com/jruby/jruby/issues/683">#683</a> - Fix unseekable stream implementation of IO.copy_stream in RubyIO.java</li>
+<li><a href="https://github.com/jruby/jruby/issues/682">#682</a> - Verifying if character is corrupted, meaning that one more char is needed.</li>
+<li><a href="https://github.com/jruby/jruby/issues/681">#681</a> - Untag passing float rubyspecs</li>
+<li><a href="https://github.com/jruby/jruby/issues/680">#680</a> - StringIO#puts should print newline when passed nil 1 or more times</li>
+<li><a href="https://github.com/jruby/jruby/issues/679">#679</a> - StringIO#set_encoding should set the encoding to default external when passed nil</li>
+<li><a href="https://github.com/jruby/jruby/issues/677">#677</a> - TempFile path consistency vs the rest of the Ruby implementations</li>
+<li><a href="https://github.com/jruby/jruby/issues/676">#676</a> - Fix eclipse problems</li>
+<li><a href="https://github.com/jruby/jruby/issues/675">#675</a> - Fix failing rubyspecs for String#unpack</li>
+<li><a href="https://github.com/jruby/jruby/issues/674">#674</a> - My stab at fixing JRUBY-7122</li>
+<li><a href="https://github.com/jruby/jruby/issues/673">#673</a> - Remove required argument constraint from StringIO#readpartial</li>
+<li><a href="https://github.com/jruby/jruby/issues/672">#672</a> - Fix Etc rubyspecs</li>
+<li><a href="https://github.com/jruby/jruby/issues/671">#671</a> - Untag passing conditional variable rubyspecs</li>
+<li><a href="https://github.com/jruby/jruby/issues/669">#669</a> - Fix BigDecimal#div rubyspecs</li>
+<li><a href="https://github.com/jruby/jruby/issues/668">#668</a> - Fix float rounding issues.</li>
+<li><a href="https://github.com/jruby/jruby/issues/667">#667</a> - Do not display class name for an anonymous struct.</li>
+<li><a href="https://github.com/jruby/jruby/issues/666">#666</a> - LoadError#path not implemented</li>
+<li><a href="https://github.com/jruby/jruby/issues/665">#665</a> - NameError for version when loading gemspec in 2.0 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/664">#664</a> - GzipReader#rewind should reset the position of the stream pointer</li>
+<li><a href="https://github.com/jruby/jruby/issues/663">#663</a> - Tempfile#size should return the size of self even if self is closed in 1.9</li>
+<li><a href="https://github.com/jruby/jruby/issues/662">#662</a> - Add license header to anno package classes.</li>
+<li><a href="https://github.com/jruby/jruby/issues/661">#661</a> - Bignum failing specs</li>
+<li><a href="https://github.com/jruby/jruby/issues/660">#660</a> - Fixing IO.foreach rubyspec, set env variable $_ to nil</li>
+<li><a href="https://github.com/jruby/jruby/issues/659">#659</a> - Ruby 2.0 Compatibility - NET:HTTP</li>
+<li><a href="https://github.com/jruby/jruby/issues/658">#658</a> - Math.gamma should return -∞ for -0.0</li>
+<li><a href="https://github.com/jruby/jruby/issues/656">#656</a> - Fix #645 by calling Java Math.cbrt directly.</li>
+<li><a href="https://github.com/jruby/jruby/issues/655">#655</a> - Io foreach</li>
+<li><a href="https://github.com/jruby/jruby/issues/654">#654</a> - [FFI] FFI::AutoPointer#free causes FFI::AutoPointer#autorelease? to cast NullPointerException</li>
+<li><a href="https://github.com/jruby/jruby/issues/653">#653</a> - Ant integration causes exception trace on failed build</li>
+<li><a href="https://github.com/jruby/jruby/issues/651">#651</a> - Kernel#__dir__ missing from 2.0 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/650">#650</a> - File/IO readlines supporting new params limit, and open mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/647">#647</a> - Using Enumerable#cycle causes a background thread to be created but never destroyed.</li>
+<li><a href="https://github.com/jruby/jruby/issues/645">#645</a> - Behavior of Jruby Math.cbrt(number) does not match MRI</li>
+<li><a href="https://github.com/jruby/jruby/issues/643">#643</a> - FIXES #235 Fix for relative require from within a gem on the classpath.</li>
+<li><a href="https://github.com/jruby/jruby/issues/639">#639</a> - Project files fix</li>
+<li><a href="https://github.com/jruby/jruby/issues/637">#637</a> - Updated shared module dependencies.</li>
+<li><a href="https://github.com/jruby/jruby/issues/635">#635</a> - remove double assignment and addition to  0</li>
+<li><a href="https://github.com/jruby/jruby/issues/634">#634</a> - Implemented OpenSSL::PKCS7::write_smime</li>
+<li><a href="https://github.com/jruby/jruby/issues/630">#630</a> - [FFI] Struct Arrays behave differently on JRuby vs FFI gem</li>
+<li><a href="https://github.com/jruby/jruby/issues/628">#628</a> - OpenSSL::TestPKCS12 failure on OpenJDK 6</li>
+<li><a href="https://github.com/jruby/jruby/issues/627">#627</a> - ant integration breaks with ant 1.9.0</li>
+<li><a href="https://github.com/jruby/jruby/issues/626">#626</a> - jruby dies with fatal error on jdk8-ea-b83 on ubuntu</li>
+<li><a href="https://github.com/jruby/jruby/issues/622">#622</a> - Added new option jruby.timeout.thread.pool.max to control the max number...</li>
+<li><a href="https://github.com/jruby/jruby/issues/617">#617</a> - An object's ID is not copied</li>
+<li><a href="https://github.com/jruby/jruby/issues/615">#615</a> - Restore $! when catching exception.</li>
+<li><a href="https://github.com/jruby/jruby/issues/613">#613</a> - Ruby 2.0 caller API</li>
+<li><a href="https://github.com/jruby/jruby/issues/612">#612</a> - [FFI] FFI::Struct.by_ref mapped type accepts arbitrary structs in it’s #to_native</li>
+<li><a href="https://github.com/jruby/jruby/issues/611">#611</a> - Timeout worker pool size</li>
+<li><a href="https://github.com/jruby/jruby/issues/609">#609</a> - Add support for Floats as the first argument in Time.at.</li>
+<li><a href="https://github.com/jruby/jruby/issues/608">#608</a> - [FFI] FFI::Pointer#slice is not defined</li>
+<li><a href="https://github.com/jruby/jruby/issues/607">#607</a> - [FFI] FFI::Pointer.size is not defined</li>
+<li><a href="https://github.com/jruby/jruby/issues/602">#602</a> - RSpec 2.13 doesn't load in 2.0 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/601">#601</a> - Ant integration DSL issue</li>
+<li><a href="https://github.com/jruby/jruby/issues/600">#600</a> - Fixing RubyBasicObject#compareTo bug.</li>
+<li><a href="https://github.com/jruby/jruby/issues/599">#599</a> - Recursive annotation visiting</li>
+<li><a href="https://github.com/jruby/jruby/issues/595">#595</a> - Fixing build problem introduced by removing encryption jars</li>
+<li><a href="https://github.com/jruby/jruby/issues/591">#591</a> - Time.new: the UTC offset is always negative</li>
+<li><a href="https://github.com/jruby/jruby/issues/590">#590</a> - Consistent hash code values between JVM instances</li>
+<li><a href="https://github.com/jruby/jruby/issues/587">#587</a> - AIX 6.1: stat.st_gid unsupported or native support failed to load</li>
+<li><a href="https://github.com/jruby/jruby/issues/583">#583</a> - Method#parameters returning empty array for some Object methods</li>
+<li><a href="https://github.com/jruby/jruby/issues/580">#580</a> - [windows][jruby-complete] Resolv.getaddress fails</li>
+<li><a href="https://github.com/jruby/jruby/issues/579">#579</a> - Don't include imports from previously processed ruby files in every generated java file.</li>
+<li><a href="https://github.com/jruby/jruby/issues/578">#578</a> - Update psych to edf05c9f40e0c566e391f7e04b4a30327c31a828</li>
+<li><a href="https://github.com/jruby/jruby/issues/575">#575</a> - Require paths with .. in them are not normalized</li>
+<li><a href="https://github.com/jruby/jruby/issues/571">#571</a> - Fix so require_relative can handle an absolute path.</li>
+<li><a href="https://github.com/jruby/jruby/issues/569">#569</a> - Ruby 2.0: locations and caller APIs can take ranges now</li>
+<li><a href="https://github.com/jruby/jruby/issues/568">#568</a> - [Ruby 2.0] Kernel#caller_locations</li>
+<li><a href="https://github.com/jruby/jruby/issues/566">#566</a> - Ruby 2.0: Range#bsearch</li>
+<li><a href="https://github.com/jruby/jruby/issues/565">#565</a> - Time.at broken in 1.7.3 when passed (Time, 0)</li>
+<li><a href="https://github.com/jruby/jruby/issues/556">#556</a> - RbConfig.expand is missing</li>
+<li><a href="https://github.com/jruby/jruby/issues/554">#554</a> - Fixes issue #549 (OpenSSL sockets spin indefinitely on timeout in handshake)</li>
+<li><a href="https://github.com/jruby/jruby/issues/553">#553</a> - show build status from travis [ci skip]</li>
+<li><a href="https://github.com/jruby/jruby/issues/552">#552</a> - Zlib::GzipWriter.wrap in 1.9 mode accepts only one argument</li>
+<li><a href="https://github.com/jruby/jruby/issues/551">#551</a> - Fi JRUBY-5122_nonblocking_io_spec on Fedora 19 by raising chunk size</li>
+<li><a href="https://github.com/jruby/jruby/issues/550">#550</a> - JRuby 1.7.3 breaks Sidekiq (DeadTaskErrors on startup)</li>
+<li><a href="https://github.com/jruby/jruby/issues/549">#549</a> - OpenSSL sockets spin indefinitely on timeout in handshake</li>
+<li><a href="https://github.com/jruby/jruby/issues/546">#546</a> - Remove unused call to `String#replaceAll()`.</li>
+<li><a href="https://github.com/jruby/jruby/issues/544">#544</a> - replacing a hash with itself returns an empty hash in ruby 1.9 compatibility mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/539">#539</a> - Time::new should treat numeric offsets as the GMT offset in seconds.</li>
+<li><a href="https://github.com/jruby/jruby/issues/530">#530</a> - JRuby is quick to show version number, slow to exit</li>
+<li><a href="https://github.com/jruby/jruby/issues/523">#523</a> - Java integration failures in 1.9 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/522">#522</a> - Generate new empty RubyString's with US-ASCII encoding.</li>
+<li><a href="https://github.com/jruby/jruby/issues/515">#515</a> - Dir.foreach fails in jar files</li>
+<li><a href="https://github.com/jruby/jruby/issues/497">#497</a> - JRuby behaves different from MRI and Rubinius when it comes to setting Module#name</li>
+<li><a href="https://github.com/jruby/jruby/issues/471">#471</a> - File.directory? should handle IO's</li>
+<li><a href="https://github.com/jruby/jruby/issues/405">#405</a> - jruby-1.7.0 Dir::tmpdir returns current directory if it is not world writable.</li>
+<li><a href="https://github.com/jruby/jruby/issues/189">#189</a> - OpenSSL::SSL::SSLError when talking to github</li>
+</ul>

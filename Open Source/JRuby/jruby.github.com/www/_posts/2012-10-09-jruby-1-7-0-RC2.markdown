@@ -1,0 +1,67 @@
+---
+layout: post
+title: JRuby 1.7.0.RC2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.0.RC2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+This is the second (and likely last) release candidate of JRuby 1.7. The JRuby 1.7 release series represents a tremendous amount of work by dozens of contributors, and there are improvements in every subsystem. Users of highly-concurrent applications will see improvements in throughput and raw parallelism. And we have upped our compatibility level to match Ruby 1.9.3.
+
+We know that there are still pieces of 1.9 support we don't have yet, like Ripper, but we think we are at a stable point where people can use JRuby in 1.9 mode to host production applications.  Barring any significantly serious issues, RC2 will become 1.7.0.  Our plan after the release of 1.7.0 is a set of smaller point releases to address bugs and to add the few missing pieces of Ruby 1.9.
+
+JRuby 1.7 is the first JRuby to support the new "invokedynamic" feature of the JVM. You can enable invokedynamic use on Java 7, but it is disabled normally due to JVM issues. On Java 8 builds, it is enabled by default. http://wiki.jruby.org/PerformanceTuning
+
+Please, please, please test your applications against 1.7.0.RC2.  We want to make 1.7.0 a rock solid release and your contribution is extremely helpful.
+
+### Issues resolved:
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-5732'>JRUBY-5732</a>] -         Error with selector: java.nio.channels.ClosedChannelException
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6140'>JRUBY-6140</a>] -         Net::POP3 (and possibly other things) cannot verify certificate using JRE&#39;s trust anchors
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6510'>JRUBY-6510</a>] -         String#encode! not correctly implemented.
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6838'>JRUBY-6838</a>] -         Kernel#rand(Range) not supported
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6912'>JRUBY-6912</a>] -         __FILE__ has an extra preceding slash in windows
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6913'>JRUBY-6913</a>] -         with jdk 7, system commands run in windows use wrong line endings
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6914'>JRUBY-6914</a>] -         Rake Tasks no longer work with Bundler under JRuby 1.7.0.RC1
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6918'>JRUBY-6918</a>] -         Ant: &quot;instance vars on non-persistent Java type Java::OrgApacheToolsAnt::UnknownElement&quot;
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6922'>JRUBY-6922</a>] -         Regexp#match interpets pos parameter in term of bytes instead of chars
+</li>
+</ul>
+            
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-5451'>JRUBY-5451</a>] -         Unessesary late error message when subclassing a packaged class with no public constructors. 
+</li>
+<li>[<a href='https://jira.codehaus.org/browse/JRUBY-6915'>JRUBY-6915</a>] -         Improve performance of the Equals operator in the RubyComparable class for objects of different types.
+</li>
+</ul>
+
+### Github Issues resolved: 
+
+- #337: Fix indentation in: e2c3728.
+- #330: mprove performance of the Equals operator in the RubyComparable class for objects of different types
+- #329: only new up kernel32 instance once per jvm
+- #324: Fix #276. For good.
+- #320: Windows Process.kill 'KILL'
+- #319: Windows signal
+- #312: Nested timeout supercedes enclosing timeout
+- #311: Fix edge case where rescued Exceptions may be nil
+- #295: Fix: Added support for the Java cacerts trust anchors 
+- #292: Apply '-' behaviour to blank padded format directives.
+- #291: Add encoding annotation to test_unicode_path
+- #278: fix some error message in Struct#\[\]
+- #270: JSON format profile printer
+- #255: JRUBY-6510 fix String.encode!

@@ -1,0 +1,25 @@
+*.gem
+*.rbc
+*~
+Gemfile.lock
+.bundle
+.config
+coverage
+InstalledFiles
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
+.rspec
+
+# YARD artifacts
+.yardoc
+_yardoc
+doc/
+/nbproject/private/
+
+# jrubyfx artifacts
+lib/jruby_visualizer/ui/.jrubyfx_cache

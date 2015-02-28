@@ -1,0 +1,21 @@
+---
+layout: post
+title: JRuby 1.5.3 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.3.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.5.3 is a minor follow-up release to address a thread deadlock, a spurious error involving selectors on windows, and a couple of fixes affecting bundler exec (and generally improves our exec() behavior).  We also fixed a few highly specialized issues which should have no affect on most users.  All users of JRuby 1.5.2 are recommended to upgrade to 1.5.3.
+
+### 1.5.3 Issues Resolved:
+
+- JRUBY-5093 ConditionVariable use causes thread deadlocks	
+- JRUBY-5076 SelectorProvider.openSelector() will sometimes fail on Windows
+- JRUBY-5098 Kernel#exec does not heed ENV\[\'PATH\'\] when launching shell command
+- JRUBY-5100 Subprocess started by Kernel#exec does not respect RUBYOPT and other environment variables set via ENV.
+- JRUBY-4944 JSR-223 ScriptEngine ignores global bindings
+- JRUBY-4948 Remove noisy warning when setting ScriptEngine.ARGV
+- JRUBY-5092 Scala classes (and perhaps others) are named oddly and break Java reflection
+- JRUBY-4937 File.open with permissions has sideffect of clearing umask

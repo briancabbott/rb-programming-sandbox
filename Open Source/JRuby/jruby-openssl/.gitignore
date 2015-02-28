@@ -1,0 +1,7 @@
+pom-jruby-openssl.gemspec.xml
+pkg
+*.jar
+target
+build.log
+.idea
+*.lock

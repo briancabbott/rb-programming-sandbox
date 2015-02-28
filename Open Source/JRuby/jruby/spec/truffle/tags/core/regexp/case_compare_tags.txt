@@ -1,0 +1,2 @@
+fails:Regexp#=== returns true if it matches a Symbol
+fails:Regexp#=== returns false if it does not match a Symbol

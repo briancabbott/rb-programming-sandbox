@@ -1,0 +1,147 @@
+---
+layout: post
+title: JRuby 1.6.8 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.8.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.7.2 (and lower) are encouraged to upgrade to 1.6.8.
+
+This release is a somewhat special release in that JRuby community members were primarily responsible for performing the backporting of fixes.  These fixes represented what current users of JRuby 1.6.x wanted in a JRuby 1.6.8.  Special thanks to merge-master David Kellum for putting so much effort into make JRuby 1.6.8 a reality.
+
+### Notable Changes:
+
+- Updated to RubyGems 1.8.24
+- Fixed a resource leak in LoadService
+- No more accidental GC of runtime state in unusual situations
+- Various 1.9 compability fixes
+
+### 1.6.8 Commits:
+
+- d991aba Fix JRUBY-6892: Calling #drop on an Enumerator doesn't work properly
+- f125aeb Up the dose on windows JRE
+- 496bf09 Bump for new version of jffi
+- 996fc86 Bump for upcoming release
+- 18d8bb1 Update to working i386 Windows jffi.
+- 34b46fe Revert non-proc allocator fix because it breaks tb.  Work with them for different soln for 1.7.0
+- 8b966d6 Make maven know about yesterdays jartravaganza
+- c4f70e2 Fix JRUBY-6452 - CallStaticLongMethod instead of CallStaticObjectMethod
+- cc93dab Update this test to match master to remove the printStacktrace (and presumably make this pass on windows)
+- 45af2c6 Remove spec due to asm4 upgrade (it will be alright)
+- 709f3a5 Fix IntelliJ setup for jruby-1_6 branch.
+- 6dbe84f Update Makefile so cexts can compile again on MacOS
+- 964717c Does this look safe to you?
+- 1d1ec53 Fix #162
+- d96b69e Partial solution for #162.
+- 1bf66f8 Fix recursiveKey usage across multiple threads (JRUBY-6621)
+- 2f73450 Use thread-local state for all recursive checks.
+- 102f85a Merge pull request #283 from dekellum/1-6-backport-6865
+- eec9bbe Merge pull request #284 from dekellum/1-6-backport-6860,6863
+- e443d7e Merge pull request #285 from dekellum/1-6-backport-6872
+- 149b646 Actually fix JRUBY-6872.
+- 2bcf438 Fix JRUBY-6872 and remaining math excludes.
+- ea52040 Fix JRUBY-6860
+- ae3ee49 Fix JRUBY-6863
+- 254d8e5 Fix JRUBY-6865
+- 57b4637 Work around some old jffi bugs with struct-by-value params to fix JRUBY-6876
+- 22c66fd Update to jnr-netdb 1.0.7 (fixes multi-threaded getservbyname() crashes on linux)
+- 41098eb Merge pull request #254 from dekellum/1-6-backport-gh224
+- 151d0a6 Merge pull request #253 from dekellum/1-6-backport-gh245
+- f9a2c6b Merge pull request #252 from dekellum/1-6-backport-6820
+- 5ae7300 Merge pull request #273 from dekellum/1-6-backport-6810
+- ab0fd82 Fix JRUBY-6810
+- 9ded4e9 Fix JRUBY-6845 - syslog(3) should be attached as a variadic function
+- b493eb4 Backport FFI::DataConverter#reference_required? fixes from master
+- c886e01 Fix Issue #262 (ffi/ffi/#221)
+- 5ff7afd JRUBY-6820: Unexpected behavior of IO.popen when giving arguments as an array containing strings
+- 80fcc90 Implement some unimplemented Process::Status methods and change the way signals are parsed from friendly name to integer.
+- 1abdc0c Flip the isShared flag only after the array's values have been copied over.
+- ecb5c6b Merge pull request #251 from dekellum/1-6-backport-6815
+- 0d8fa5c Merge pull request #250 from dekellum/1-6-backport-6819
+- 03291b2 Merge pull request #249 from dekellum/1-6-backport-6658
+- 944e4ba Merge pull request #248 from dekellum/1-6-backport-6792
+- 581aee7 Merge pull request #247 from dekellum/1-6-backport-6813
+- 0a15994 JRUBY-6815: IO.read doesn't work with pipes
+- 4478f83 Fix JRUBY-6819
+- db3fd5e Fixes JRUBY-6658
+- d25edcc Fix for JRUBY-6792:  Keep a hard reference to the current ThreadContext to avoid it being collected
+- 2969acd Fix for JRUBY-6792:  Keep a hard reference to the current ThreadContext to avoid it being collected
+- f78b088 Implement Time#round. This fixes JRUBY-6813.
+- c6a559a Tag some long-failing specs on jruby-1_6 branch.
+- 8115b8c Fix JRUBY-6514
+- b8d0ca6 Fix JRUBY-6395: Coerce Fixnum to Number
+- 86ef07e Fix JRUBY-6731
+- 7c8dba1 JRUBY-6785 Make the receiver for callMethod more consistent. Allow nil as a receiver.  Allow Java objects as receivers.  These will be wrapped before use.
+- a90bb11 JRUBY-6785 Allow ScriptingContainer#callMethod to be called on a Java object. Allow ScriptingContainer#callMethod to be called using nil as a receiver
+- 684ce37 Fix JRUBY-6775: RubyRandom is not thread-safe
+- 413edcb Fix JRUBY-6753
+- 98724c3 Fix JRUBY-6722
+- 400c73a Fix JRUBY-6724
+- f9b745f Fix for JRUBY-6725. See jruby/ruby repo for description.
+- 44b8f31 Fix JRUBY-6745
+- 0324c3d Fix for JRUBY-6728. This fixes Nokogiri's 1.9 test error of PrettyPrint as well as https://github.com/sparklemotion/nokogiri/issues/657.
+- a62f4af Errant printf removed
+- ddc48ae Fix JRUBY-6706
+- df5b336 Fixes JRUBY-6677
+- 566ae5d Remove Enumerable#join. This resolves JRUBY-6703.
+- c82a360 JRUBY-6708: NullPointerException instead of proper exceptions output
+- 5f65879 Fix JRUBY-6248
+- 280e435 Fix JRUBY-6517
+- 9a122ed Fix JRUBY-6642.
+- 82a2f2d JRUBY-6464: Use "mvn versions:set -DnewVersion=&lt;whatever&gt;" instead of our Ruby rake code for updating poms
+- 7153b89 Remove -mimpure-text from CFLAGS.  Fixes JRUBY-6633.
+- 8623090 Check if all throwables are Java exceptions in interpreted mode (JRUBY-6641)
+- 0fe664a JRUBY-6611: Fix resource leak in LoadServiceResource
+- 2ce65e1 Regression spec for JRUBY-6634.
+- b8e182d JRUBY-6626 Ensure thread is set on finalize
+- defb411 JRUBY-6624 Strip jar: prefix when searching for files in a JAR
+- 2e6d4c8 Add copyright notice for Yecht. This resolves JRUBY-4843.
+- 4b462fd Add spec for JRUBY-6571
+- cbbbf38 Mitigation for JRUBY-6576
+- 22a52eb Regression test for JRUBY-5863.
+- fc17ab4 Fix JRUBY-6570: autoload :Time, 'time' doesn't work
+- c591134 Fix JRUBY-5863: Named captures cause crash when there is no match
+- fd9ca2e Fix JRUBY-6571: StackOverflow when calling java.util.regex.Matcher#end
+- 7b370c2 JRUBY-6559: GzipReader#rewind crashes when the input stream is serially-multiplexed like RubyGems
+- 61f2cf0 Implement Kernel#Hash. Fixes JRUBY-6496.
+- 358883f JRUBY-6560 Fix File.expand_path for jar:file:/ paths
+- 1ef14f1 Fix JRUBY-6538: 'obj !~ thing' is not the same as obj.send(:!~, thing)
+- 202a45c Fix JRUBY-6489
+- 40e87d7 Add rdoc to gems we install for dist, since hoe appears to depend on it now.
+- 5837b58 Correctly check the already-loaded file cache
+- 6f398e8 Tweaks to match master fix for JRUBY-6607, JRUBY-6498.
+- ef59f99 Fix JRUBY-6619: NoMethodError 'upcase' on Java string
+- 734662f Add spec for JRUBY-6661, which is already fixed by the previous commit.
+- 6bc0674 Fix JRUBY-6661: strftime should behave the same for datetime and time
+- 13bccdd Fix JRUBY-6633: gcc 4.7 compilation fails
+- aab80da Allow primitive boxes to pass for primitive toJava targets.
+- 26e08ba Don't forget Evan
+- dedcfc2 Hmmm...my cherry-pick missed a lot
+- 3d756d1 Bump for 1.6.7.2
+- 0804bcb Hmmm, perhaps I should have reversed this...full steam ahead
+- 9a44218 Update Eclipse classpath setting
+- 57cf31a Update to RubyGems 1.8.24.
+- 94f07cf Add missing SSL cert.
+- 7762e4c Update to RubyGems 1.8.23
+- d078fee Update for security release 1.6.7.1
+- 904fd37 Update to RubyGems 1.8.21.
+- 985cae8 Spec for JRUBY-6612
+- b8364a6 Fix JRUBY-6612. Detect special case where Long.MIN_VALUE == -1\*Long.MIN_VALUE in Java, and guard accordingly. It is a bit hack-ish, but it will do for now. Spec to be added later.
+- 4a8ed93 Update to RubyGems 1.8.21.
+- 465bc21 JRUBY-6580: Fix performance drop with threadsafe autoload
+- 03c14ba Prevents "cygpath: can't convert empty path" on cygwin when no other jars besides jruby.jar are present in $JRUBY_HOME/lib (as is the case with a fresh install).
+- 95cc9cc No plans for 1.6.8.dev, but we definitely hsould not keep it as 1.6.7
+- 08cf4a4 JRUBY-4502: Wrong gzip data crashes JRuby (collab w/ nahi...thanks nahi!)
+- 515bc51 Fix JRUBY-6544: CR at the end of String can cause SyntaxError
+- 65e3fb4 Spec for JRUBY-6344
+- 9002961 Allow cexts to build under OpenJDK on OS X, where os.arch == 'amd64'
+- 045bb05 No email notifications from travis.
+- a9958df Make rake+ant specs more robust when no JAVA_HOME env is set.
+- ff1c6ba Remove formatting, external class from time-to-date JI test.
+- 26ea1a5 Add travis build for 1.6 branch.
+- 9f4ebdb Fix JRUBY-6541
+- f3b846a Fix JRUBY-6522
+- c3df4da JRUBY-6518: Array#combination returns unexpected value when argument number too big
+- 86cb0ba Fix JRUBY-6497

@@ -1,0 +1,2 @@
+fails:Array#<< pushes the object onto the end of the array
+fails:Array#<< raises a RuntimeError on a frozen array

@@ -1,0 +1,80 @@
+---
+layout: post
+title: JRuby 1.7.17 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.17
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.17 is our twentieth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.
+
+Highlights:
+
+- 56 issues fixed for 1.7.17
+- native crypt()
+- Fixed bad encoding of string interpolated within backticks
+- popen2+ now works properly with env hash
+- improvements to align MRI and JRuby FFI
+- updated stdlib to 1.9.3p392 (+ rexml security fixes)
+
+### Github Issues resolved for 1.7.17
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/pull/2271">#2271</a> - refactor FileResource.inputStream to be easier to use</li>
+<li><a href="https://github.com/jruby/jruby/issues/2264">#2264</a> - Illegal hex characters in escape (%) pattern</li>
+<li><a href="https://github.com/jruby/jruby/issues/2258">#2258</a> - Encoding issue with backticks</li>
+<li><a href="https://github.com/jruby/jruby/issues/2249">#2249</a> - Improve error message when adding file to X509Store fails</li>
+<li><a href="https://github.com/jruby/jruby/issues/2231">#2231</a> - Was the --indy cli option removed? (1.7.16.1)</li>
+<li><a href="https://github.com/jruby/jruby/pull/2223">#2223</a> - test Kernel.system on windows</li>
+<li><a href="https://github.com/jruby/jruby/issues/2219">#2219</a> - JRuby Complete 1.7.16.1 does not move asm to other package</li>
+<li><a href="https://github.com/jruby/jruby/issues/2173">#2173</a> - on jboss wildfly when starting a rack application: stat unsupported or native support failed to load</li>
+<li><a href="https://github.com/jruby/jruby/issues/2169">#2169</a> - Upgrade jcraft/jzlib dependency</li>
+<li><a href="https://github.com/jruby/jruby/pull/2123">#2123</a> - Fix for issue 2050 : BigDecimal and nil multiplication</li>
+<li><a href="https://github.com/jruby/jruby/issues/2120">#2120</a> - require 'win32/registry' fails</li>
+<li><a href="https://github.com/jruby/jruby/pull/2115">#2115</a> - Limit searches for service libraries to once per baseName, rather than once per suffix.</li>
+<li><a href="https://github.com/jruby/jruby/issues/2088">#2088</a> - Allow partial but not actual esoteric interpolation sequences to be regexp values</li>
+<li><a href="https://github.com/jruby/jruby/issues/2079">#2079</a> - Error running rspec (LoadError: load error: jopenssl/load -- java.lang.NoClassDefFoundError: org/bouncycastle/asn1/DERBoolean)</li>
+<li><a href="https://github.com/jruby/jruby/issues/2078">#2078</a> - Very large retained heap size for org.jruby.RubyRegexp$RegexpCache in JRuby Rails App</li>
+<li><a href="https://github.com/jruby/jruby/issues/2077">#2077</a> - jruby can't be used w/ jdk 9</li>
+<li><a href="https://github.com/jruby/jruby/pull/2075">#2075</a> - Provide better error message when using :: in java_import (fixes #2074)</li>
+<li><a href="https://github.com/jruby/jruby/issues/2074">#2074</a> - java_import does not accept :: for static nested classes</li>
+<li><a href="https://github.com/jruby/jruby/issues/2072">#2072</a> - Old tzdata in JRuby</li>
+<li><a href="https://github.com/jruby/jruby/pull/2068">#2068</a> - Made Exception#set_backtrace compliant with Ruby documentation</li>
+<li><a href="https://github.com/jruby/jruby/pull/2064">#2064</a> - improve handling of non ascii character after backslash</li>
+<li><a href="https://github.com/jruby/jruby/issues/2060">#2060</a> - Instance_eval tramples over block's binding's ivars</li>
+<li><a href="https://github.com/jruby/jruby/issues/2057">#2057</a> - Rubygems broken due to psych problem for 1.7.16 in 1.8 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/2055">#2055</a> - extensions found on classpath do not load</li>
+<li><a href="https://github.com/jruby/jruby/issues/2042">#2042</a> - Gem class missing in jruby-complete 1.7.16 when running from network folder (Windows only)</li>
+<li><a href="https://github.com/jruby/jruby/issues/2040">#2040</a> - jruby -S irb broken on solaris in 1.7.16 with JDK 7</li>
+<li><a href="https://github.com/jruby/jruby/issues/2032">#2032</a> - JRuby 1.7.16's complete.jar has a path regression from 1.7.15</li>
+<li><a href="https://github.com/jruby/jruby/issues/2017">#2017</a> - load path with jars not working anymore with 1.7.16</li>
+<li><a href="https://github.com/jruby/jruby/issues/2016">#2016</a> - java.library.path on Fedora</li>
+<li><a href="https://github.com/jruby/jruby/pull/2011">#2011</a> - Fix for issue 1695 : BigDecimal and Rational multiplication</li>
+<li><a href="https://github.com/jruby/jruby/pull/2008">#2008</a> - Implemented multi args 'system' method on Windows fix #1074</li>
+<li><a href="https://github.com/jruby/jruby/issues/2006">#2006</a> - Coding Conventions guide uses wrong link for sun java coding standards</li>
+<li><a href="https://github.com/jruby/jruby/issues/2004">#2004</a> - jruby-complete-1.7.16.jar includes /Users directory</li>
+<li><a href="https://github.com/jruby/jruby/pull/2003">#2003</a> - fix enums to return nil on unknown symbol</li>
+<li><a href="https://github.com/jruby/jruby/pull/2002">#2002</a> - tweak include order</li>
+<li><a href="https://github.com/jruby/jruby/issues/1999">#1999</a> - Land master File.readlink fix (084eef9c25860cccdd65b625a877e7e230414175)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1983">#1983</a> - java -jar jruby-complete.jar -S irb doesn't work anymore</li>
+<li><a href="https://github.com/jruby/jruby/issues/1962">#1962</a> - Array() does not coerce according to MRI 1.9 logic</li>
+<li><a href="https://github.com/jruby/jruby/issues/1954">#1954</a> - FFI::Library#enum_value difference between MRI and JRuby</li>
+<li><a href="https://github.com/jruby/jruby/pull/1934">#1934</a> - Deprecate overloaded `setProfile`, prefer `setProfilingMode`</li>
+<li><a href="https://github.com/jruby/jruby/issues/1919">#1919</a> - Call Exception#set_bactrace when raising exception</li>
+<li><a href="https://github.com/jruby/jruby/issues/1875">#1875</a> - __FILE__ is wrong when using PathType.CLASSPATH so require_relative can't work</li>
+<li><a href="https://github.com/jruby/jruby/pull/1870">#1870</a> - Module#ancestors now includes singletons themselves</li>
+<li><a href="https://github.com/jruby/jruby/issues/1869">#1869</a> - ScriptingContainer.parse(PathType.CLASSPATH,  "some.rb").run() fails</li>
+<li><a href="https://github.com/jruby/jruby/issues/1791">#1791</a> - scriptingcontainer native memory leak?</li>
+<li><a href="https://github.com/jruby/jruby/issues/1768">#1768</a> - OpenSSL cipher list mismatch</li>
+<li><a href="https://github.com/jruby/jruby/issues/1758">#1758</a> - Binding bug</li>
+<li><a href="https://github.com/jruby/jruby/issues/1752">#1752</a> - warning: Tempfile#unlink or delete called on open file; ignoring</li>
+<li><a href="https://github.com/jruby/jruby/issues/1695">#1695</a> - BigDecimal and Rational multiplication rounds the rational number</li>
+<li><a href="https://github.com/jruby/jruby/pull/1681">#1681</a> - Optimize SipHash using sun.misc.Unsafe</li>
+<li><a href="https://github.com/jruby/jruby/issues/1549">#1549</a> - openssl issue with rails and installed default gems</li>
+<li><a href="https://github.com/jruby/jruby/issues/1547">#1547</a> - Passing environment hash to Open3#popen3 causes IOError</li>
+<li><a href="https://github.com/jruby/jruby/issues/1290">#1290</a> - JRuby 1.7.8 (1.9) Open3 `capture3` bug</li>
+<li><a href="https://github.com/jruby/jruby/issues/1074">#1074</a> - Kernel#system with two parameter on Windows fails</li>
+<li><a href="https://github.com/jruby/jruby/issues/1035">#1035</a> - String#crypt behaving differently that in MRI</li>
+<li><a href="https://github.com/jruby/jruby/issues/957">#957</a> - Time marshaling is incorrect </li>
+</ul>

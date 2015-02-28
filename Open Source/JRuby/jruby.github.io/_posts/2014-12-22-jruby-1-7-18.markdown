@@ -1,0 +1,44 @@
+---
+layout: post
+title: JRuby 1.7.18 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.18
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.18 is our twenty-first update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.
+
+The goal of this release was to give a quick turnaround for bug reporters of 1.7.17.  We wanted to get one more solid release out before the holidays...
+
+Highlights:
+
+- 20 issues fixed for 1.7.18
+- non-ASCII Symbols now have their proper encoding
+- fixed a couple of regressions from native crypt() landing
+- update stdlib to match MRI (C Ruby) patch level 551
+
+### Github Issues resolved for 1.7.18
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/2342">#2342</a> - Java::JavaLang::NullPointerException:      org.jruby.RubyString.crypt(RubyString.java:2660)</li>
+<li><a href="https://github.com/jruby/jruby/issues/2331">#2331</a> - File.realpath treats absolute "classpath:/" paths as relative paths</li>
+<li><a href="https://github.com/jruby/jruby/pull/2327">#2327</a> - added String#b method</li>
+<li><a href="https://github.com/jruby/jruby/issues/2316">#2316</a> - I/O calls do not invalidate `String#ascii_only?` cache</li>
+<li><a href="https://github.com/jruby/jruby/issues/2310">#2310</a> - ArgumentError: "+HH:MM" or "-HH:MM" expected for utc_offset</li>
+<li><a href="https://github.com/jruby/jruby/issues/2307">#2307</a> - ConstantCompilationTest.testContainerCompilation regression</li>
+<li><a href="https://github.com/jruby/jruby/issues/2304">#2304</a> - Unable to use JRuby with google app engine due to use of sun.misc.Unsafe</li>
+<li><a href="https://github.com/jruby/jruby/issues/2302">#2302</a> - Update JRuby 1.7.x to latest PL and default gems</li>
+<li><a href="https://github.com/jruby/jruby/issues/2301">#2301</a> - unable to get value of object's fields in RubyMine debugger</li>
+<li><a href="https://github.com/jruby/jruby/issues/2298">#2298</a> - Open3.capture3 still broken in JRuby 1.7.17</li>
+<li><a href="https://github.com/jruby/jruby/issues/2297">#2297</a> - File.executable? raises an exception if the `file_path` is non-existent and native disabled</li>
+<li><a href="https://github.com/jruby/jruby/issues/2296">#2296</a> - NullPointerException with JRuby 1.7.17 running rspec &amp; simplecov in debug mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/2295">#2295</a> - Regexp.union [] gives wrong result in ruby 1.8 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/2294">#2294</a> - String#crypt fails on Windows</li>
+<li><a href="https://github.com/jruby/jruby/issues/2291">#2291</a> - Dir[] fails if path does not exist instead of returning nil</li>
+<li><a href="https://github.com/jruby/jruby/issues/2259">#2259</a> - File.basename can return a string with a different encoding than the input</li>
+<li><a href="https://github.com/jruby/jruby/issues/2172">#2172</a> - Symbols need to support UTF-8 names</li>
+<li><a href="https://github.com/jruby/jruby/issues/2048">#2048</a> - Stat of an empty resource does not generate proper Exception.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1941">#1941</a> - Symlinks in load path should remain unexpanded in LOADED_FEATURES</li>
+<li><a href="https://github.com/jruby/jruby/issues/1237">#1237</a> - jffi*.tmp files remain in %TMP% folder</li>
+</ul>

@@ -1,0 +1,4 @@
+fails:String.new returns an instance of String
+fails:String.new returns a fully-formed String
+fails:String.new raises TypeError on inconvertible object
+fails:String.new returns a binary String

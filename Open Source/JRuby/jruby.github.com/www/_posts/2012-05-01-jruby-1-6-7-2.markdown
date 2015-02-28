@@ -1,0 +1,16 @@
+---
+layout: post
+title: JRuby 1.6.7.2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.7.2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+This is a special release of JRuby which only updates our shipped copy of RubyGems to version 1.8.24.  This version of RubyGems is the first version to verify that a RubyGems server certficate is valid.  This helps to prevent a "man in the middle" style of attack when someone controls a portion of the network between you and the RubyGems server (See the release notes for RubyGems 1.8.23 and 1.8.24 for more details).  All users are encouraged to upgrade to JRuby 1.6.7.2.
+
+Note: You may also use the normal RubyGems upgrade mechanisms, but this will overwrite the Maven support we ship as part of JRuby.
+
+### Notable Change:
+
+- Update to Rubygems 1.8.24

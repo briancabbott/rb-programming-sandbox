@@ -1,0 +1,34 @@
+---
+layout: post
+title: JRuby 1.7.15 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.15
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.15 is our fifteenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+This release is a quick followup release to JRuby 1.7.14.  JRuby 1.7.14 had a mangled jruby-jars release as well as several non-obvious regressions involving our new load service internals.  We apologize if these regressions have affected you and recommend all people upgrade to 1.7.15.
+
+Changes of note:
+
+- 8 issues fixed for 1.7.15
+- Potential memory leak resolved when reloading JRuby apps in Java App servers
+- jruby-jars gem did not have their embedded jars within it
+- rvm install of jruby would not properly follow gemset symlinks
+- Windows exec works again
+- lstat did not honor native.enabled property and always invoked native
+
+### Github Issues resolved for 1.7.15
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1940">#1940</a> - Symlinks in load path get expanded when they should not</li>
+<li><a href="https://github.com/jruby/jruby/pull/1939">#1939</a> - Update jnr-ffi dependency version</li>
+<li><a href="https://github.com/jruby/jruby/issues/1936">#1936</a> - Pathname object in $LOAD_PATH causes error (1.7.14)</li>
+<li><a href="https://github.com/jruby/jruby/pull/1935">#1935</a> - Add ScriptingContainer accessors for ProfileOutput</li>
+<li><a href="https://github.com/jruby/jruby/issues/1930">#1930</a> - JRuby 1.7.14 relies on HOME in the environment - change in behaviour from 1.7.13</li>
+<li><a href="https://github.com/jruby/jruby/issues/1927">#1927</a> - jruby-complete 1.7.14 appears to be missing some files</li>
+<li><a href="https://github.com/jruby/jruby/issues/1926">#1926</a> - jruby-jars 1.7.14 gem seems to be missing jar files.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1115">#1115</a> - control-c in cmd while running webrick rails app does not kill jruby.exe </li>
+</ul>

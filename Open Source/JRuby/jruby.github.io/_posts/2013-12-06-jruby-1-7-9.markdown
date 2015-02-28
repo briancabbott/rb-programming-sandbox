@@ -1,0 +1,62 @@
+---
+layout: post
+title: JRuby 1.7.9 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.9
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.9 is our ninth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 36 issues fixed
+- Windows File.size fixed
+- Windows now will properly display to console windows codepage
+- Fixed regression which broke Compass (or anything which depended on FSSM)
+- A few more encoding issues fixed
+- Lots of Enumerable method improvements
+
+We would like to single out Daniel Marcotte with a special shout-out this release.  Daniel recently has been digging into our block dispatch code (especially in regards to Enumerable) which is far from a trivial part of our codebase and we are loving it.
+
+### Github Issues resolved for 1.7.9
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/pull/1300">#1300</a> - Fix #1222, StringIO.gets w/ utf8</li>
+<li><a href="https://github.com/jruby/jruby/pull/1295">#1295</a> - Don't set java.net.preferIPv4Stack in shell scripts #1286</li>
+<li><a href="https://github.com/jruby/jruby/pull/1293">#1293</a> - Adding spec for JRUBY-5946</li>
+<li><a href="https://github.com/jruby/jruby/pull/1292">#1292</a> - subList toIndex should be exclusive, not inclusive. (fromIndex is inclusive.)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1291">#1291</a> - Sidekiq - Minitest error: NoMethodError: unmocked method :==, expected one of []</li>
+<li><a href="https://github.com/jruby/jruby/pull/1282">#1282</a> - Blockless Struct#select should return an enumerator</li>
+<li><a href="https://github.com/jruby/jruby/pull/1275">#1275</a> - Quote a JSON key so it's valid JSON.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1274">#1274</a> - RubyArray.subList should treat toIndex as exclusive, not inclusive.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1272">#1272</a> - File.size (org.jruby.RubyFile.size() ) impacts underlying file handle</li>
+<li><a href="https://github.com/jruby/jruby/pull/1271">#1271</a> - Fix arrays with overridden each</li>
+<li><a href="https://github.com/jruby/jruby/pull/1267">#1267</a> - Removes Logger customizations in JavaUtilLoggingLogger</li>
+<li><a href="https://github.com/jruby/jruby/issues/1265">#1265</a> - StackOverflowError overriding Array.each since 1.7.5</li>
+<li><a href="https://github.com/jruby/jruby/pull/1264">#1264</a> - Fix Enumerable#chunk arg handling</li>
+<li><a href="https://github.com/jruby/jruby/pull/1263">#1263</a> - Fix Enumerable#take_while arg handling</li>
+<li><a href="https://github.com/jruby/jruby/pull/1262">#1262</a> - Fix Enumerable#slice_before arg handling</li>
+<li><a href="https://github.com/jruby/jruby/issues/1257">#1257</a> - mvn clean package wipes out installed jruby launcher</li>
+<li><a href="https://github.com/jruby/jruby/issues/1255">#1255</a> - StringIO Encoding Issue</li>
+<li><a href="https://github.com/jruby/jruby/issues/1254">#1254</a> - String#encode raises different errors on 1.7.8 than on 1.7.4 (and both are different from MRI)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1251">#1251</a> - "Stub gems" missing/wrong in JRuby 1.7.8</li>
+<li><a href="https://github.com/jruby/jruby/pull/1246">#1246</a> - Fixing String#concat(symbol) should raise TypeError</li>
+<li><a href="https://github.com/jruby/jruby/issues/1245">#1245</a> - Undefined method exception when using `compass watch' in jruby 1.7.8.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1242">#1242</a> - UTF-8 string interpolation in US-ASCII string sometimes returns wrong US-ASCII string</li>
+<li><a href="https://github.com/jruby/jruby/issues/1239">#1239</a> - Compiled method bodies do not scope defn/defs correctly</li>
+<li><a href="https://github.com/jruby/jruby/issues/1238">#1238</a> - JRuby 1.7.8 fails to initialize OpenSSL::PKey::RSA.new with encrypted key</li>
+<li><a href="https://github.com/jruby/jruby/issues/1236">#1236</a> - Erroneous files in JRuby 1.7.8 "bin/" directory.</li>
+<li><a href="https://github.com/jruby/jruby/pull/1234">#1234</a> - Fix any_spec</li>
+<li><a href="https://github.com/jruby/jruby/pull/1231">#1231</a> - Fix count_spec (1.7.x)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1229">#1229</a> - duplicate class definition when reifying classes</li>
+<li><a href="https://github.com/jruby/jruby/issues/1222">#1222</a> - CSV parse fails when string with mutibyte character terminates with CR-LF</li>
+<li><a href="https://github.com/jruby/jruby/pull/1221">#1221</a> - openssl: add handling for base 0 to new and to_s</li>
+<li><a href="https://github.com/jruby/jruby/issues/1209">#1209</a> - Pathname#dup is broken in 1.7.5.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1204">#1204</a> - Regression: Encoding error saving YAML with Norwegian characters</li>
+<li><a href="https://github.com/jruby/jruby/issues/1198">#1198</a> - String encoding</li>
+<li><a href="https://github.com/jruby/jruby/issues/1032">#1032</a> - Build error using Java 8 on OS X</li>
+<li><a href="https://github.com/jruby/jruby/issues/901">#901</a> - Enumerable arg handling issues for `#chunk`, `#slice_before`, and `#take_while`</li>
+<li><a href="https://github.com/jruby/jruby/issues/770">#770</a> - file size error on windows</li>
+</ul>

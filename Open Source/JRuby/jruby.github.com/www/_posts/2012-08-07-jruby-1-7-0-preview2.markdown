@@ -1,0 +1,157 @@
+---
+layout: post
+title: JRuby 1.7.0.preview2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.0.preview2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+
+This is the second preview release of JRuby 1.7. The JRuby 1.7 release series represents a tremendous amount of work by dozens of contributors, and there are improvements in every subsystem. Users of highly-concurrent applications will see improvements in throughput and raw parallelism. And we have upped our compatibility level to match Ruby 1.9.3.
+
+We have opted for another preview cycle due to the amount of reports about improperly working transcoding support.  We have greatly improved transcoding of IO and users should be much happier with 1.7.0.preview2.
+
+Due to some issues with Java 7's invokedynamic support we decided to disable the support by default.  It will be turned back on when Java 7 fixes those issues. See http://wiki.jruby.org/PerformanceTuning
+
+Please, please, please test your applications against 1.7.0.preview2.  We want to make 1.7.0 a rock solid release and your contribution is extremely helpful.
+
+### Notable Changes:
+
+- 1\.9\.3 is now our default runtime mode (--1.8 is needed for 1.8.7 support)
+- Many 1.9.x compatibility fixes
+- invokedynamic has been disabled for now on Java 7 (still on by default on Java 8)
+- Performance and concurrency improvements
+- Java 5 support dropped (Java 6+ required)
+- Several IO transcoding issues
+- YAML now encodes scalars properly instead of using Java locale
+- Kernel#exec now does a true native exec on all platforms
+- Improvements and fixes to Java integration and embedding
+- Fix several native support issues on Solaris
+- 122 issues resolved
+
+### Issues resolved:
+
+- JRUBY-5053 memory leak in rubygems
+- JRUBY-5785 BUG: invoking UndefinedMethod.call
+- JRUBY-5899 NotImplementedError: Process::Status#exited? not implemented
+- JRUBY-5939 \[:space:\] does not match unicode 0x3000: fullwidth whitespace
+- JRUBY-6056 High CPU Loop with parallel Etc.group iterrations
+- JRUBY-6121 Local variables cross eval scopes
+- JRUBY-6124 Yielding no values to a block gives ArrayIndexOutOfBoundsException
+- JRUBY-6125 Yielding a single object to a block with \|a, b\| arguments does not call \#to_ary
+- JRUBY-6181 SSH Agent forwarding does not work with jRuby \(which lets capistrano ssh-deployments fail\)
+- JRUBY-6253 IBM JVM rejects class/method names with \#, as in our JIT recently.
+- JRUBY-6286 jnr-posix WindowsHelpers.isBatch Always Returns False
+- JRUBY-6299 Slow perf in String#split or #join on 1.9 mode
+- JRUBY-6317 YAML can't parse some valid unicode characters
+- JRUBY-6330 Performance degradation in Time.strptime with invokedynamic
+- JRUBY-6376 File.stat.size on Solaris: ridiculously large results
+- JRUBY-6395 Coerce Fixnum to Number
+- JRUBY-6424 Allow java_signature to generate throws clause for methods/constructors
+- JRUBY-6428 Regression: Float#to_d doesn't work on 1.7 (did in 1.6)
+- JRUBY-6459 JRuby head causes rack response to change behaviour
+- JRUBY-6465 out of memory building c extensions
+- JRUBY-6481 AccessControl exceptions attempting to create JRuby instances in applet
+- JRUBY-6493 Calling dynamically defined method throws Java::JavaLang::NullPointerException or returns nil without executing method body
+- JRUBY-6494 File#directory? always returns false on Solaris
+- JRUBY-6495 java.nio.ByteBuffer.wrap throws java.lang.IndexOutOfBoundsException
+- JRUBY-6514 java.lang.NullPointerException when using ScriptingCotainer from an Appletjava.lang.NullPointerException
+- JRUBY-6521 With Java 7, nailgun client cannot list local gems more than once
+- JRUBY-6525 FFI bug with Solaris JRuby >=1.6.6
+- JRUBY-6532 ftp.nlst, ftp.ls doesn't work on JDK 7u3
+- JRUBY-6548 REXML error when reading files containing ISO-8859-1 encoded data
+- JRUBY-6552 File.directory? does not work under 1.9 mode on Solaris
+- JRUBY-6553 Application continues running after throwing out of memory exception in Thread.
+- JRUBY-6613 special characters like umlauts make Kramdown hang (works with MRI Rubies)
+- JRUBY-6615 File.open ignores specified external encoding
+- JRUBY-6638 Multicast UDPSocket send does not work with host and port
+- JRUBY-6639 Marshal.load takes forever when deserializing Rails unicode db in WEBrick
+- JRUBY-6658 Problem when setting up an autoload entry, defining a class via require, then redefining the autoload entry
+- JRUBY-6663 \`jruby -S bundle exec rails c\` fails with "Bundler: command not found"
+- JRUBY-6666 Open3.popen3 failing due to missing handling for \[path, argv\[0\]\] array
+- JRUBY-6674 Inconsistent java method/signature choosing depending on java version/platform
+- JRUBY-6677 open\("\|something", "w"\) does not open in write mode
+- JRUBY-6678 compilation fails for CC="ccache gcc"
+- JRUBY-6679 Encoding.default_external discrepancy between JRuby and MRI
+- JRUBY-6682 ' jgem search -r ak ' causes exceptions.
+- JRUBY-6685 Encoding problem when using JRuby 1.7.0.preview1 + Nokogiri under Windows
+- JRUBY-6686 JRuby/RSolr - BLOCKED on org.jruby.internal.runtime.methods.InvocationMethodFactory.getCompiledMethod
+- JRUBY-6688 Tempfile#{unlink,delete} should warn or actualy do something
+- JRUBY-6693 Get the terminal width with JRuby
+- JRUBY-6694 Invalid byte sequence in utf-8
+- JRUBY-6697 JRuby 1.7 should report 1.9 as default
+- JRUBY-6701 Net::HTTP ignore JSE defined HTTP Proxy options
+- JRUBY-6702 File.utime does not check file permissions
+- JRUBY-6703 Remove Enumerable#join from 1.9 mode
+- JRUBY-6705 Error during gem loading in Rails: ActiveRecord is not missing constant Base
+- JRUBY-6706 Collections.shuffle works incorreclty on Ruby arrays
+- JRUBY-6707 JRuby master (1.7) is LOT slower than jRuby 1.6.7 & MRI in generating tictactoe game tree
+- JRUBY-6708 NullPointerException instead of proper exceptions output
+- JRUBY-6709 ffi problems on 1.7.0.preview1?
+- JRUBY-6711 JRuby 1.7 needs a formal release of jline
+- JRUBY-6713 win32/registry.rb warning
+- JRUBY-6714 require 'java' in verbose mode causes circular dependency warning
+- JRUBY-6715 jruby-openssl cert validation fails on windows
+- JRUBY-6717 jruby1.7.0preview1 doesn't work on Windows with jdk7
+- JRUBY-6718 crash with java.lang.invoke.WrongMethodTypeException
+- JRUBY-6721 probably extraneous warning message generated
+- JRUBY-6722 Can't instantiate ThreadGroup subclass with arguments
+- JRUBY-6724 NO_FILE_CLASS Profile does disables File but not FileStats that depends on File
+- JRUBY-6725 NameError: uninitialized constant RubyVM
+- JRUBY-6729 1.9: block argument to yield method is not correctly pass to a block. \-\- pp's seplist method
+- JRUBY-6731 Can't load class files in WARs compiled by warbler using jruby 1.7.0.preview1
+- JRUBY-6734 Socket.new seems broken \-\- throws exceptions on valid params
+- JRUBY-6735 FileUtils.chmod broken for symlinks
+- JRUBY-6737 Cannot use rspec with JRuby 1.7
+- JRUBY-6739 Does not read UTF-16 properly
+- JRUBY-6740 BasicObject.respond_to? raises a "undefined method \`respond_to_missing?\'"
+- JRUBY-6741 Inconsistent == on java.lang.Integer between Mac and RedHat Enterprise Linux
+- JRUBY-6742 ant dist aborts on non-Mac hosts
+- JRUBY-6745 ClassCastException calling Fixnum\#== with a Java Integer
+- JRUBY-6746 OpenSSL 'connect_nonblock' missing/broken in 1.6.7 and 1.7.0.preview1
+- JRUBY-6748 Race condition still in thread list
+- JRUBY-6753 class_eval should inherit \_\_name\_\_ from the caller
+- JRUBY-6755 Test suite failure: Unable to resolve dependencies: rdoc requires json (~&gt; 1.4)
+- JRUBY-6760 ArgumentError output
+- JRUBY-6761 NoMethodError: undefined method \`recvfrom\' for \#&lt;Socket:fd&gt;
+- JRUBY-6762 How to detect if a Ruby method has been defined using ScriptingContainer
+- JRUBY-6764 Ascii or UTF-8 Encoding ascii substrings that originated from binary string causes an exception to be thrown.
+- JRUBY-6766 \-\-profile slows down Array#join , which distorts profiling results
+- JRUBY-6768 Instance variable value is lost under certain circumstances
+- JRUBY-6769 Curried lambda/proc does not work correctly with Array.map
+- JRUBY-6773 ERB parsing in JRuby 1.6.6
+- JRUBY-6774 wrong exception class thrown when opening file after Dir.chdir
+- JRUBY-6775 RubyRandom is not thread-safe
+- JRUBY-6776 Array#join(nil) should use $, as a separator for compatibility
+- JRUBY-6778 Possible long integer overflow bug in Integer#succ in RubyInteger.java
+- JRUBY-6779 Strange behaviour of some Integer Ranges with Range#each - maybe an integer overflow problem?
+- JRUBY-6780 File.open creates file without permissions
+- JRUBY-6782 load path doesn't respect rubygems when invoked from command line
+- JRUBY-6784 Wrong arg passed with lambda with splat
+- JRUBY-6785 NoMethodError calling callMethod on instance of reopened Java class
+- JRUBY-6786 opening the singleton class of an exception breaks equal and inspect
+- JRUBY-6788 Missing prompt in rails console
+- JRUBY-6789 Test for embedded JRuby are not run by CI
+- JRUBY-6791 RuntimExceptions with a Ruby Exception as cause will not print out complete stacktrace
+- JRUBY-6792 Occasional java.lang.ArrayIndexOutOfBoundsException calling ScriptingContainer#runScriptlet
+- JRUBY-6801 bundle exec no longer works
+- JRUBY-6802 JSON generation for largish data structures v. slow under 1.7 (JDK 1.6)
+- JRUBY-6803 Reading thousands of files significantly slower with JRuby 1.7
+- JRUBY-6808 org.jruby.ext.ffi.Platform does not determineCPU or determineOS properly on Turkish
+- JRUBY-6809 Time::utc sub-millisecond inaccuracy, causes incorrect date in Rails
+- JRUBY-6813 Implement Time#round
+- JRUBY-6815 IO.read doesn't work with pipes
+- JRUBY-6816 jffi 1.2 jar files for FreeBSD
+- JRUBY-6819 java.lang.ArrayIndexOutOfBoundsException in String#each_line
+- JRUBY-6820 Unexpected behavior of IO.popen when giving arguments as an array containing strings
+- JRUBY-6821 FFI::Pointer#write_string is missing
+- JRUBY-6822 Net::HTTP SSL connections fail with EAGAIN
+
+- GH-222 MatchData.begin(n) always returns 0 in jruby-1.6.7.2
+- GH-176 Fixes JRUBY-6658
+- GH-174 JRUBY-6668: StringScanner#scan_until spins forever on UTF-8 data
+- GH-162 Recursive checking threadlocals in Ruby keep runtimes alive
+- GH-155 invokedynamic: Instance var sites do not age, do not handle dup'ed classes well
+- GH-145 exception in eval gets written to stderr
+- GH-141 ConcurrencyError in safe code

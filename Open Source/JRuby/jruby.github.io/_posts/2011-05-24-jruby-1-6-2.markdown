@@ -1,0 +1,44 @@
+---
+layout: post
+title: JRuby 1.6.2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.2 is our second update to 1.6.x.  The main motivation besides spinning incremental releases quicker was a nasty YAML bug which prevented a number of Rubygems from installing (see JRUBY-5581 -- ArrayIndexOutOfBounds problem).  Expect JRuby 1.6.3 in a couple of weeks.
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.1 (and lower) are encouraged to upgrade to 1.6.2.
+
+### Notable Changes:
+
+- YAML problem generating an ArrayIndexOutOfBounds Exception JRUBY-5581
+- Java names of the form getX were not getting aliases of get_x, x (regression)
+- A couple of embedding errors (JRUBY-5734, JRUBY-5635)
+- A few 1.9 issues resolved
+
+### 1.6.2 Issues Resolved:
+- JRUBY-5805 Kernel.warn should use 2 writes instead of 1 puts 		
+- JRUBY-5802 Problem loading yaml string in 1.9 mode with JRuby 1.6 and newer
+- JRUBY-5791 rvm install jruby-head rewrite's the current rakes hash-bang invocation to be: #!/usr/bin/env jruby
+- JRUBY-5788 Java names with only on capital letter not getting Ruby shortcuts defined
+- JRUBY-5787 ConcurrencyError from Array#choice when the Array was truncated before
+- JRUBY-5786 SelectorPool file descriptor leak
+- JRUBY-5776 secure_random.rb broken on jruby (RangeError: bignum too big to convert into 'long')
+- JRUBY-5769 SSH connection can fail unpredictably
+- JRUBY-5762 Proc#=== is not same as Proc#call in 1.9 mode.
+- JRUBY-5740 zip with Range argument does not work in 1.9 mode
+- JRUBY-5734 Repeatedly getting ScriptEngine causes (NameError) uninitialized constant #&lt;Class:0x.........&gt;::ARGV
+- JRUBY-5733 String#unpack: @ directive doesn't work on substrings
+- JRUBY-5729 Process.respond_to?(:fork) must return false		
+- JRUBY-5728 Array#pack is no longer threadsafe
+- JRUBY-5712 Threading issues in 1.6.0 and 1.9 mode
+- JRUBY-5689 Regression: wrapException throws unexpected exceptions depending on previously-run code
+- JRUBY-5674 Cannot override Fixnum operators
+- JRUBY-5665 RubySpec: String#scan failures		
+- JRUBY-5635 ScriptingContainer.put() does not always work (race condition?)
+- JRUBY-5624 Class.new { p eval("self", binding) }
+- JRUBY-5606 asprintf does not exist on Solaris, so C extensions do not build	
+- JRUBY-5581 gem install throws java.lang.ArrayIndexOutOfBoundsException
+- JRUBY-4828 Null-byte vulnerability

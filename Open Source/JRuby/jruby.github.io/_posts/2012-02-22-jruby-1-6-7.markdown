@@ -1,0 +1,73 @@
+---
+layout: post
+title: JRuby 1.6.7 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.7.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.6 (and lower) are encouraged to upgrade to 1.6.7.
+
+Some astute readers of our release announcements will remember this snippet:
+
+   "Because master keeps getting further and further away from our 1.6 branch we have decided to make this our last 1.6 release.  We largely fulfilled our goal of having reasonable 1.9 support."
+
+After releasing 1.6.6, we got a smallish flood of simple to fix 1.9 compatibility issues.  We realized our charter of reasonable 1.9 support had not quite been reached.  So we decided to put out 1.6.7.  As of JRuby 1.6.7, we think we are leaving the 1.6 series at a nice stopping point.  Plus, 1.7.0 is less than two months away.  
+
+### Notable Changes:
+
+- Fix circular require issue in Rubygems introduced by our Maven gem support
+- Fix regression in popen* where streams get prematurely closed
+- Many 1.9-mode encoding bugs fixed in String, Regexp, StringIO, and YAML
+- Win32OLE now works in 1.9-mode
+- ffi on Win x64 now knows about basic types :size_t
+- Use jzlib to fix a set of issues with out zlib library
+- Reduced internal locking based on user reports
+- C extensions work on OS X again
+- Gems with gemspecs which contain UTF-8 multi-byte chars install in 1.9 mode
+
+### 1.6.7 Issues Resolved:
+
+- JRUBY-3958 Caller mismatch within include/extend
+- JRUBY-4956 1.9: ConditionVariable#wait should return self
+- JRUBY-5165 non-blocking IO does not function correctly: connect_nonblock followed by an IO.select
+- JRUBY-5189 1.9: invalid byte sequence in UTF-8
+- JRUBY-5216 WIN32OLE gem cannot be loaded in 1.9 mode
+- JRUBY-5437 Encoding of result string for String#gsub is not consistent
+- JRUBY-5761 /\z/ raises ArrayIndexOutOfBoundsException in --1.9 mode
+- JRUBY-5764 RegexpError when running any rake command
+- JRUBY-5836 soap library doesn't handle the situation where the backtrace is nil
+- JRUBY-5846 JRuby Internal Java NegativeArraySizeExcetpion when normalising a string
+- JRUBY-5903 citrus parser produces ArrayIndexOutOfBoundsException in RubyString.java
+- JRUBY-6104 JRuby hangs on testing string for equality with 'test/unit' testing framework
+- JRUBY-6110 Security issue with org.jruby.embed.class.path in unsigned JavaFX applet.
+- JRUBY-6193 asprintf is added to Solaris > 10 & Illumos, local asprintf.h breaks the build
+- JRUBY-6208 bad gem file creation using mode --1.9
+- JRUBY-6238 Issues with eval - wrong arguments
+- JRUBY-6396 strip! fails on File.read
+- JRUBY-6398 java.lang.NullPointerException when executing jruby.exe under Windows 7 (v1.6.6)
+- JRUBY-6399 wrong number of arguments (4 for 3) when calling enum_for in 1.9 mode
+- JRUBY-6400 StackOverflowError in loading bundler when starting cucumber
+- JRUBY-6404 multiple assignment fails to deconstruct object
+- JRUBY-6407 StackOverflowError regarding RubyGems, require(), rubygems/defaults/jruby.rb, and jruby/util.rb
+- JRUBY-6414 YAML.load cause errors in particular string
+- JRUBY-6415 1.9: Psych::SyntaxError when trying to install will_paginate 3.0.3
+- JRUBY-6416 JRuby 1.6.6(1.9-mode) freezing in Rails application without any error, when manipulating a String with special characters
+- JRUBY-6418 CLONE - Closing One Stream From IO.popen4 Results in Stream Closed Error When Reading Other Streams
+- JRUBY-6420 LoadError: load error: bundler/definition -- java.lang.NoClassDefFoundError: Could not initialize class org.jruby.javasupport.JavaClass
+- JRUBY-6422 Regression: Variety pack of failures with bundler install via rubygems
+- JRUBY-6425 StringIO.readline of UTF-8 string will return a ASCII-8BIT
+- JRUBY-6433 DRegexp with specific encodings were getting non-strict versions in 1.9 mode
+- JRUBY-6434 sprintf does not support name references, like sprintf('%%&lt;xyz&gt;s', :xyz => 'abc') 
+- JRUBY-6441 malloc: error for object 0x7f94d1a24650: pointer being freed was not allocated
+- JRUBY-6442 TCPSocket#write_nonblock blocks
+- JRUBY-6454 Unable to launch browsers with watir or capybara in 1.9 mode
+- JRUBY-6456 ThreadLocal Leak in 1.9 Mode w/ Internal Recursive Map
+- JRUBY-6457 class_variable_get (et al) should be public in 1.9 mode
+- JRUBY-6458 jruby-launcher fails to install from rvm with default 1.9 mode
+- JRUBY-6462 Gems build incorrectly in 1.9 mode
+- JRUBY-6463 File.read('foo').strip Leaves Trailing Newline Under 1.9
+- JRUBY-6471 JRuby doesn't seem to forward java methods to java arrays properly
+- JRUBY-6474 \_\_LINE\_\_ is not reset to 1 when passing a filename to binding.eval
+- JRUBY-6480 Missing type intptr_t from ffi

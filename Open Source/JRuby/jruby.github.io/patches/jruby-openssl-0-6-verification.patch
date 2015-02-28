@@ -1,0 +1,1540 @@
+From 9837ce34485051f4fb2b5221c6960f910e7824f7 Mon Sep 17 00:00:00 2001
+From: NAKAMURA <nakahiro@gmail.com>
+Date: Tue, 17 Nov 2009 23:22:28 +0900
+Subject: [PATCH] fixes verification problems.
+
+1. x509store.Name#hash: need to convert signed long to unsigned. hash
+   dir CA cert lookup did not work.
+2. ext.X509Name#hash(OpenSSL::X509::Name#hash): ditto.
+3. x509store.StoreContext#loadVerifyLocations: verifyCallback was
+   wrongly initialized.
+4. x509store.StoreContext#checkChainExtensions: insufficient pathlen
+   check for CA w/o pathlen. X509Certificate#getBasicConstraints()
+   returns Integer.MAX_VALUE for such case (see JavaDoc).
+5. test/openssl/test_x509name.rb: added a test for
+   OpenSSL::X509::Name#hash.
+6. test/test_integration.rb: added tests for verification problems.
+
+Signed-off-by: Nick Sieger <nick@nicksieger.com>
+---
+ src/java/org/jruby/ext/openssl/X509Name.java       |    4 +-
+ src/java/org/jruby/ext/openssl/x509store/Name.java |    7 +++-
+ .../jruby/ext/openssl/x509store/StoreContext.java  |    3 +-
+ test/fixture/ca_path/72fa7371.0                    |    1 +
+ test/fixture/ca_path/verisign.pem                  |   19 ++++++++
+ test/fixture/verisign.pem                          |   19 ++++++++
+ test/fixture/verisign_c3.pem                       |   14 ++++++
+ test/openssl/test_x509name.rb                      |   16 +++++++
+ test/test_integration.rb                           |   47 ++++++++++++++++++--
+ 9 files changed, 122 insertions(+), 8 deletions(-)
+ create mode 100644 test/fixture/ca_path/72fa7371.0
+ create mode 100644 test/fixture/ca_path/verisign.pem
+ create mode 100644 test/fixture/verisign.pem
+ create mode 100644 test/fixture/verisign_c3.pem
+
+diff --git a/src/java/org/jruby/ext/openssl/X509Name.java b/src/java/org/jruby/ext/openssl/X509Name.java
+index b2bf9c8..bd009df 100644
+--- a/src/java/org/jruby/ext/openssl/X509Name.java
++++ b/src/java/org/jruby/ext/openssl/X509Name.java
+@@ -57,6 +57,7 @@ import org.jruby.RubyObject;
+ import org.jruby.RubyString;
+ import org.jruby.anno.JRubyMethod;
+ import org.jruby.exceptions.RaiseException;
++import org.jruby.ext.openssl.x509store.Name;
+ import org.jruby.runtime.Block;
+ import org.jruby.runtime.ObjectAllocator;
+ import org.jruby.runtime.builtin.IRubyObject;
+@@ -355,7 +356,8 @@ else
+ 
+     @JRubyMethod
+     public RubyFixnum hash() {
+-        return getRuntime().newFixnum(new org.bouncycastle.asn1.x509.X509Name(new Vector<Object>(oids),new Vector<Object>(values)).hashCode());
++        Name name = new Name(new org.bouncycastle.asn1.x509.X509Name(new Vector<Object>(oids),new Vector<Object>(values)));
++        return getRuntime().newFixnum(name.hash());
+     }
+ 
+     @JRubyMethod
+diff --git a/src/java/org/jruby/ext/openssl/x509store/Name.java b/src/java/org/jruby/ext/openssl/x509store/Name.java
+index b900254..71a945d 100755
+--- a/src/java/org/jruby/ext/openssl/x509store/Name.java
++++ b/src/java/org/jruby/ext/openssl/x509store/Name.java
+@@ -64,7 +64,12 @@ public class Name {
+             byte[] md = null;
+             MessageDigest md5 = MessageDigest.getInstance("MD5");
+             md = md5.digest(bytes);
+-            return md[0] | ((long)md[1] << 8) | ((long)md[2] << 16) | ((long)md[3] << 24);
++            long result = 0;
++            result |= md[3] & 0xff; result <<= 8;
++            result |= md[2] & 0xff; result <<= 8;
++            result |= md[1] & 0xff; result <<= 8;
++            result |= md[0] & 0xff;
++            return result & 0xffffffff;
+         } catch(Exception e) {
+             return 0;
+         }
+diff --git a/src/java/org/jruby/ext/openssl/x509store/StoreContext.java b/src/java/org/jruby/ext/openssl/x509store/StoreContext.java
+index 12f4ea0..cdcb734 100644
+--- a/src/java/org/jruby/ext/openssl/x509store/StoreContext.java
++++ b/src/java/org/jruby/ext/openssl/x509store/StoreContext.java
+@@ -450,7 +450,6 @@ public class StoreContext {
+                 ctx = new Store();
+                 this.param.inherit(ctx.param);
+                 param.inherit(VerifyParameter.lookup("default"));
+-                this.verifyCallback = ctx.verifyCallback;
+                 this.cleanup = ctx.cleanup;
+                 if(ctx.checkIssued != null && ctx.checkIssued != Store.CheckIssuedFunction.EMPTY) {
+                     this.checkIssued = ctx.checkIssued;
+@@ -906,7 +905,7 @@ public class StoreContext {
+                 }
+             }
+ 
+-            if(i > 1 && x.getBasicConstraints() != -1 && (i > (x.getBasicConstraints() + proxy_path_length + 1))) {
++            if(i > 1 && x.getBasicConstraints() != -1 && x.getBasicConstraints() != Integer.MAX_VALUE && (i > (x.getBasicConstraints() + proxy_path_length + 1))) {
+                 error = X509Utils.V_ERR_PATH_LENGTH_EXCEEDED;
+                 errorDepth = i;
+                 currentCertificate = x;
+diff --git a/test/fixture/ca_path/72fa7371.0 b/test/fixture/ca_path/72fa7371.0
+new file mode 120000
+index 0000000..208530a
+--- /dev/null
++++ b/test/fixture/ca_path/72fa7371.0
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDAjCCAmsCEH3Z/gfPqB63EHln+6eJNMYwDQYJKoZIhvcNAQEFBQAwgcExCzAJ
++BgNVBAYTAlVTMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xh
++c3MgMyBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcy
++MTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3Jp
++emVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
++DTk4MDUxODAwMDAwMFoXDTI4MDgwMTIzNTk1OVowgcExCzAJBgNVBAYTAlVTMRcw
++FQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMyBQdWJsaWMg
++UHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEo
++YykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3JpemVkIHVzZSBvbmx5
++MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMIGfMA0GCSqGSIb3DQEB
++AQUAA4GNADCBiQKBgQDMXtERXVxp0KvTuWpMmR9ZmDCOFoUgRm1HP9SFIIThbbP4
++pO0M8RcPO/mn+SXXwc+EY/J8Y8+iR/LGWzOOZEAEaMGAuWQcRXfH2G71lSk8UOg0
++13gfqLptQ5GVj0VXXn7F+8qkBOvqlzdUMG+7AUcyM83cV5tkaWH4mx0ciU9cZwID
++AQABMA0GCSqGSIb3DQEBBQUAA4GBAFFNzb5cy5gZnBWyATl4Lk0PZ3BwmcYQWpSk
++U01UbSuvDV1Ai2TT1+7eVmGSX6bEHRBhNtMsJzzoKQm5EWR0zLVznxxIqbxhAe7i
++F6YM40AIOw7n60RzKprxaZLvcRTDOaxxp5EJb+RxBrO6WVcmeQD2+A2iMzAo1KpY
++oJ2daZH9
++-----END CERTIFICATE-----
+diff --git a/test/fixture/ca_path/verisign.pem b/test/fixture/ca_path/verisign.pem
+new file mode 100644
+index 0000000..2202c69
+--- /dev/null
++++ b/test/fixture/ca_path/verisign.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDAjCCAmsCEH3Z/gfPqB63EHln+6eJNMYwDQYJKoZIhvcNAQEFBQAwgcExCzAJ
++BgNVBAYTAlVTMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xh
++c3MgMyBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcy
++MTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3Jp
++emVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
++DTk4MDUxODAwMDAwMFoXDTI4MDgwMTIzNTk1OVowgcExCzAJBgNVBAYTAlVTMRcw
++FQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMyBQdWJsaWMg
++UHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEo
++YykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3JpemVkIHVzZSBvbmx5
++MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMIGfMA0GCSqGSIb3DQEB
++AQUAA4GNADCBiQKBgQDMXtERXVxp0KvTuWpMmR9ZmDCOFoUgRm1HP9SFIIThbbP4
++pO0M8RcPO/mn+SXXwc+EY/J8Y8+iR/LGWzOOZEAEaMGAuWQcRXfH2G71lSk8UOg0
++13gfqLptQ5GVj0VXXn7F+8qkBOvqlzdUMG+7AUcyM83cV5tkaWH4mx0ciU9cZwID
++AQABMA0GCSqGSIb3DQEBBQUAA4GBAFFNzb5cy5gZnBWyATl4Lk0PZ3BwmcYQWpSk
++U01UbSuvDV1Ai2TT1+7eVmGSX6bEHRBhNtMsJzzoKQm5EWR0zLVznxxIqbxhAe7i
++F6YM40AIOw7n60RzKprxaZLvcRTDOaxxp5EJb+RxBrO6WVcmeQD2+A2iMzAo1KpY
++oJ2daZH9
++-----END CERTIFICATE-----
+diff --git a/test/fixture/verisign.pem b/test/fixture/verisign.pem
+new file mode 100644
+index 0000000..2202c69
+--- /dev/null
++++ b/test/fixture/verisign.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDAjCCAmsCEH3Z/gfPqB63EHln+6eJNMYwDQYJKoZIhvcNAQEFBQAwgcExCzAJ
++BgNVBAYTAlVTMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xh
++c3MgMyBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcy
++MTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3Jp
++emVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
++DTk4MDUxODAwMDAwMFoXDTI4MDgwMTIzNTk1OVowgcExCzAJBgNVBAYTAlVTMRcw
++FQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMyBQdWJsaWMg
++UHJpbWFyeSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEo
++YykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZvciBhdXRob3JpemVkIHVzZSBvbmx5
++MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMIGfMA0GCSqGSIb3DQEB
++AQUAA4GNADCBiQKBgQDMXtERXVxp0KvTuWpMmR9ZmDCOFoUgRm1HP9SFIIThbbP4
++pO0M8RcPO/mn+SXXwc+EY/J8Y8+iR/LGWzOOZEAEaMGAuWQcRXfH2G71lSk8UOg0
++13gfqLptQ5GVj0VXXn7F+8qkBOvqlzdUMG+7AUcyM83cV5tkaWH4mx0ciU9cZwID
++AQABMA0GCSqGSIb3DQEBBQUAA4GBAFFNzb5cy5gZnBWyATl4Lk0PZ3BwmcYQWpSk
++U01UbSuvDV1Ai2TT1+7eVmGSX6bEHRBhNtMsJzzoKQm5EWR0zLVznxxIqbxhAe7i
++F6YM40AIOw7n60RzKprxaZLvcRTDOaxxp5EJb+RxBrO6WVcmeQD2+A2iMzAo1KpY
++oJ2daZH9
++-----END CERTIFICATE-----
+diff --git a/test/fixture/verisign_c3.pem b/test/fixture/verisign_c3.pem
+new file mode 100644
+index 0000000..87676ac
+--- /dev/null
++++ b/test/fixture/verisign_c3.pem
+@@ -0,0 +1,14 @@
++-----BEGIN CERTIFICATE-----
++MIICPDCCAaUCEHC65B0Q2Sk0tjjKewPMur8wDQYJKoZIhvcNAQECBQAwXzELMAkG
++A1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMTcwNQYDVQQLEy5DbGFz
++cyAzIFB1YmxpYyBQcmltYXJ5IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTk2
++MDEyOTAwMDAwMFoXDTI4MDgwMTIzNTk1OVowXzELMAkGA1UEBhMCVVMxFzAVBgNV
++BAoTDlZlcmlTaWduLCBJbmMuMTcwNQYDVQQLEy5DbGFzcyAzIFB1YmxpYyBQcmlt
++YXJ5IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MIGfMA0GCSqGSIb3DQEBAQUAA4GN
++ADCBiQKBgQDJXFme8huKARS0EN8EQNvjV69qRUCPhAwL0TPZ2RHP7gJYHyX3KqhE
++BarsAx94f56TuZoAqiN91qyFomNFx3InzPRMxnVx0jnvT0Lwdd8KkMaOIG+YD/is
++I19wKTakyYbnsZogy1Olhec9vn2a/iRFM9x2Fe0PonFkTGUugWhFpwIDAQABMA0G
++CSqGSIb3DQEBAgUAA4GBALtMEivPLCYATxQT3ab7/AoRhIzzKBxnki98tsX63/Do
++lbwdj2wsqFHMc9ikwFPwTtYmwHYBV4GSXiHx0bH/59AhWM1pF+NEHJwZRDmJXNyc
++AA9WjQKZ7aKQRUzkuxCkPfAyAw7xzvjoyVGM5mKf5p/AfbdynMk2OmufTqj/ZA1k
++-----END CERTIFICATE-----
+diff --git a/test/openssl/test_x509name.rb b/test/openssl/test_x509name.rb
+index c32c662..6fc9347 100644
+--- a/test/openssl/test_x509name.rb
++++ b/test/openssl/test_x509name.rb
+@@ -6,6 +6,8 @@ require "test/unit"
+ 
+ if defined?(OpenSSL)
+ 
++require 'digest/md5'
++
+ class OpenSSL::TestX509Name < Test::Unit::TestCase
+   OpenSSL::ASN1::ObjectId.register(
+     "1.2.840.113549.1.9.1", "emailAddress", "emailAddress")
+@@ -260,6 +262,20 @@ class OpenSSL::TestX509Name < Test::Unit::TestCase
+     assert_equal(OpenSSL::ASN1::IA5STRING, ary[3][2])
+     assert_equal(OpenSSL::ASN1::PRINTABLESTRING, ary[4][2])
+   end
++
++  def test_hash
++    dn = "/DC=org/DC=ruby-lang/CN=www.ruby-lang.org"
++    name = OpenSSL::X509::Name.parse(dn)
++    d = Digest::MD5.digest(name.to_der)
++    expected = (d[0] & 0xff) | (d[1] & 0xff) << 8 | (d[2] & 0xff) << 16 | (d[3] & 0xff) << 24
++    assert_equal(expected, name.hash)
++    #
++    dn = "/DC=org/DC=ruby-lang/CN=baz.ruby-lang.org"
++    name = OpenSSL::X509::Name.parse(dn)
++    d = Digest::MD5.digest(name.to_der)
++    expected = (d[0] & 0xff) | (d[1] & 0xff) << 8 | (d[2] & 0xff) << 16 | (d[3] & 0xff) << 24
++    assert_equal(expected, name.hash)
++  end
+ end
+ 
+ end
+diff --git a/test/test_integration.rb b/test/test_integration.rb
+index aa5ddcc..6c251d4 100644
+--- a/test/test_integration.rb
++++ b/test/test_integration.rb
+@@ -29,18 +29,57 @@ class TestIntegration < Test::Unit::TestCase
+   # Warning - this test actually uses the internet connection.
+   # If there is no connection, it will fail.
+   def test_ca_path_name
+-    uri = URI.parse('https://www.paypal.com')
+-
++    uri = URI.parse('https://www.amazon.com')
+     http = Net::HTTP.new(uri.host, uri.port)
+     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+-    http.ca_path = "./"
++    http.ca_path = "test/fixture/ca_path/"
+     http.use_ssl = true
++    response = http.start do |s|
++      assert s.get(uri.request_uri).length > 0
++    end
++  end
++
++  # Warning - this test actually uses the internet connection.
++  # If there is no connection, it will fail.
++  def test_ssl_verify
++    uri = URI.parse('https://www.amazon.com/')
++    http = Net::HTTP.new(uri.host, uri.port)
++    http.use_ssl = true
++    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
++    # right trust anchor for www.amazon.com
++    http.ca_file = 'test/fixture/verisign.pem'
++    response = http.start do |s|
++      assert s.get(uri.request_uri).length > 0
++    end
++    # wrong trust anchor for www.amazon.com
++    http.ca_file = 'test/fixture/verisign_c3.pem'
++    assert_raises(OpenSSL::SSL::SSLError) do
++      # it must cause SSLError for verification failure.
++      response = http.start do |s|
++        s.get(uri.request_uri)
++      end
++    end
++    # round trip
++    http.ca_file = 'test/fixture/verisign.pem'
++    response = http.start do |s|
++      assert s.get(uri.request_uri).length > 0
++    end
++  end
+ 
++  # Warning - this test actually uses the internet connection.
++  # If there is no connection, it will fail.
++  def test_pathlen_does_not_appear
++    uri = URI.parse('https://www.paypal.com/')
++    http = Net::HTTP.new(uri.host, uri.port)
++    http.use_ssl = true
++    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
++    # right trust anchor for www.amazon.com
++    http.ca_file = 'test/fixture/verisign_c3.pem'
+     response = http.start do |s|
+       assert s.get(uri.request_uri).length > 0
+     end
+   end
+-  
++
+   # JRUBY-2178 and JRUBY-1307
+   # Warning - this test actually uses the internet connection.
+   # If there is no connection, it will fail.
+-- 
+1.5.6
+
+From d2d3f070b00c705a75bace32ce66f27d07f45fe3 Mon Sep 17 00:00:00 2001
+From: NAKAMURA <nakahiro@gmail.com>
+Date: Tue, 10 Nov 2009 01:01:51 +0900
+Subject: [PATCH] Fix nsCertType handling.
+
+* nsCertType extension (OID: 2.16.840.1.113730.1.1) is a DERBitString
+  or DERBitString wrapped in DEROctetString. Added
+  X509AuxCertificate#getNsCertType and let it parse properly.
+* let Purpose use getNsCertType.
+* let X509Extention#create_ext parse nsCertType definitions.
+
+Signed-off-by: Nick Sieger <nick@nicksieger.com>
+---
+ src/java/org/jruby/ext/openssl/X509Extensions.java |   82 ++++++++++++++++
+ .../org/jruby/ext/openssl/x509store/Purpose.java   |   25 +++---
+ .../ext/openssl/x509store/X509AuxCertificate.java  |   28 ++++++
+ test/openssl/test_pkcs7.rb                         |    1 +
+ test/test_x509store.rb                             |   99 ++++++++++++++++++++
+ 5 files changed, 222 insertions(+), 13 deletions(-)
+ create mode 100644 test/test_x509store.rb
+
+diff --git a/src/java/org/jruby/ext/openssl/X509Extensions.java b/src/java/org/jruby/ext/openssl/X509Extensions.java
+index 016dc30..4a388c3 100644
+--- a/src/java/org/jruby/ext/openssl/X509Extensions.java
++++ b/src/java/org/jruby/ext/openssl/X509Extensions.java
+@@ -359,6 +359,51 @@ public class X509Extensions {
+                 }
+                 
+                 value = new String(ByteList.plain(new DERBitString(inp,unused).getDEREncoded()));
++            } else if(r_oid.equals(new DERObjectIdentifier("2.16.840.1.113730.1.1"))) { //nsCertType
++                byte v = 0;
++                if (valuex.length() < 3) {
++                    byte[] inp = ByteList.plain(valuex);
++                    v = inp[0];
++                } else {
++                    String[] spl = valuex.split(",");
++                    for (int i = 0; i < spl.length; i++) {
++                        spl[i] = spl[i].trim();
++                    }
++                    for (int i = 0; i < spl.length; i++) {
++                        if ("SSL Client".equals(spl[i]) || "client".equals(spl[i])) {
++                            v |= (byte) 128;
++                        } else if ("SSL Server".equals(spl[i]) || "server".equals(spl[i])) {
++                            v |= (byte) 64;
++                        } else if ("S/MIME".equals(spl[i]) || "email".equals(spl[i])) {
++                            v |= (byte) 32;
++                        } else if ("Object Signing".equals(spl[i]) || "objsign".equals(spl[i])) {
++                            v |= (byte) 16;
++                        } else if ("Unused".equals(spl[i]) || "reserved".equals(spl[i])) {
++                            v |= (byte) 8;
++                        } else if ("SSL CA".equals(spl[i]) || "sslCA".equals(spl[i])) {
++                            v |= (byte) 4;
++                        } else if ("S/MIME CA".equals(spl[i]) || "emailCA".equals(spl[i])) {
++                            v |= (byte) 2;
++                        } else if ("Object Signing CA".equals(spl[i]) || "objCA".equals(spl[i])) {
++                            v |= (byte) 1;
++                        } else {
++                            throw new RaiseException(getRuntime(), (RubyClass) (((RubyModule) (getRuntime().getModule("OpenSSL").getConstant("X509"))).getConstant("ExtensionError")), oid + " = " + valuex + ": unknown bit string argument", true);
++                        }
++                    }
++                }
++                int unused = 0;
++                if (v == 0) {
++                    unused += 8;
++                } else {
++                    byte a2 = v;
++                    int x = 8;
++                    while (a2 != 0) {
++                        a2 <<= 1;
++                        x--;
++                    }
++                    unused += x;
++                }
++                value = new DERBitString(new byte[] { v }, unused);
+             } else if(r_oid.equals(new DERObjectIdentifier("2.5.29.17"))) { //subjectAltName
+                 if(valuex.startsWith("DNS:")) {
+                     value = new String(ByteList.plain(new GeneralNames(new GeneralName(GeneralName.dNSName,new DERIA5String(valuex.substring(4)))).getDEREncoded()));
+@@ -571,6 +616,43 @@ public class X509Extensions {
+                     sbe.append(sep).append("Encipher Only");
+                 }
+                 return getRuntime().newString(sbe.toString());
++            } else if(getRealOid().equals(new DERObjectIdentifier("2.16.840.1.113730.1.1"))) { //nsCertType
++                byte[] bx = getRealValueBytes();
++                byte b = bx[0];
++                StringBuffer sbe = new StringBuffer();
++                String sep = "";
++                if((b & (byte)128) != 0) {
++                    sbe.append(sep).append("SSL Client");
++                    sep = ", ";
++                }
++                if((b & (byte)64) != 0) {
++                    sbe.append(sep).append("SSL Servern");
++                    sep = ", ";
++                }
++                if((b & (byte)32) != 0) {
++                    sbe.append(sep).append("S/MIME");
++                    sep = ", ";
++                }
++                if((b & (byte)16) != 0) {
++                    sbe.append(sep).append("Object Signing");
++                    sep = ", ";
++                }
++                if((b & (byte)8) != 0) {
++                    sbe.append(sep).append("Unused");
++                    sep = ", ";
++                }
++                if((b & (byte)4) != 0) {
++                    sbe.append(sep).append("SSL CA");
++                    sep = ", ";
++                }
++                if((b & (byte)2) != 0) {
++                    sbe.append(sep).append("S/MIME CA");
++                    sep = ", ";
++                }
++                if((b & (byte)1) != 0) {
++                    sbe.append(sep).append("Object Signing CA");
++                }
++                return getRuntime().newString(sbe.toString());
+             } else if(getRealOid().equals(new DERObjectIdentifier("2.5.29.14"))) { //subjectKeyIdentifier
+                 byte[] b1 = getRealValueBytes();
+                 byte[] b2 = new byte[b1.length-2];
+diff --git a/src/java/org/jruby/ext/openssl/x509store/Purpose.java b/src/java/org/jruby/ext/openssl/x509store/Purpose.java
+index 492f5de..c2619c0 100755
+--- a/src/java/org/jruby/ext/openssl/x509store/Purpose.java
++++ b/src/java/org/jruby/ext/openssl/x509store/Purpose.java
+@@ -227,8 +227,8 @@ public class Purpose {
+             if(x.getKeyUsage() != null) {
+                 return 4;
+             }
+-            byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-            if(ns1 != null && (((DERBitString)new ASN1InputStream(ns1).readObject()).intValue() & X509Utils.NS_ANY_CA) != 0) {
++            Integer nsCertType = x.getNsCertType();
++            if (nsCertType != null && (nsCertType & X509Utils.NS_ANY_CA) != 0) {
+                 return 5;
+             }
+             return 0;
+@@ -243,8 +243,8 @@ public class Purpose {
+         if(ca_ret == 0) {
+             return 0;
+         }
+-        byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-        boolean v2 = ns1 != null && (((DERBitString)new ASN1InputStream(ns1).readObject()).intValue() & X509Utils.NS_SSL_CA) != 0;
++        Integer nsCertType = x.getNsCertType();
++        boolean v2 = nsCertType != null && (nsCertType & X509Utils.NS_SSL_CA) != 0;
+         if(ca_ret != 5 || v2) {
+             return ca_ret;
+         }
+@@ -263,21 +263,20 @@ public class Purpose {
+             if(ca_ret == 0) {
+                 return 0;
+             }
+-            byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-            boolean v2 = ns1 != null && (((DERBitString)new ASN1InputStream(ns1).readObject()).intValue() & X509Utils.NS_SMIME_CA) != 0;
++            Integer nsCertType = x.getNsCertType();
++            boolean v2 = nsCertType != null && (nsCertType & X509Utils.NS_SMIME_CA) != 0;
+             if(ca_ret != 5 || v2) {
+                 return ca_ret;
+             } else {
+                 return 0;
+             }
+         }
+-        byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-        if(ns1 != null) {
+-            int nscert = ((DERBitString)new ASN1InputStream(ns1).readObject()).intValue();
+-            if((nscert & X509Utils.NS_SMIME) != 0) {
++        Integer nsCertType = x.getNsCertType();
++        if (nsCertType != null) {
++            if ((nsCertType & X509Utils.NS_SMIME) != 0) {
+                 return 1;
+             }
+-            if((nscert & X509Utils.NS_SSL_CLIENT) != 0) {
++            if ((nsCertType & X509Utils.NS_SSL_CLIENT) != 0) {
+                 return 2;
+             }
+             return 0;
+@@ -338,8 +337,8 @@ public class Purpose {
+                 if(ca != 0) {
+                     return checkSSLCA(x);
+                 }
+-                byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-                boolean v2 = ns1 != null && (((DERBitString)new ASN1InputStream(ns1).readObject()).intValue() & X509Utils.NS_SSL_SERVER) != 0;
++                Integer nsCertType = x.getNsCertType();
++                boolean v2 = nsCertType != null && (nsCertType & X509Utils.NS_SSL_SERVER) != 0;
+                 if(v2) {
+                     return 0;
+                 }
+diff --git a/src/java/org/jruby/ext/openssl/x509store/X509AuxCertificate.java b/src/java/org/jruby/ext/openssl/x509store/X509AuxCertificate.java
+index 94ffb9a..555d247 100644
+--- a/src/java/org/jruby/ext/openssl/x509store/X509AuxCertificate.java
++++ b/src/java/org/jruby/ext/openssl/x509store/X509AuxCertificate.java
+@@ -27,6 +27,7 @@
+  ***** END LICENSE BLOCK *****/
+ package org.jruby.ext.openssl.x509store;
+ 
++import java.io.IOException;
+ import java.math.BigInteger;
+ 
+ import java.security.Principal;
+@@ -48,6 +49,9 @@ import java.util.List;
+ import java.util.Set;
+ 
+ import javax.security.auth.x500.X500Principal;
++import org.bouncycastle.asn1.ASN1InputStream;
++import org.bouncycastle.asn1.DERBitString;
++import org.bouncycastle.asn1.DEROctetString;
+ 
+ /**
+  * Since regular X509Certificate doesn't represent the Aux part of a
+@@ -139,4 +143,28 @@ public class X509AuxCertificate extends X509Certificate {
+     public byte[] 	getExtensionValue(String oid){ return wrap.getExtensionValue(oid); }
+     public Set<String> 	getNonCriticalExtensionOIDs(){ return wrap.getNonCriticalExtensionOIDs(); }
+     public boolean 	hasUnsupportedCriticalExtension(){ return wrap.hasUnsupportedCriticalExtension(); }
++
++    private static final String NS_CERT_TYPE_OID = "2.16.840.1.113730.1.1";
++    public Integer getNsCertType() throws CertificateException {
++        byte[] bytes = getExtensionValue(NS_CERT_TYPE_OID);
++        if (bytes == null) {
++            return null;
++        }
++        try {
++            Object o = new ASN1InputStream(bytes).readObject();
++            if (o instanceof DERBitString) {
++                return ((DERBitString) o).intValue();
++            } else if (o instanceof DEROctetString) {
++                // just reads initial object for nsCertType definition and ignores trailing objects.
++                ASN1InputStream in = new ASN1InputStream(((DEROctetString) o).getOctets());
++                o = in.readObject();
++                return ((DERBitString) o).intValue();
++            } else {
++                throw new CertificateException("unknown type from ASN1InputStream.readObject: " + o);
++            }
++        } catch (IOException ioe) {
++            throw new CertificateEncodingException(ioe.getMessage(), ioe);
++        }
++    }
++
+ }// X509AuxCertificate
+diff --git a/test/openssl/test_pkcs7.rb b/test/openssl/test_pkcs7.rb
+index 41deb9f..a263163 100644
+--- a/test/openssl/test_pkcs7.rb
++++ b/test/openssl/test_pkcs7.rb
+@@ -33,6 +33,7 @@ class OpenSSL::TestPKCS7 < Test::Unit::TestCase
+       ["keyUsage","Non Repudiation, Digital Signature, Key Encipherment",true],
+       ["authorityKeyIdentifier","keyid:always",false],
+       ["extendedKeyUsage","clientAuth, emailProtection, codeSigning",false],
++      ["nsCertType","client,email",false],
+     ]
+     @ee1_cert = issue_cert(ee1, @rsa1024, 2, Time.now, Time.now+1800, ee_exts,
+                            @ca_cert, @rsa2048, OpenSSL::Digest::SHA1.new)
+diff --git a/test/test_x509store.rb b/test/test_x509store.rb
+new file mode 100644
+index 0000000..1480157
+--- /dev/null
++++ b/test/test_x509store.rb
+@@ -0,0 +1,99 @@
++if defined?(JRUBY_VERSION)
++  require "java"
++  base = File.dirname(__FILE__)
++  $CLASSPATH << File.join(base, '..', 'pkg', 'classes')
++  $CLASSPATH << File.join(base, '..', 'lib', 'bcprov-jdk14-139.jar')
++end
++
++begin
++  require "openssl"
++rescue LoadError
++end
++
++require "test/unit"
++require "tempfile"
++
++class TestX509Store < Test::Unit::TestCase
++  def setup
++    @store = OpenSSL::X509::Store.new
++  end
++
++  def teardown
++  end
++
++  def test_ns_cert_type
++    f = Tempfile.new("globalsign-root.pem")
++    f << GLOBALSIGN_ROOT_CA
++    f.close
++    @store.add_file(f.path)
++    f.unlink
++
++    # CAUTION !
++    #
++    # sgc is an issuing CA certificate so we should not verify it for the
++    # purpose 'PURPOSE_SSL_SERVER'. It's not a SSL server certificate.
++    # We're just checking the code for 'PURPOSE_SSL_SERVER'.
++    # jruby-openssl/0.5.2 raises the following exception around ASN.1
++    # nsCertType handling.
++    #   Purpose.java:344:in `call': java.lang.ClassCastException: org.bouncycastle.asn1.DEROctetString cannot be cast to org.bouncycastle.asn1.DERBitString
++    sgc = OpenSSL::X509::Certificate.new(GLOBALSIGN_ORGANIZATION_VALIDATION_CA)
++
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_SERVER
++    assert_nothing_raised do
++      @store.verify(sgc) # => should be false
++    end
++  end
++
++  GLOBALSIGN_ROOT_CA = <<__EOS__
++-----BEGIN CERTIFICATE-----
++MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG
++A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv
++b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw05ODA5MDExMjAw
++MDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i
++YWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYDVQQDExJHbG9iYWxT
++aWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDaDuaZ
++jc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavp
++xy0Sy6scTHAHoT0KMM0VjU/43dSMUBUc71DuxC73/OlS8pF94G3VNTCOXkNz8kHp
++1Wrjsok6Vjk4bwY8iGlbKk3Fp1S4bInMm/k8yuX9ifUSPJJ4ltbcdG6TRGHRjcdG
++snUOhugZitVtbNV4FpWi6cgKOOvyJBNPc1STE4U6G7weNLWLBYy5d4ux2x8gkasJ
++U26Qzns3dLlwR5EiUWMWea6xrkEmCMgZK9FGqkjWZCrXgzT/LCrBbBlDSgeF59N8
++9iFo7+ryUp9/k5DPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
++BTADAQH/MB0GA1UdDgQWBBRge2YaRQ2XyolQL30EzTSo//z9SzANBgkqhkiG9w0B
++AQUFAAOCAQEA1nPnfE920I2/7LqivjTFKDK1fPxsnCwrvQmeU79rXqoRSLblCKOz
++yj1hTdNGCbM+w6DjY1Ub8rrvrTnhQ7k4o+YviiY776BQVvnGCv04zcQLcFGUl5gE
++38NflNUVyRRBnMRddWQVDf9VMOyGj/8N7yy5Y0b2qvzfvGn9LhJIZJrglfCm7ymP
++AbEVtQwdpf5pLGkkeB6zpxxxYu7KyJesF12KwvhHhm4qxFYxldBniYUr+WymXUad
++DKqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveCX4XSQRjbgbME
++HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
++-----END CERTIFICATE-----
++__EOS__
++
++  GLOBALSIGN_ORGANIZATION_VALIDATION_CA = <<__EOS__
++-----BEGIN CERTIFICATE-----
++MIIEZzCCA0+gAwIBAgILBAAAAAABHkSl9SowDQYJKoZIhvcNAQEFBQAwVzELMAkG
++A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv
++b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0wNzA0MTExMjAw
++MDBaFw0xNzA0MTExMjAwMDBaMGoxIzAhBgNVBAsTGk9yZ2FuaXphdGlvbiBWYWxp
++ZGF0aW9uIENBMRMwEQYDVQQKEwpHbG9iYWxTaWduMS4wLAYDVQQDEyVHbG9iYWxT
++aWduIE9yZ2FuaXphdGlvbiBWYWxpZGF0aW9uIENBMIIBIjANBgkqhkiG9w0BAQEF
++AAOCAQ8AMIIBCgKCAQEAoS/EvM6HA+lnwYnI5ZP8fbStnvZjTmronCxziaIB9I8h
+++P0lnVgWbYb27klXdX516iIRfj37x0JB3PzFDJFVgHvrZDMdm/nKOOmrxiVDUSVA
++9OR+GFVqqY8QOkAe1leD738vNC8t0vZTwhkNt+3JgfVGLLQjQl6dEwN17Opq/Fd8
++yTaXO5jcExPs7EH6XTTquZPnEBZlzJyS/fXFnT5KuQn85F8eaV9N9FZyRLEdIwPI
++NvZliMi/ORZFjh4mbFEWxSoAOMWkE2mVfasBO6jEFLSA2qwaRCDV/qkGexQnr+Aw
++Id2Q9KnVIxkuHgPmwd+VKeTBlEPdPpCqy0vJvorTOQIDAQABo4IBHzCCARswDgYD
++VR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFH1tKuxm
++q6dRNqsCafFwj8RZC5ofMEsGA1UdIAREMEIwQAYJKwYBBAGgMgEUMDMwMQYIKwYB
++BQUHAgEWJWh0dHA6Ly93d3cuZ2xvYmFsc2lnbi5uZXQvcmVwb3NpdG9yeS8wMwYD
++VR0fBCwwKjAooCagJIYiaHR0cDovL2NybC5nbG9iYWxzaWduLm5ldC9yb290LmNy
++bDARBglghkgBhvhCAQEEBAMCAgQwIAYDVR0lBBkwFwYKKwYBBAGCNwoDAwYJYIZI
++AYb4QgQBMB8GA1UdIwQYMBaAFGB7ZhpFDZfKiVAvfQTNNKj//P1LMA0GCSqGSIb3
++DQEBBQUAA4IBAQB5R/wV10x53w96ns7UfEtjyYm1ez+ZEuicjJpJL+BOlUrtx7y+
++8aLbjpMdunFUqkvZiSIkh8UEqKyCUqBS+LjhT6EnZmMhSjnnx8VOX7LWHRNtMOnO
++16IcvCkKczxbI0n+1v/KsE/18meYwEcR+LdIppAJ1kK+6rG5U0LDnCDJ+6FbtVZt
++h4HIYKzEuXInCo4eqLEuzTKieFewnPiVu0OOjDGGblMNxhIFukFuqDUwCRgdAmH/
++/e413mrDO9BNS05QslY2DERd2hplKuaYVqljMy4E567o9I63stp9wMjirqYoL+PJ
++c738B0E0t6pu7qfb0ZM87ZDsMpKI2cgjbHQh
++-----END CERTIFICATE-----
++__EOS__
++end
+-- 
+1.5.6
+
+From dc5c70d3699654fee2bd459c07353801d6f4e138 Mon Sep 17 00:00:00 2001
+From: NAKAMURA <nakahiro@gmail.com>
+Date: Thu, 19 Nov 2009 19:49:46 +0900
+Subject: [PATCH] fixes verification purpose problems.
+
+1. SSLContext#{checkClientTrusted,checkServerTrusted}: must be checked
+   as "ssl_client" and "ssl_server", respectively (was reversed).
+2. x509store.Purpose#checkPurposeSSLServer: inverted nsCertType check
+   condition. (rejected if it's exactly for SSL_SERVER_AUTH.)
+   Introduced xkuReject and nsReject to fix it and let logic clean.
+3. test/test_x509store.rb: added tests for ssl_server and ssl_client
+   purposes.
+4. test/fixture/purpose/*: added test certs for above test.
+
+Signed-off-by: Nick Sieger <nick@nicksieger.com>
+---
+ src/java/org/jruby/ext/openssl/SSLContext.java     |    4 +-
+ .../org/jruby/ext/openssl/x509store/Purpose.java   |   77 +++++++-----
+ test/fixture/purpose/ca/ca_config.rb               |   37 ++++++
+ test/fixture/purpose/ca/cacert.pem                 |   24 ++++
+ test/fixture/purpose/ca/newcerts/2_cert.pem        |   19 +++
+ test/fixture/purpose/ca/newcerts/3_cert.pem        |   19 +++
+ test/fixture/purpose/ca/private/cakeypair.pem      |   30 +++++
+ test/fixture/purpose/ca/serial                     |    1 +
+ test/fixture/purpose/cacert.pem                    |   24 ++++
+ test/fixture/purpose/scripts/gen_cert.rb           |  127 ++++++++++++++++++++
+ test/fixture/purpose/scripts/gen_csr.rb            |   50 ++++++++
+ test/fixture/purpose/scripts/init_ca.rb            |   66 ++++++++++
+ test/fixture/purpose/sslclient.pem                 |   19 +++
+ test/fixture/purpose/sslclient/csr.pem             |   10 ++
+ test/fixture/purpose/sslclient/keypair.pem         |   15 +++
+ test/fixture/purpose/sslclient/sslclient.pem       |   19 +++
+ test/fixture/purpose/sslserver.pem                 |   19 +++
+ test/fixture/purpose/sslserver/csr.pem             |   10 ++
+ test/fixture/purpose/sslserver/keypair.pem         |   15 +++
+ test/fixture/purpose/sslserver/sslserver.pem       |   19 +++
+ test/test_x509store.rb                             |   22 ++++
+ 21 files changed, 593 insertions(+), 33 deletions(-)
+ create mode 100644 test/fixture/purpose/ca/PASSWD_OF_CA_KEY_IS_1234
+ create mode 100644 test/fixture/purpose/ca/ca_config.rb
+ create mode 100644 test/fixture/purpose/ca/cacert.pem
+ create mode 100644 test/fixture/purpose/ca/newcerts/2_cert.pem
+ create mode 100644 test/fixture/purpose/ca/newcerts/3_cert.pem
+ create mode 100644 test/fixture/purpose/ca/private/cakeypair.pem
+ create mode 100644 test/fixture/purpose/ca/serial
+ create mode 100644 test/fixture/purpose/cacert.pem
+ create mode 100755 test/fixture/purpose/scripts/gen_cert.rb
+ create mode 100755 test/fixture/purpose/scripts/gen_csr.rb
+ create mode 100755 test/fixture/purpose/scripts/init_ca.rb
+ create mode 100644 test/fixture/purpose/sslclient.pem
+ create mode 100644 test/fixture/purpose/sslclient/csr.pem
+ create mode 100644 test/fixture/purpose/sslclient/keypair.pem
+ create mode 100644 test/fixture/purpose/sslclient/sslclient.pem
+ create mode 100644 test/fixture/purpose/sslserver.pem
+ create mode 100644 test/fixture/purpose/sslserver/csr.pem
+ create mode 100644 test/fixture/purpose/sslserver/keypair.pem
+ create mode 100644 test/fixture/purpose/sslserver/sslserver.pem
+
+diff --git a/src/java/org/jruby/ext/openssl/SSLContext.java b/src/java/org/jruby/ext/openssl/SSLContext.java
+index f646e40..0e85f6a 100644
+--- a/src/java/org/jruby/ext/openssl/SSLContext.java
++++ b/src/java/org/jruby/ext/openssl/SSLContext.java
+@@ -272,7 +272,7 @@ public class SSLContext extends RubyObject {
+                         throw new CertificateException("couldn't initialize store");
+                     }
+ 
+-                    ctx.setDefault("ssl_server");
++                    ctx.setDefault("ssl_client");
+ 
+                     IRubyObject val = ctt.callMethod(ctt.getRuntime().getCurrentContext(),"ca_file");
+                     String ca_file = val.isNil() ? null : val.convertToString().toString();
+@@ -323,7 +323,7 @@ public class SSLContext extends RubyObject {
+                         throw new CertificateException("couldn't initialize store");
+                     }
+ 
+-                    ctx.setDefault("ssl_client");
++                    ctx.setDefault("ssl_server");
+ 
+                     IRubyObject val = ctt.callMethod(ctt.getRuntime().getCurrentContext(),"ca_file");
+                     String ca_file = val.isNil() ? null : val.convertToString().toString();
+diff --git a/src/java/org/jruby/ext/openssl/x509store/Purpose.java b/src/java/org/jruby/ext/openssl/x509store/Purpose.java
+index c2619c0..2109fb1 100755
+--- a/src/java/org/jruby/ext/openssl/x509store/Purpose.java
++++ b/src/java/org/jruby/ext/openssl/x509store/Purpose.java
+@@ -30,10 +30,6 @@ package org.jruby.ext.openssl.x509store;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+-import org.bouncycastle.asn1.ASN1InputStream;
+-import org.bouncycastle.asn1.DERBitString;
+-import org.bouncycastle.asn1.DERObject;
+-import org.bouncycastle.asn1.DEROctetString;
+ 
+ /**
+  * c: X509_PURPOSE
+@@ -41,6 +37,14 @@ import org.bouncycastle.asn1.DEROctetString;
+  * @author <a href="mailto:ola.bini@ki.se">Ola Bini</a>
+  */
+ public class Purpose {
++    private static final String XKU_EMAIL_PROTECT = "1.3.6.1.5.5.7.3.4";    // Email protection
++    private static final String XKU_SSL_CLIENT = "1.3.6.1.5.5.7.3.2";       // SSL Client Authentication
++    private static final String[] XKU_SSL_SERVER = new String[]{
++        "1.3.6.1.5.5.7.3.1",        // SSL Server Authentication
++        "2.16.840.1.113730.4.1",    // Netscape Server Gated Crypto
++        "1.3.6.1.4.1.311.10.3.3"    // Microsoft Server Gated Crypto
++    };
++
+     public static interface CheckPurposeFunction extends Function3 {
+         public static final CheckPurposeFunction EMPTY = new CheckPurposeFunction(){
+                 public int call(Object arg0, Object arg1, Object arg2) {
+@@ -215,7 +219,7 @@ public class Purpose {
+             return 0;
+         }
+         if(x.getExtensionValue("2.5.29.19") != null) { // BASIC_CONSTRAINTS
+-            if(x.getBasicConstraints() != -1) {
++            if(x.getBasicConstraints() != -1) { // is CA.
+                 return 1;
+             } else {
+                 return 0;
+@@ -252,10 +256,38 @@ public class Purpose {
+     }
+ 
+      /**
++     * c: xku_reject: check if the cert must be rejected(true) or not
++     */
++    public static boolean xkuReject(X509AuxCertificate x, String mustHaveXku) throws Exception {
++        List<String> xku = x.getExtendedKeyUsage();
++        return (xku != null) && !xku.contains(mustHaveXku);
++    }
++    public static boolean xkuReject(X509AuxCertificate x, String[] mustHaveOneOfXku) throws Exception {
++        List<String> xku = x.getExtendedKeyUsage();
++        if(xku == null) {
++            return false;
++        }
++        for (String mustHaveXku : mustHaveOneOfXku) {
++            if(xku.contains(mustHaveXku)) {
++                return false;
++            }
++        }
++        return true;
++    }
++
++     /**
++     * c: ns_reject
++     */
++    public static boolean nsReject(X509AuxCertificate x, int mustHaveCertType) throws Exception {
++        Integer nsCertType = x.getNsCertType();
++        return (nsCertType != null) && (nsCertType & mustHaveCertType) == 0;
++    }
++
++     /**
+      * c: purpose_smime
+      */
+     public static int purposeSMIME(X509AuxCertificate x, int ca) throws Exception {
+-        if(x.getExtendedKeyUsage() != null && !x.getExtendedKeyUsage().contains("1.3.6.1.5.5.7.3.4")) {
++        if(xkuReject(x,XKU_EMAIL_PROTECT)) {
+             return 0; // must allow email protection
+         }
+         if(ca != 0) {
+@@ -290,32 +322,19 @@ public class Purpose {
+      public final static CheckPurposeFunction checkPurposeSSLClient = new CheckPurposeFunction() {
+             public int call(Object _xp, Object _x, Object _ca) throws Exception {
+                 X509AuxCertificate x = (X509AuxCertificate)_x;
+-                int ca = ((Integer)_ca).intValue();
+-
+-                if(x.getExtendedKeyUsage() != null && !x.getExtendedKeyUsage().contains("1.3.6.1.5.5.7.3.2")) {
++                if(xkuReject(x, XKU_SSL_CLIENT)) {
+                     return 0;
+                 }
++                int ca = ((Integer)_ca).intValue();
+                 if(ca != 0) {
+                     return checkSSLCA(x);
+                 }
+                 if(x.getKeyUsage() != null && !x.getKeyUsage()[0]) {
+                     return 0;
+                 }
+-                byte[] ns1 = x.getExtensionValue("2.16.840.1.113730.1.1"); //nsCertType
+-                if (ns1 != null) {
+-                    DERObject derObject = new ASN1InputStream(ns1).readObject();
+-                    DERBitString derBitString;
+-                    if (derObject instanceof DEROctetString) {
+-                        derBitString = new DERBitString(derObject);
+-                    } else if (derObject instanceof DERBitString) {
+-                        derBitString = (DERBitString)derObject;
+-                    } else {
+-                        throw new RuntimeException("unknown type from ASN1InputStream.readObject: " + derObject);
+-                    }
+-                    boolean v2 = ns1 != null && (derBitString.intValue() & X509Utils.NS_SSL_CLIENT) != 0;
+-                    if(v2) {
+-                        return 0;
+-                    }
++                if(nsReject(x, X509Utils.NS_SSL_CLIENT)) {
++                    // when the cert has nsCertType, it must include NS_SSL_CLIENT
++                    return 0;
+                 }
+                 return 1;
+             }
+@@ -328,18 +347,14 @@ public class Purpose {
+             public int call(Object _xp, Object _x, Object _ca) throws Exception {
+                 X509AuxCertificate x = (X509AuxCertificate)_x;
+                 int ca = ((Integer)_ca).intValue();
+-
+-                if(x.getExtendedKeyUsage() != null && (!x.getExtendedKeyUsage().contains("1.3.6.1.5.5.7.3.1") && 
+-                                                       !x.getExtendedKeyUsage().contains("2.16.840.1.113730.4.1") &&
+-                                                       !x.getExtendedKeyUsage().contains("1.3.6.1.4.1.311.10.3.3"))) {
++                if(xkuReject(x, XKU_SSL_SERVER)) {
+                     return 0;
+                 }
+                 if(ca != 0) {
+                     return checkSSLCA(x);
+                 }
+-                Integer nsCertType = x.getNsCertType();
+-                boolean v2 = nsCertType != null && (nsCertType & X509Utils.NS_SSL_SERVER) != 0;
+-                if(v2) {
++                if(nsReject(x, X509Utils.NS_SSL_SERVER)) {
++                    // when the cert has nsCertType, it must include NS_SSL_SERVER
+                     return 0;
+                 }
+                 if(x.getKeyUsage() != null && (!x.getKeyUsage()[0] || !x.getKeyUsage()[2])) {
+diff --git a/test/fixture/purpose/ca/PASSWD_OF_CA_KEY_IS_1234 b/test/fixture/purpose/ca/PASSWD_OF_CA_KEY_IS_1234
+new file mode 100644
+index 0000000..e69de29
+diff --git a/test/fixture/purpose/ca/ca_config.rb b/test/fixture/purpose/ca/ca_config.rb
+new file mode 100644
+index 0000000..faed4ae
+--- /dev/null
++++ b/test/fixture/purpose/ca/ca_config.rb
+@@ -0,0 +1,37 @@
++class CAConfig
++  BASE_DIR = File.dirname(__FILE__)
++  KEYPAIR_FILE = "#{BASE_DIR}/private/cakeypair.pem"
++  CERT_FILE = "#{BASE_DIR}/cacert.pem"
++  SERIAL_FILE = "#{BASE_DIR}/serial"
++  NEW_CERTS_DIR = "#{BASE_DIR}/newcerts"
++  NEW_KEYPAIR_DIR = "#{BASE_DIR}/private/keypair_backup"
++  CRL_DIR = "#{BASE_DIR}/crl"
++
++  NAME = [['C', 'JP'], ['O', 'www.ruby-lang.org'], ['OU', 'development']]
++  CA_CERT_DAYS = 20 * 365
++  CA_RSA_KEY_LENGTH = 2048
++
++  CERT_DAYS = 19 * 365
++  CERT_KEY_LENGTH_MIN = 1024
++  CERT_KEY_LENGTH_MAX = 2048
++  CDP_LOCATION = nil
++  OCSP_LOCATION = nil
++
++  CRL_FILE = "#{CRL_DIR}/jruby.crl"
++  CRL_PEM_FILE = "#{CRL_DIR}/jruby.pem"
++  CRL_DAYS = 14
++
++  PASSWD_CB = Proc.new { |flag|
++    print "Enter password: "
++    pass = $stdin.gets.chop!
++    # when the flag is true, this passphrase
++    # will be used to perform encryption; otherwise it will
++    # be used to perform decryption.
++    if flag
++      print "Verify password: "
++      pass2 = $stdin.gets.chop!
++      raise "verify failed." if pass != pass2
++    end
++    pass
++  }
++end
+diff --git a/test/fixture/purpose/ca/cacert.pem b/test/fixture/purpose/ca/cacert.pem
+new file mode 100644
+index 0000000..0f85e76
+--- /dev/null
++++ b/test/fixture/purpose/ca/cacert.pem
+@@ -0,0 +1,24 @@
++-----BEGIN CERTIFICATE-----
++MIIEADCCAuigAwIBAgIBATANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDI5MjBaFw0yOTExMTQxMDI5MjBaMEwx
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzEUMBIGA1UE
++CwwLZGV2ZWxvcG1lbnQxCzAJBgNVBAMMAkNBMIIBIjANBgkqhkiG9w0BAQEFAAOC
++AQ8AMIIBCgKCAQEA2nXhXZxXUs1Sfxqi8sReyzPHRcAHQM9RqDAGG9Nt1zYrLXwg
++MmUhOr4yBeW2KAxJGxdRQSzI38jyT6mrDRBpTl/OeU9zBG4p6AtFGkoMnRvUonB3
++CvgYJXhmrFjnHn34JNaRSORjaZDBmI9/fMGvaYndEM3wJ2b3jEOeizDIG60kZxA6
++XQ+X7ral+aABsjomubvjEQ9dlcDhQlssKjbjaN3NZ/kL/i/75jc6rzT05XYYkj+Z
++9rPRfT+HH3c5EYLtxcRTEHVWXMC8/of7oOFgZwwI3Cx9/v1s2Z6gdJ8J0kIkEoUL
++ziYsLIOmVB2tx0rKkmeivJB4PTM5QyHb7d1xUwIDAQABo4HsMIHpMA8GA1UdEwEB
++/wQFMAMBAf8wMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQg
++Q2VydGlmaWNhdGUwHQYDVR0OBBYEFBOZGvHkAfn+0Ct33rQ6tW2UmF5TMA4GA1Ud
++DwEB/wQEAwIBBjB0BgNVHSMEbTBrgBQTmRrx5AH5/tArd960OrVtlJheU6FQpE4w
++TDELMAkGA1UEBhMCSlAxGjAYBgNVBAoMEXd3dy5ydWJ5LWxhbmcub3JnMRQwEgYD
++VQQLDAtkZXZlbG9wbWVudDELMAkGA1UEAwwCQ0GCAQEwDQYJKoZIhvcNAQEFBQAD
++ggEBACfgSl3pA+e3JyjgS/zscaJHHNDwXIIoH0KY6pcrZnl7Zh8CW+Gdba621Lek
++aAy0YhAAM9bF87QZG1+sL7B2H1oSTt7F67SwQfq079oNWjhEdV5dxBKk6XaU0R31
++KXSsmLR4pMxcFdPzGM0FTiSj9FNKk2pydVySsa5jJeG0qvXVFMqsRUUwklQHl9Kx
++9GZiknt4PEGj/ThUwarhRbRjV5z7ZxXKexkangBlRWPX7TjvlpZPgLzAODG4fiRW
++ZUo8Ng7QolTJuPAhlVxhdi9n5hItm6mt21RTpQcP49KoGe8x+T4EzPO0PPdCMliD
++fH3udDO+bq2F8H4ts6ZJAYWFo8U=
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/ca/newcerts/2_cert.pem b/test/fixture/purpose/ca/newcerts/2_cert.pem
+new file mode 100644
+index 0000000..e957d05
+--- /dev/null
++++ b/test/fixture/purpose/ca/newcerts/2_cert.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDBjCCAe6gAwIBAgIBAjANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMTdaFw0yODExMTQxMDMwMTdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3Nsc2VydmVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgYsazavfR
++a72yK4qfnIjOrDT9Uv2ToL4swbE86PXY5N+YvUig3fVmNJo72rT5JlAODs+MtJJU
++aJ8HsczlGdrhjTWyT/0fyoY/rC4mi5UFASBCbaoaviDPgbhI6ehBY6d5vEYQOW79
++fL95KIa+OyGzUNYy+EkSxJmvt/8EJYtqIwIDAQABo4GFMIGCMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFJsUyGU/R4muSKVIeckJElcBNbipMAsGA1UdDwQEAwIF
++oDATBgNVHSUEDDAKBggrBgEFBQcDATANBgkqhkiG9w0BAQUFAAOCAQEAAc49qdDC
++TzFoWy794TYEx/uSAFQPMxp/dktYuMvtMSqhOfkDAaX7YFAD40R9tQljm6Vb7uEB
++afAecveSyBN2EPZas8NdohJJcTT/pu39E9iMuvAoxz+R8RV7S/RikFOtoet79owa
++6lnD3893tz5RR5BloRX7yRii87U5LUdxd3CvEmA7ycNTO8ZEaAuLDitsTMxhPiIJ
++DeGW5L8DCyiWuDt9K6S13XdnDxTvYUmafVPU59BncdSoY/3BebappMzDM8QM0yCZ
++GWh7ItY4sncMur1fc9ZuSsyplT3d3jysmVXolz2khxboMPVBoRSTtgBOn1PSsVma
++FWULbrbYBK5Cqg==
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/ca/newcerts/3_cert.pem b/test/fixture/purpose/ca/newcerts/3_cert.pem
+new file mode 100644
+index 0000000..05a5f62
+--- /dev/null
++++ b/test/fixture/purpose/ca/newcerts/3_cert.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDEDCCAfigAwIBAgIBAzANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMjdaFw0yODExMTQxMDMwMjdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3NsY2xpZW50MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgemBPByEo
++KbxaYnHXJxslyYsdWWCKf6j2mVIoxzC0b7W4TS5loBzOkZ05rkuapZ7O5flSMjtH
++5NMJ2h7/zsgK5XBkNRCPFK+8HMXVFdSs+euKY+2qE01P0NIuCrkvKjJgsrXdy3sG
++2UVUEoYEt5MHDR6aBL0Km+nVKc6T7O+KtQIDAQABo4GPMIGMMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFOFnq0r6adftxM/7aApl0DDrLTNWMAsGA1UdDwQEAwIF
++4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQEFBQAD
++ggEBACiRGC9KvUP2PaU7JmcIzJHMJtz0mUsO8KJeFWmBCSkfQErF3egOzE47WcRM
++0lGy0e4fjJB3at/O2V4RgwkFpsBpGXv9LJ5ZVXkEu9PwzwLTGZ4VfSPNIXgse1lK
++9EYOXgL8XhL7c9XPJLRFOWt6Odwp1VjQ2RqkpYLYnsHZam+5gsRd5K2yS0VO8A1Q
++otxH1D4evwpoSAaRHSff71Qh7046g2jGvCvdEVqBXuAoOuY8IRvf6YpTKEcPuOOo
++t7h5kLIVKuG4/AikVZ62Xh7DjdRFxy/Pxg3uIhrvkHkG8QtEFgBBMHoQR6iSGf6N
++1SNrs9tpu1oqTSzoKFG72BsEA6M=
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/ca/private/cakeypair.pem b/test/fixture/purpose/ca/private/cakeypair.pem
+new file mode 100644
+index 0000000..a84ead9
+--- /dev/null
++++ b/test/fixture/purpose/ca/private/cakeypair.pem
+@@ -0,0 +1,30 @@
++-----BEGIN RSA PRIVATE KEY-----
++Proc-Type: 4,ENCRYPTED
++DEK-Info: DES-EDE3-CBC,1381BA5304F6971E
++
++NmDiHjP3Kn3gG7q0oG8n5nyCM8wp5PYeEpuwrZmnNzpdsTTxpPV2Px8wy9EBrR4k
++SeZufUHA7T+zOLc1mSGMm+LOSSV2CMcUnby+yVRuV7CTtw7AwD+et7asff/HU1v6
++GE4SbX0tnZskiAR00zZTN/C17w27HIG7qNHrEjCng/S4fKFVNe6riQbmQqvykYQS
++8bZsQzzlB8e8kxNV5EDvYag3oevgY7RpIWUXEwTHd46o+8GsExuhs+8WpiO1az1D
++vu0u0MpO5t6PKyafp5vdiLTiwoY8VUdCF627FbyCWFkSuRbYxXNiRZzIvgwtZS7d
++wHOr5aVA2ROli2S7W5Mmx00tww05mPdzQbk5q6ZMxD+lK9bIuHEGwBY0IaWjkJtt
++a0RyBilLatVE9866D40dmNKA4mzAqtADdq6vwzoEqd7kVdwjdk7EMvaZgACrBypH
++NfadJ+HG2TW+4gnZLG60y6YaMPXAbObCUHCUYVhJe/E4mGdSkKOGgiQks9hT448T
+++/YBt2TqCq3UQU2rfxLVV6AlD/tywTwPTb0Leu40oTNEQyJ9aaQXmcZHZlDWI+Sl
++xdvGule84RenlV+GnC5UlBxUopTKbVSI7tw10grJtz5/TWx7ubOQ4pCNHzxksQH7
++YqygX5F6jlR6GbZFYUozNf57Frh9zUmhc6YWGFeTz1uc6rRqTCrKcyqvRD9QCYPY
++P+8MhvztbbYOr+XRStVeuDXzMwS6/HUrlPTt0IvO3Hq9dFDaTg1bW4mzgdKuYotV
++VF5DRenkF8lalTFpMppNsfpldazrZ8VvW5qRwbKF4mu7AWsBh9IpZMW15LtI7fUA
++L+JQO8aBUq6gyXTzaJxx8kxpdcIRtubOIultptj2m/XPXNNFSsI5DMv7V5jh58sC
++ju2RwxwivcWh1XtQxc4RNzvP3/Ek85at+cO9Q74Tu4f8alJZiWT51PZRwaucdQ8y
++rYT32rsqoWw1MvkDDENHbEt1QZ7AFmO3zFeGYXbPNHoi2gKzCo7xQtCm+QXQAh7B
++87KoKqwS9BO9QA/F+htVW9mbA+Yc5a2vcykxYbGlGqyMleI8cU5AeIbGoZdyYaun
++cDX/NtyV3HGPD5aHUPcz/sP7KAbdLzwh72CzRqQQo8yxOmQEWdd7W8jtxt0on2cs
++AXj59c9jKRJl5XlXMQO+VWnWO04bWxs8PAgop5Y4ePY766/mL1bAr02kdI6DJ9mx
++Opmpqk4gPZpnksnCQWJelPPYad0S49QxbOIWf5bI9FMi+6cgVh76iC5nMGVGI+gw
++lS64zEHhSRXuAC9Nsw5d+owc3aCG15DzUjpEBhDJ8EYKP9kgiJU0rnqPqGrriyrb
++f6kNOisGvAbI3RldVDLvvZbZEffPu60yA1rP7XaBRPn4K3g+3KTiEcn00wwJaoc3
++rddzmUCbx6fOluN+34BiPdJzHBZsROEvCcT4KGw1/nZIp/GgX3f3nPW40go2RLFP
++THQ5L0tuEvyhtJWaiLzjoZ3kCiwWZUzUwYCSfP9raVVXAxLoS4wU+qqKPl6/AaLI
++NDgIDJtZ0hrnptZuCkBUzVGQzxpMr8IVK/zQDq8uSXI53heZhLQoww==
++-----END RSA PRIVATE KEY-----
+diff --git a/test/fixture/purpose/ca/serial b/test/fixture/purpose/ca/serial
+new file mode 100644
+index 0000000..9df46a8
+--- /dev/null
++++ b/test/fixture/purpose/ca/serial
+@@ -0,0 +1 @@
++0004
+\ No newline at end of file
+diff --git a/test/fixture/purpose/cacert.pem b/test/fixture/purpose/cacert.pem
+new file mode 100644
+index 0000000..0f85e76
+--- /dev/null
++++ b/test/fixture/purpose/cacert.pem
+@@ -0,0 +1,24 @@
++-----BEGIN CERTIFICATE-----
++MIIEADCCAuigAwIBAgIBATANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDI5MjBaFw0yOTExMTQxMDI5MjBaMEwx
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzEUMBIGA1UE
++CwwLZGV2ZWxvcG1lbnQxCzAJBgNVBAMMAkNBMIIBIjANBgkqhkiG9w0BAQEFAAOC
++AQ8AMIIBCgKCAQEA2nXhXZxXUs1Sfxqi8sReyzPHRcAHQM9RqDAGG9Nt1zYrLXwg
++MmUhOr4yBeW2KAxJGxdRQSzI38jyT6mrDRBpTl/OeU9zBG4p6AtFGkoMnRvUonB3
++CvgYJXhmrFjnHn34JNaRSORjaZDBmI9/fMGvaYndEM3wJ2b3jEOeizDIG60kZxA6
++XQ+X7ral+aABsjomubvjEQ9dlcDhQlssKjbjaN3NZ/kL/i/75jc6rzT05XYYkj+Z
++9rPRfT+HH3c5EYLtxcRTEHVWXMC8/of7oOFgZwwI3Cx9/v1s2Z6gdJ8J0kIkEoUL
++ziYsLIOmVB2tx0rKkmeivJB4PTM5QyHb7d1xUwIDAQABo4HsMIHpMA8GA1UdEwEB
++/wQFMAMBAf8wMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQg
++Q2VydGlmaWNhdGUwHQYDVR0OBBYEFBOZGvHkAfn+0Ct33rQ6tW2UmF5TMA4GA1Ud
++DwEB/wQEAwIBBjB0BgNVHSMEbTBrgBQTmRrx5AH5/tArd960OrVtlJheU6FQpE4w
++TDELMAkGA1UEBhMCSlAxGjAYBgNVBAoMEXd3dy5ydWJ5LWxhbmcub3JnMRQwEgYD
++VQQLDAtkZXZlbG9wbWVudDELMAkGA1UEAwwCQ0GCAQEwDQYJKoZIhvcNAQEFBQAD
++ggEBACfgSl3pA+e3JyjgS/zscaJHHNDwXIIoH0KY6pcrZnl7Zh8CW+Gdba621Lek
++aAy0YhAAM9bF87QZG1+sL7B2H1oSTt7F67SwQfq079oNWjhEdV5dxBKk6XaU0R31
++KXSsmLR4pMxcFdPzGM0FTiSj9FNKk2pydVySsa5jJeG0qvXVFMqsRUUwklQHl9Kx
++9GZiknt4PEGj/ThUwarhRbRjV5z7ZxXKexkangBlRWPX7TjvlpZPgLzAODG4fiRW
++ZUo8Ng7QolTJuPAhlVxhdi9n5hItm6mt21RTpQcP49KoGe8x+T4EzPO0PPdCMliD
++fH3udDO+bq2F8H4ts6ZJAYWFo8U=
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/scripts/gen_cert.rb b/test/fixture/purpose/scripts/gen_cert.rb
+new file mode 100755
+index 0000000..011c2d3
+--- /dev/null
++++ b/test/fixture/purpose/scripts/gen_cert.rb
+@@ -0,0 +1,127 @@
++#!/usr/bin/env ruby
++
++require 'openssl'
++require 'ca_config'
++require 'fileutils'
++require 'getopts'
++
++include OpenSSL
++
++def usage
++  myname = File::basename($0)
++  $stderr.puts "Usage: #{myname} [--type (client|server|ca|ocsp)] [--out certfile] csr_file"
++  exit
++end
++
++getopts nil, 'type:client', 'out:', 'force'
++
++cert_type = $OPT_type
++out_file = $OPT_out || 'cert.pem'
++csr_file = ARGV.shift or usage
++ARGV.empty? or usage
++
++csr = X509::Request.new(File.open(csr_file).read)
++unless csr.verify(csr.public_key)
++  raise "CSR sign verification failed."
++end
++p csr.public_key
++if csr.public_key.n.num_bits < CAConfig::CERT_KEY_LENGTH_MIN
++  raise "Key length too short"
++end
++if csr.public_key.n.num_bits > CAConfig::CERT_KEY_LENGTH_MAX
++  raise "Key length too long"
++end
++if csr.subject.to_a[0, CAConfig::NAME.size] != CAConfig::NAME
++  unless $OPT_force
++    p csr.subject.to_a
++    p CAConfig::NAME
++    raise "DN does not match"
++  end
++end
++
++# Only checks signature here.  You must verify CSR according to your CP/CPS.
++
++$stdout.sync = true
++
++# CA setup
++
++ca_file = CAConfig::CERT_FILE
++puts "Reading CA cert (from #{ca_file})"
++ca = X509::Certificate.new(File.read(ca_file))
++
++ca_keypair_file = CAConfig::KEYPAIR_FILE
++puts "Reading CA keypair (from #{ca_keypair_file})"
++ca_keypair = PKey::RSA.new(File.read(ca_keypair_file), &CAConfig::PASSWD_CB)
++
++serial = File.open(CAConfig::SERIAL_FILE, "r").read.chomp.hex
++File.open(CAConfig::SERIAL_FILE, "w") do |f|
++  f << sprintf("%04X", serial + 1)
++end
++
++# Generate new cert
++
++cert = X509::Certificate.new
++from = Time.now # + 30 * 60	# Wait 30 minutes.
++cert.subject = csr.subject
++cert.issuer = ca.subject
++cert.not_before = from
++cert.not_after = from + CAConfig::CERT_DAYS * 24 * 60 * 60
++cert.public_key = csr.public_key
++cert.serial = serial
++cert.version = 2 # X509v3
++
++basic_constraint = nil
++key_usage = []
++ext_key_usage = []
++case cert_type
++when "ca"
++  basic_constraint = "CA:TRUE"
++  key_usage << "cRLSign" << "keyCertSign"
++when "terminalsubca"
++  basic_constraint = "CA:TRUE,pathlen:0"
++  key_usage << "cRLSign" << "keyCertSign"
++when "server"
++  basic_constraint = "CA:FALSE"
++  key_usage << "digitalSignature" << "keyEncipherment"
++  ext_key_usage << "serverAuth"
++when "ocsp"
++  basic_constraint = "CA:FALSE"
++  key_usage << "nonRepudiation" << "digitalSignature"
++  ext_key_usage << "serverAuth" << "OCSPSigning"
++when "client"
++  basic_constraint = "CA:FALSE"
++  key_usage << "nonRepudiation" << "digitalSignature" << "keyEncipherment"
++  ext_key_usage << "clientAuth" << "emailProtection"
++else
++  raise "unknonw cert type \"#{cert_type}\" is specified."
++end
++
++ef = X509::ExtensionFactory.new
++ef.subject_certificate = cert
++ef.issuer_certificate = ca
++ex = []
++ex << ef.create_extension("basicConstraints", basic_constraint, true)
++ex << ef.create_extension("nsComment","Ruby/OpenSSL Generated Certificate")
++ex << ef.create_extension("subjectKeyIdentifier", "hash")
++#ex << ef.create_extension("nsCertType", "client,email")
++ex << ef.create_extension("keyUsage", key_usage.join(",")) unless key_usage.empty?
++#ex << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
++#ex << ef.create_extension("authorityKeyIdentifier", "keyid:always")
++ex << ef.create_extension("extendedKeyUsage", ext_key_usage.join(",")) unless ext_key_usage.empty?
++
++ex << ef.create_extension("crlDistributionPoints", CAConfig::CDP_LOCATION) if CAConfig::CDP_LOCATION
++ex << ef.create_extension("authorityInfoAccess", "OCSP;" << CAConfig::OCSP_LOCATION) if CAConfig::OCSP_LOCATION
++cert.extensions = ex
++cert.sign(ca_keypair, OpenSSL::Digest::SHA1.new)
++
++# For backup
++
++cert_file = CAConfig::NEW_CERTS_DIR + "/#{cert.serial}_cert.pem"
++File.open(cert_file, "w", 0644) do |f|
++  f << cert.to_pem
++end
++
++puts "Writing cert.pem..."
++FileUtils.copy(cert_file, out_file)
++
++puts "DONE. (Generated certificate for '#{cert.subject}')"
+diff --git a/test/fixture/purpose/scripts/gen_csr.rb b/test/fixture/purpose/scripts/gen_csr.rb
+new file mode 100755
+index 0000000..f0b157f
+--- /dev/null
++++ b/test/fixture/purpose/scripts/gen_csr.rb
+@@ -0,0 +1,50 @@
++#!/usr/bin/env ruby
++
++require 'getopts'
++require 'openssl'
++
++include OpenSSL
++
++def usage
++  myname = File::basename($0)
++  $stderr.puts <<EOS
++Usage: #{myname} [--key keypair_file] name
++  name ... ex. /C=JP/O=RRR/OU=CA/CN=NaHi/emailAddress=nahi@example.org
++EOS
++  exit
++end
++
++getopts nil, "key:", "csrout:", "keyout:"
++keypair_file = $OPT_key
++csrout = $OPT_csrout || "csr.pem"
++keyout = $OPT_keyout || "keypair.pem"
++
++$stdout.sync = true
++name_str = ARGV.shift or usage()
++p name_str
++name = X509::Name.parse(name_str)
++
++keypair = nil
++if keypair_file
++  keypair = PKey::RSA.new(File.open(keypair_file).read)
++else
++  keypair = PKey::RSA.new(1024) { putc "." }
++  puts
++  puts "Writing #{keyout}..."
++  File.open(keyout, "w", 0400) do |f|
++    f << keypair.to_pem
++  end
++end
++
++puts "Generating CSR for #{name_str}"
++
++req = X509::Request.new
++req.version = 0
++req.subject = name
++req.public_key = keypair.public_key
++req.sign(keypair, OpenSSL::Digest::MD5.new)
++
++puts "Writing #{csrout}..."
++File.open(csrout, "w") do |f|
++  f << req.to_pem
++end
+diff --git a/test/fixture/purpose/scripts/init_ca.rb b/test/fixture/purpose/scripts/init_ca.rb
+new file mode 100755
+index 0000000..e037c61
+--- /dev/null
++++ b/test/fixture/purpose/scripts/init_ca.rb
+@@ -0,0 +1,66 @@
++#!/usr/bin/env ruby
++
++require 'openssl'
++require 'ca_config'
++
++include OpenSSL
++
++$stdout.sync = true
++
++cn = ARGV.shift || 'CA'
++
++unless FileTest.exist?('private')
++  Dir.mkdir('private', 0700)
++end
++unless FileTest.exist?('newcerts')
++  Dir.mkdir('newcerts')
++end
++unless FileTest.exist?('crl')
++  Dir.mkdir('crl')
++end
++unless FileTest.exist?('serial')
++  File.open('serial', 'w') do |f|
++    f << '2'
++  end
++end
++
++print "Generating CA keypair: "
++keypair = PKey::RSA.new(CAConfig::CA_RSA_KEY_LENGTH) { putc "." }
++putc "\n"
++
++now = Time.now
++cert = X509::Certificate.new
++name = CAConfig::NAME.dup << ['CN', cn]
++cert.subject = cert.issuer = X509::Name.new(name)
++cert.not_before = now
++cert.not_after = now + CAConfig::CA_CERT_DAYS * 24 * 60 * 60
++cert.public_key = keypair.public_key
++cert.serial = 0x1
++cert.version = 2 # X509v3
++
++key_usage = ["cRLSign", "keyCertSign"]
++ef = X509::ExtensionFactory.new
++ef.subject_certificate = cert
++ef.issuer_certificate = cert # we needed subjectKeyInfo inside, now we have it
++ext1 = ef.create_extension("basicConstraints","CA:TRUE", true)
++ext2 = ef.create_extension("nsComment","Ruby/OpenSSL Generated Certificate")
++ext3 = ef.create_extension("subjectKeyIdentifier", "hash")
++ext4 = ef.create_extension("keyUsage", key_usage.join(","), true)
++cert.extensions = [ext1, ext2, ext3, ext4]
++ext0 = ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
++cert.add_extension(ext0)
++cert.sign(keypair, OpenSSL::Digest::SHA1.new)
++
++keypair_file = CAConfig::KEYPAIR_FILE
++puts "Writing keypair."
++File.open(keypair_file, "w", 0400) do |f|
++  f << keypair.export(Cipher::DES.new(:EDE3, :CBC), &CAConfig::PASSWD_CB)
++end
++
++cert_file = CAConfig::CERT_FILE
++puts "Writing #{cert_file}."
++File.open(cert_file, "w", 0644) do |f|
++  f << cert.to_pem
++end
++
++puts "DONE. (Generated certificate for '#{cert.subject}')"
+diff --git a/test/fixture/purpose/sslclient.pem b/test/fixture/purpose/sslclient.pem
+new file mode 100644
+index 0000000..05a5f62
+--- /dev/null
++++ b/test/fixture/purpose/sslclient.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDEDCCAfigAwIBAgIBAzANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMjdaFw0yODExMTQxMDMwMjdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3NsY2xpZW50MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgemBPByEo
++KbxaYnHXJxslyYsdWWCKf6j2mVIoxzC0b7W4TS5loBzOkZ05rkuapZ7O5flSMjtH
++5NMJ2h7/zsgK5XBkNRCPFK+8HMXVFdSs+euKY+2qE01P0NIuCrkvKjJgsrXdy3sG
++2UVUEoYEt5MHDR6aBL0Km+nVKc6T7O+KtQIDAQABo4GPMIGMMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFOFnq0r6adftxM/7aApl0DDrLTNWMAsGA1UdDwQEAwIF
++4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQEFBQAD
++ggEBACiRGC9KvUP2PaU7JmcIzJHMJtz0mUsO8KJeFWmBCSkfQErF3egOzE47WcRM
++0lGy0e4fjJB3at/O2V4RgwkFpsBpGXv9LJ5ZVXkEu9PwzwLTGZ4VfSPNIXgse1lK
++9EYOXgL8XhL7c9XPJLRFOWt6Odwp1VjQ2RqkpYLYnsHZam+5gsRd5K2yS0VO8A1Q
++otxH1D4evwpoSAaRHSff71Qh7046g2jGvCvdEVqBXuAoOuY8IRvf6YpTKEcPuOOo
++t7h5kLIVKuG4/AikVZ62Xh7DjdRFxy/Pxg3uIhrvkHkG8QtEFgBBMHoQR6iSGf6N
++1SNrs9tpu1oqTSzoKFG72BsEA6M=
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/sslclient/csr.pem b/test/fixture/purpose/sslclient/csr.pem
+new file mode 100644
+index 0000000..5a78b13
+--- /dev/null
++++ b/test/fixture/purpose/sslclient/csr.pem
+@@ -0,0 +1,10 @@
++-----BEGIN CERTIFICATE REQUEST-----
++MIIBfDCB5gIBADA9MQswCQYDVQQGEwJKUDEaMBgGA1UECgwRd3d3LnJ1YnktbGFu
++Zy5vcmcxEjAQBgNVBAMMCXNzbGNsaWVudDCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
++gYkCgYEA4HpgTwchKCm8WmJx1ycbJcmLHVlgin+o9plSKMcwtG+1uE0uZaAczpGd
++Oa5LmqWezuX5UjI7R+TTCdoe/87ICuVwZDUQjxSvvBzF1RXUrPnrimPtqhNNT9DS
++Lgq5LyoyYLK13ct7BtlFVBKGBLeTBw0emgS9Cpvp1SnOk+zvirUCAwEAAaAAMA0G
++CSqGSIb3DQEBBAUAA4GBAAg7mWW/hU/fBNLxYVoBRGjpgYKTipRieZ9UDxsxu5O5
++DpLbM/DWydzD0nWDt3zSxG4tCwgEL7gOK6rQz3D+b3BkFGSeQ5AQXjxaDurQoLdR
++OQccN93zAeDb0vBADN/90thJ7osiX8VKG6vUHHcWhA26hzaARSHcLPRR8TeTFFb6
++-----END CERTIFICATE REQUEST-----
+diff --git a/test/fixture/purpose/sslclient/keypair.pem b/test/fixture/purpose/sslclient/keypair.pem
+new file mode 100644
+index 0000000..e12d2b2
+--- /dev/null
++++ b/test/fixture/purpose/sslclient/keypair.pem
+@@ -0,0 +1,15 @@
++-----BEGIN RSA PRIVATE KEY-----
++MIICXAIBAAKBgQDgemBPByEoKbxaYnHXJxslyYsdWWCKf6j2mVIoxzC0b7W4TS5l
++oBzOkZ05rkuapZ7O5flSMjtH5NMJ2h7/zsgK5XBkNRCPFK+8HMXVFdSs+euKY+2q
++E01P0NIuCrkvKjJgsrXdy3sG2UVUEoYEt5MHDR6aBL0Km+nVKc6T7O+KtQIDAQAB
++AoGABfvdI14qSRrLtZEYPccCF0DHH5IpW6fJhkFSClo89yJfMrmD+huJiQwip834
++n/e4QwWoXsOOBv2XjpSs7N7DQFJNfZ3ivRHyEOlHYgiH2m3hOpe/47sbgvB4z7li
++SPGV6oV2BBafc+yDof3vWLX2BMmxvQKB6aJ7DUjSsc7SR2ECQQD+0m+Q03AynhST
++9ZSOnHt9mUMykeNuPXfX2oeQ1LXtpIQ9Zco/Bl9fWr94ghygAy8tsc4gtGQj+74G
++GcGGcBydAkEA4YQHyGGdZAb6bH0esNpE3hyTiqzjEshTpvF3jkKAlRU+4DS9cBhB
++fcqPrsYetIrl1fgySLdNK3vTdS8WduWu+QJBAN5u5JIf7uVQVhgdm3KtJ6KoQR8I
++d+VH5K/YAtQqyS/KluBdVSCUuHWs6kwQD1qhzPHvLkYgEPXUDriWjPaEMIUCQFf1
++wXtc56DOP/r0ynW8jMP9bWbXjDIVRNuGr1Ujhzee88lLiOAh9dl0mppW2D8fNgpB
++JovKQyVExPOeDCsP5zECQBoXPjAvdLm1BrRhQkvtX7Fkk2l54CxoKz7yBHwNWD7e
++hKa0riKKq3z+tzzfOkgFdNf3aTZyL7cfBALZJdfiLhA=
++-----END RSA PRIVATE KEY-----
+diff --git a/test/fixture/purpose/sslclient/sslclient.pem b/test/fixture/purpose/sslclient/sslclient.pem
+new file mode 100644
+index 0000000..05a5f62
+--- /dev/null
++++ b/test/fixture/purpose/sslclient/sslclient.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDEDCCAfigAwIBAgIBAzANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMjdaFw0yODExMTQxMDMwMjdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3NsY2xpZW50MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgemBPByEo
++KbxaYnHXJxslyYsdWWCKf6j2mVIoxzC0b7W4TS5loBzOkZ05rkuapZ7O5flSMjtH
++5NMJ2h7/zsgK5XBkNRCPFK+8HMXVFdSs+euKY+2qE01P0NIuCrkvKjJgsrXdy3sG
++2UVUEoYEt5MHDR6aBL0Km+nVKc6T7O+KtQIDAQABo4GPMIGMMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFOFnq0r6adftxM/7aApl0DDrLTNWMAsGA1UdDwQEAwIF
++4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQEFBQAD
++ggEBACiRGC9KvUP2PaU7JmcIzJHMJtz0mUsO8KJeFWmBCSkfQErF3egOzE47WcRM
++0lGy0e4fjJB3at/O2V4RgwkFpsBpGXv9LJ5ZVXkEu9PwzwLTGZ4VfSPNIXgse1lK
++9EYOXgL8XhL7c9XPJLRFOWt6Odwp1VjQ2RqkpYLYnsHZam+5gsRd5K2yS0VO8A1Q
++otxH1D4evwpoSAaRHSff71Qh7046g2jGvCvdEVqBXuAoOuY8IRvf6YpTKEcPuOOo
++t7h5kLIVKuG4/AikVZ62Xh7DjdRFxy/Pxg3uIhrvkHkG8QtEFgBBMHoQR6iSGf6N
++1SNrs9tpu1oqTSzoKFG72BsEA6M=
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/sslserver.pem b/test/fixture/purpose/sslserver.pem
+new file mode 100644
+index 0000000..e957d05
+--- /dev/null
++++ b/test/fixture/purpose/sslserver.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDBjCCAe6gAwIBAgIBAjANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMTdaFw0yODExMTQxMDMwMTdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3Nsc2VydmVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgYsazavfR
++a72yK4qfnIjOrDT9Uv2ToL4swbE86PXY5N+YvUig3fVmNJo72rT5JlAODs+MtJJU
++aJ8HsczlGdrhjTWyT/0fyoY/rC4mi5UFASBCbaoaviDPgbhI6ehBY6d5vEYQOW79
++fL95KIa+OyGzUNYy+EkSxJmvt/8EJYtqIwIDAQABo4GFMIGCMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFJsUyGU/R4muSKVIeckJElcBNbipMAsGA1UdDwQEAwIF
++oDATBgNVHSUEDDAKBggrBgEFBQcDATANBgkqhkiG9w0BAQUFAAOCAQEAAc49qdDC
++TzFoWy794TYEx/uSAFQPMxp/dktYuMvtMSqhOfkDAaX7YFAD40R9tQljm6Vb7uEB
++afAecveSyBN2EPZas8NdohJJcTT/pu39E9iMuvAoxz+R8RV7S/RikFOtoet79owa
++6lnD3893tz5RR5BloRX7yRii87U5LUdxd3CvEmA7ycNTO8ZEaAuLDitsTMxhPiIJ
++DeGW5L8DCyiWuDt9K6S13XdnDxTvYUmafVPU59BncdSoY/3BebappMzDM8QM0yCZ
++GWh7ItY4sncMur1fc9ZuSsyplT3d3jysmVXolz2khxboMPVBoRSTtgBOn1PSsVma
++FWULbrbYBK5Cqg==
++-----END CERTIFICATE-----
+diff --git a/test/fixture/purpose/sslserver/csr.pem b/test/fixture/purpose/sslserver/csr.pem
+new file mode 100644
+index 0000000..8c8aa2c
+--- /dev/null
++++ b/test/fixture/purpose/sslserver/csr.pem
+@@ -0,0 +1,10 @@
++-----BEGIN CERTIFICATE REQUEST-----
++MIIBfDCB5gIBADA9MQswCQYDVQQGEwJKUDEaMBgGA1UECgwRd3d3LnJ1YnktbGFu
++Zy5vcmcxEjAQBgNVBAMMCXNzbHNlcnZlcjCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
++gYkCgYEA4GLGs2r30Wu9siuKn5yIzqw0/VL9k6C+LMGxPOj12OTfmL1IoN31ZjSa
++O9q0+SZQDg7PjLSSVGifB7HM5Rna4Y01sk/9H8qGP6wuJouVBQEgQm2qGr4gz4G4
++SOnoQWOnebxGEDlu/Xy/eSiGvjshs1DWMvhJEsSZr7f/BCWLaiMCAwEAAaAAMA0G
++CSqGSIb3DQEBBAUAA4GBAFpQTo9v0rOmfP/m9WSfUMEXsWUl/NP8c7slM4M0wNOX
++iI/e2XiyywgOSJlmCdvmrMeSmrhHbLZvIsQUj7CR9fZ4pxz0eX/JwclmlhS+StH8
++C3HHxlLUOZpnLVl4R3PXoDTCHLuSiQod3WNNiqEdzaRn4jrNv8LgzJtgSseikwDA
++-----END CERTIFICATE REQUEST-----
+diff --git a/test/fixture/purpose/sslserver/keypair.pem b/test/fixture/purpose/sslserver/keypair.pem
+new file mode 100644
+index 0000000..d4c626a
+--- /dev/null
++++ b/test/fixture/purpose/sslserver/keypair.pem
+@@ -0,0 +1,15 @@
++-----BEGIN RSA PRIVATE KEY-----
++MIICXwIBAAKBgQDgYsazavfRa72yK4qfnIjOrDT9Uv2ToL4swbE86PXY5N+YvUig
++3fVmNJo72rT5JlAODs+MtJJUaJ8HsczlGdrhjTWyT/0fyoY/rC4mi5UFASBCbaoa
++viDPgbhI6ehBY6d5vEYQOW79fL95KIa+OyGzUNYy+EkSxJmvt/8EJYtqIwIDAQAB
++AoGBAJy/o/s2YIRldZD/pck2esOVvTayQP5eLjvp2zynqQapbCGxKQlnxMRvPsdN
++U1sxjn8jjY3HnulkZKPlazMoSqQy+7JIOzgG8UelDk/4OuuJWQZ26P/Qzza0k5we
++Sisc8/3xkCzv9RoRIm2VvAAuuSHiZwQTHBP0M6yg9R2+sSpxAkEA+RL48KB9tCyx
++wo8Tn1WKK2GUoGj+pJJ16uq5taUlRKBwvasHNEu96TlrAHNeq+YnFCeLTbvCkU5P
++2GaauRV8TQJBAOagD5u+duKB3go+YywRHVcFrv+u9ejS9onfhvwhgciVpCrNR5RX
++YqhJ3K4ciHEs5OQGsDLPY+dtl1b4AP5r+C8CQQCpyLcNQDmwEi9yUpmrqWGwRKpN
++1oSOpo/e/PZuzg5jg4KWp/kXOvJQAyXffsVwJElLQdGBwZXV+y4Oc5LQy8aZAkEA
++3dsaSMO3z/wIYqhTdL/eDqncCAECdQAExOswCnodRJ2XeMlTU4Og161+SkwOgXkj
++k6xPcgGJ5MbLMJGROy8YZwJBAK+wq+c/x/BeqtnOIqQnDpgxH7Ox1VA0bbaGPq++
++l24EYVsaJpPty7w7M+B7N5XD5GDVDSeG9Xdf/uyCDX7isFc=
++-----END RSA PRIVATE KEY-----
+diff --git a/test/fixture/purpose/sslserver/sslserver.pem b/test/fixture/purpose/sslserver/sslserver.pem
+new file mode 100644
+index 0000000..e957d05
+--- /dev/null
++++ b/test/fixture/purpose/sslserver/sslserver.pem
+@@ -0,0 +1,19 @@
++-----BEGIN CERTIFICATE-----
++MIIDBjCCAe6gAwIBAgIBAjANBgkqhkiG9w0BAQUFADBMMQswCQYDVQQGEwJKUDEa
++MBgGA1UECgwRd3d3LnJ1YnktbGFuZy5vcmcxFDASBgNVBAsMC2RldmVsb3BtZW50
++MQswCQYDVQQDDAJDQTAeFw0wOTExMTkxMDMwMTdaFw0yODExMTQxMDMwMTdaMD0x
++CzAJBgNVBAYTAkpQMRowGAYDVQQKDBF3d3cucnVieS1sYW5nLm9yZzESMBAGA1UE
++AwwJc3Nsc2VydmVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgYsazavfR
++a72yK4qfnIjOrDT9Uv2ToL4swbE86PXY5N+YvUig3fVmNJo72rT5JlAODs+MtJJU
++aJ8HsczlGdrhjTWyT/0fyoY/rC4mi5UFASBCbaoaviDPgbhI6ehBY6d5vEYQOW79
++fL95KIa+OyGzUNYy+EkSxJmvt/8EJYtqIwIDAQABo4GFMIGCMAwGA1UdEwEB/wQC
++MAAwMQYJYIZIAYb4QgENBCQWIlJ1YnkvT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlm
++aWNhdGUwHQYDVR0OBBYEFJsUyGU/R4muSKVIeckJElcBNbipMAsGA1UdDwQEAwIF
++oDATBgNVHSUEDDAKBggrBgEFBQcDATANBgkqhkiG9w0BAQUFAAOCAQEAAc49qdDC
++TzFoWy794TYEx/uSAFQPMxp/dktYuMvtMSqhOfkDAaX7YFAD40R9tQljm6Vb7uEB
++afAecveSyBN2EPZas8NdohJJcTT/pu39E9iMuvAoxz+R8RV7S/RikFOtoet79owa
++6lnD3893tz5RR5BloRX7yRii87U5LUdxd3CvEmA7ycNTO8ZEaAuLDitsTMxhPiIJ
++DeGW5L8DCyiWuDt9K6S13XdnDxTvYUmafVPU59BncdSoY/3BebappMzDM8QM0yCZ
++GWh7ItY4sncMur1fc9ZuSsyplT3d3jysmVXolz2khxboMPVBoRSTtgBOn1PSsVma
++FWULbrbYBK5Cqg==
++-----END CERTIFICATE-----
+diff --git a/test/test_x509store.rb b/test/test_x509store.rb
+index 1480157..6b281d6 100644
+--- a/test/test_x509store.rb
++++ b/test/test_x509store.rb
+@@ -44,6 +44,28 @@ class TestX509Store < Test::Unit::TestCase
+     end
+   end
+ 
++  def test_purpose_ssl_client
++    @store.add_file("test/fixture/purpose/cacert.pem")
++    cert = OpenSSL::X509::Certificate.new(File.read("test/fixture/purpose/sslclient.pem"))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_CLIENT
++    assert_equal(true, @store.verify(cert))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_SERVER
++    assert_equal(false, @store.verify(cert))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_CLIENT
++    assert_equal(true, @store.verify(cert))
++  end
++
++  def test_purpose_ssl_server
++    @store.add_file("test/fixture/purpose/cacert.pem")
++    cert = OpenSSL::X509::Certificate.new(File.read("test/fixture/purpose/sslserver.pem"))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_SERVER
++    assert_equal(true, @store.verify(cert))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_CLIENT
++    assert_equal(false, @store.verify(cert))
++    @store.purpose = OpenSSL::X509::PURPOSE_SSL_SERVER
++    assert_equal(true, @store.verify(cert))
++  end
++
+   GLOBALSIGN_ROOT_CA = <<__EOS__
+ -----BEGIN CERTIFICATE-----
+ MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG
+-- 
+1.5.6
+

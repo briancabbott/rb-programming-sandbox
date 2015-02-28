@@ -1,0 +1,53 @@
+---
+layout: post
+title: JRuby 1.7.14 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.14
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.14 is our fourteenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 30 issues fixed for 1.7.14
+- Fixed potential memory leak with Jar file resources
+- Due to slow startup on Rails apps invokedynamic is no longer on by default
+- load/require internals refactored and simplified
+- Small smattering of compatibility fixes
+
+### Github Issues resolved for 1.7.14
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1923">#1923</a> - String#start_with? returns false when using an empty string</li>
+<li><a href="https://github.com/jruby/jruby/issues/1905">#1905</a> - Tempfile and deleteOnExit</li>
+<li><a href="https://github.com/jruby/jruby/issues/1899">#1899</a> - Can't call static method on Java 8 interface</li>
+<li><a href="https://github.com/jruby/jruby/pull/1898">#1898</a> - Fix the memory leak and actually close the resources.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1889">#1889</a> - NPE from org.jruby.java.proxies.ArrayJavaProxy.to_a</li>
+<li><a href="https://github.com/jruby/jruby/issues/1888">#1888</a> - native memory leak when reading files from inside a .jar</li>
+<li><a href="https://github.com/jruby/jruby/issues/1859">#1859</a> - JMX tries to double-bind a port when using bundle exec</li>
+<li><a href="https://github.com/jruby/jruby/issues/1858">#1858</a> - JRuby with Java 8 4 to 10 times slower than Java 7</li>
+<li><a href="https://github.com/jruby/jruby/pull/1852">#1852</a> - JRubyClassloader seems to have a problem with file urls pointing to jar ...</li>
+<li><a href="https://github.com/jruby/jruby/issues/1850">#1850</a> - embedded jars do not get loaded</li>
+<li><a href="https://github.com/jruby/jruby/pull/1846">#1846</a> - Fix $LOAD_FEATURES paths for 1.8</li>
+<li><a href="https://github.com/jruby/jruby/pull/1818">#1818</a> - fix ArrayJavaProxy#to_a failure on arrays containing null</li>
+<li><a href="https://github.com/jruby/jruby/issues/1813">#1813</a> - can not load resources from jar anymore with jar uri</li>
+<li><a href="https://github.com/jruby/jruby/pull/1809">#1809</a> - apply minor enebo's comments</li>
+<li><a href="https://github.com/jruby/jruby/pull/1808">#1808</a> - Fix BigDecimal#round behavior with NAN and INFINITY</li>
+<li><a href="https://github.com/jruby/jruby/pull/1805">#1805</a> - Zlib crc improvements</li>
+<li><a href="https://github.com/jruby/jruby/pull/1803">#1803</a> - Fix minor bug in `setNativeEnabled`, and expose it in ScriptingContainer</li>
+<li><a href="https://github.com/jruby/jruby/pull/1802">#1802</a> - Fix Encoding::Converter#inspect output</li>
+<li><a href="https://github.com/jruby/jruby/issues/1799">#1799</a> - mvn -Pall fails at the documentation step</li>
+<li><a href="https://github.com/jruby/jruby/pull/1790">#1790</a> - Make Time#to_r consistent with MRI</li>
+<li><a href="https://github.com/jruby/jruby/issues/1777">#1777</a> - ServerSocket#accept_nonblock returns the server's port, not the client's</li>
+<li><a href="https://github.com/jruby/jruby/pull/1772">#1772</a> - avoid sub-classing ThreadLocal since it will leak in envs such as .wars</li>
+<li><a href="https://github.com/jruby/jruby/pull/1765">#1765</a> - added a java_field method for use in the jrubyc command. </li>
+<li><a href="https://github.com/jruby/jruby/pull/1762">#1762</a> - enhanced the java_class compiler so it can handle multiple constructors</li>
+<li><a href="https://github.com/jruby/jruby/pull/1750">#1750</a> - Refactor LoadService to make use of resources</li>
+<li><a href="https://github.com/jruby/jruby/issues/1729">#1729</a> - no valid struct layout for Ethon::Curl::Slist</li>
+<li><a href="https://github.com/jruby/jruby/pull/1676">#1676</a> - Empty hash optimization</li>
+<li><a href="https://github.com/jruby/jruby/issues/1580">#1580</a> - IO.select raises CancelledKeyException on shutdown</li>
+<li><a href="https://github.com/jruby/jruby/issues/1520">#1520</a> - Date comparison as java objects</li>
+<li><a href="https://github.com/jruby/jruby/issues/1435">#1435</a> - bouncy-castle-java JARs missing when warbling with JRuby 1.7.10</li>
+</ul>

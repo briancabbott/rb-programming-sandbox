@@ -1,0 +1,39 @@
+---
+layout: post
+title: JRuby 1.6.0 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.0.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.0 final is out!
+
+JRuby 1.6.0 is the largest release of JRuby to date. This release
+fixes hundreds of user issues and brings compatibility with Ruby 1.9.2
+to a very high level. We have made Windows a primary supported
+platform by adding it to our continuous integration environment.  JRuby
+1.6 will provide Windows-based Ruby users with the best experience
+yet. This release integrates experimental support for C extensions
+based on Ruby's C API. And as with all major releases, we have
+improved stability and performance across the board in response to
+real-world user input.
+
+Over the next month or two we plan on putting out quicker point releases
+in anticipation that 1.6.0 will get a new wave of feedback.  Give JRuby
+1.6.0 a try and let us know how things go.
+
+### Major Features:
+
+- Ruby 1.9.2 language and API compatibility
+
+  - Not implemented Encoding::Converter, ripper
+- Improved Ruby call performance
+- Built-in profiler (--profile, --profile.graph)
+- RSpec no longer bundled
+- C Extension support (experimental)
+- RubyGems Maven support (preview)
+- Improved compatibility and user experience on Windows
+- jruby-complete.jar now includes 1.9 standard library
+- Embedding API refinements
+- Over 2000 commits and 270 issues resolved.

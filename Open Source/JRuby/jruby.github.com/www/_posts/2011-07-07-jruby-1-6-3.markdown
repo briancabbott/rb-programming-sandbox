@@ -1,0 +1,58 @@
+---
+layout: post
+title: JRuby 1.6.3 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.3.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.2 (and lower) are encouraged to upgrade to 1.6.3.
+
+### Notable Changes:
+- 1\.9 language and core class fixes
+- Ruby object construction performance boost
+- Require performance improvements
+- Windows native exec fixes
+- 39 Issues resolved
+
+### 1.6.3 Issues Resolved:
+- JRUBY-2457 Instantiation of Ruby subclass of Java class does incorrect constructor argument check
+- JRUBY-5511 1.9: Failing character iteration specs for StringIO in 1.9 mode
+- JRUBY-5669 RubySpec: String#strip failures (1.9 mode)
+- JRUBY-5716 Enumerable should provide each_with_object
+- JRUBY-5719 Trivial patch to bin/jruby to allow spaces in the path
+- JRUBY-5722 Duplicate class definition issue in 1.9 mode
+- JRUBY-5724 jrubyc generates classes with the wrong names
+- JRUBY-5743 Build fails to run on OpenJDK build on OS X 10.6
+- JRUBY-5768 apparent bug in mkmf logic
+- JRUBY-5773 assignment in a method with default argument strip off other arguments.
+- JRUBY-5807 1.9: String.rstrip brokes UTF-8 string.
+- JRUBY-5813 FFI::AutoPointer occasionally calls releaser proc when GC'd, even if autorelease is set to false
+- JRUBY-5820 HashMap#map does not splat the arguments to the block
+- JRUBY-5824 exec(env, command) and Process.spawn(env, command) throw Errno::ENOENT exception
+- JRUBY-5827 FFI enum always maps the value 0
+- JRUBY-5828 FFI Structs no longer support bools
+- JRUBY-5833 $LOAD_PATH scanning slowness
+- JRUBY-5835 ruboto: File#read fails with jruby-jars-1.6.2
+- JRUBY-5837 Building jruby in git-free environment fails
+- JRUBY-5839 Enumerable#map is picky about it's internal block arguments in --1.9 mode
+- JRUBY-5840 Rails won't start with -X+C
+- JRUBY-5841 Call to ScriptingContainer#setCurrentDirectory is ignored after a call to ScriptingContainer#put
+- JRUBY-5844 jruby -x (executing ruby embedded into a message) fails
+- JRUBY-5849 make JAVA_VM to be set from environment
+- JRUBY-5850 jruby --1.9 : Exception in thread "RubyThread-1: threadtest.rb:1" java.lang.LinkageError: loader (instance of org/jruby/util/JRubyClassLoader): attempted duplicate class definition for name: "threadtest$block_0$RUBY$true?"
+- JRUBY-5853 Added WIN32OLE_EVENT#off_event
+- JRUBY-5854 conflicting license info in FFI
+- JRUBY-5856 CLONE -Kernel.exec will not use a modified ENV PATH to locate commands on Windows
+- JRUBY-5857 Should not be able to set ENV keys that contain an =
+- JRUBY-5863 Named captures cause crash when there is no match
+- JRUBY-5864 jruby bash scripts do not work with msys/mingw
+- JRUBY-5871 java.lang.NegativeArraySizeException from RubyEnumerator (after JITed)
+- JRUBY-5875 extending Struct and override initialize would make Marshal fail
+- JRUBY-5878 Enumerator.map is not yielding all values
+- JRUBY-5883 Hash Subclass#== not respected when checking equality of collections.
+- JRUBY-5887 Strange error in classloader
+- JRUBY-5888 missing File#readbyte
+- JRUBY-5889 Problem running JRuby 1.6.2 (via jruby-jars.gem) on 32-bit Systems
+- JRUBY-5900 java.lang.ClassFormatError: Invalid method Code length 

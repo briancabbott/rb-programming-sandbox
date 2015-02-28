@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="62">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>argnames.h</itemPath>
+      <itemPath>argparser.h</itemPath>
+      <itemPath>jvmlauncher.h</itemPath>
+      <itemPath>nbexecloader.h</itemPath>
+      <itemPath>platformlauncher.h</itemPath>
+      <itemPath>rb_w32_cmdvector.h</itemPath>
+      <itemPath>utilsfuncs.h</itemPath>
+      <itemPath>version.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+      <itemPath>resources/jruby.ico</itemPath>
+      <itemPath>resources/jruby.rc</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>argparser.cpp</itemPath>
+      <itemPath>jruby.cpp</itemPath>
+      <itemPath>jrubyexe.cpp</itemPath>
+      <itemPath>jvmlauncher.cpp</itemPath>
+      <itemPath>ng.c</itemPath>
+      <itemPath>platformlauncher.cpp</itemPath>
+      <itemPath>strlcpy.c</itemPath>
+      <itemPath>unixlauncher.cpp</itemPath>
+      <itemPath>utilsfuncs.cpp</itemPath>
+      <itemPath>utilsfuncswin.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+      <itemPath>TODO.txt</itemPath>
+    </logicalFolder>
+    <itemPath>spec</itemPath>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="mingw" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>1</architecture>
+          <commandlineTool>gcc</commandlineTool>
+          <commandLine>-mno-cygwin</commandLine>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>1</architecture>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>${JAVA_HOME}/include</pElem>
+            <pElem>${JAVA_HOME}/include/win32</pElem>
+          </incDir>
+          <commandLine>-mno-cygwin</commandLine>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <linkerTool>
+          <output>jruby.dll</output>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>${LINK.cc}</commandlineTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lws2_32 -static-libgcc -lws2_32 -Wl,--enable-auto-import -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="mingw64" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW_TDM</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <commandlineTool>gcc</commandlineTool>
+          <commandLine>-mno-cygwin</commandLine>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>${JAVA_HOME}/include</pElem>
+            <pElem>${JAVA_HOME}/include/win32</pElem>
+          </incDir>
+          <commandLine>-mno-cygwin</commandLine>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <linkerTool>
+          <output>jruby.dll</output>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>${LINK.cc}</commandlineTool>
+          <linkerLibItems>
+            <linkerOptionItem>-lws2_32 -static-libgcc -lws2_32 -Wl,--enable-auto-import -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="unix" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>4</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>1</architecture>
+          <commandlineTool>gcc</commandlineTool>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>1</architecture>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>${JAVA_HOME}/include</pElem>
+          </incDir>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <linkerTool>
+          <output>jruby.dll</output>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>${LINK.cc}</commandlineTool>
+          <linkerLibItems>
+            <linkerOptionItem>-static-libgcc -Wl,--enable-auto-import -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="utilsfuncswin.cpp" ex="true" tool="1">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

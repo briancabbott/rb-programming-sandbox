@@ -1,0 +1,40 @@
+<div id="main_nav">
+  <div class="wrapper">
+    <div id="menu" class="menu">
+      <ul>
+        <li id="page_1" class="{% if page.title contains "Home" %}on{% endif %}">
+          <a href="/">Home</a>
+        </li>
+        <li id="page_16" class="{% if page.title contains "Try JRuby!" %}on{% endif %}">
+          <a href="/tryjruby">Try JRuby!</a>
+        </li>
+        <li id="page_5" class="{% if page.title contains "News" %}on{% endif %}">
+          <a href="/news">News</a>
+        </li>
+        <li id="page_8" class="{% if page.title contains "Download" %}on{% endif %}">
+          <a href="/download">Downloads</a>
+        </li>
+        <li id="page_10" class="{% if page.title contains "Getting Started" %}on{% endif %}">
+          <a href="/getting-started">Getting Started</a>
+        </li>
+        <li id="page_9" class="{% if page.title contains "Community" %}on{% endif %}">
+          <a href="/community">Community</a>
+        </li>
+        <li id="page_13" class="{% if page.title contains "Documentation" %}on{% endif %}">
+          <a href="/documentation">Documentation</a>
+        </li>
+        <li id="page_15" class="{% if page.title contains "Security" %}on{% endif %}">
+          <a href="/security">Security</a>
+        </li>
+        <li id="page_14" class="{% if page.title contains "Contribut" %}on{% endif %}">
+          <a href="/contribute">Contribute</a>
+        </li>
+        <li>
+          <a href="http://travis-ci.org/jruby/jruby" target="_blank">
+            <img src="https://secure.travis-ci.org/jruby/jruby.svg?branch=master" alt="Build Status" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

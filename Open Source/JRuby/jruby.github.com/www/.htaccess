@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ([^.]+)$ $1.html [QSA,PT]
+
+ErrorDocument 404 /404.html
+

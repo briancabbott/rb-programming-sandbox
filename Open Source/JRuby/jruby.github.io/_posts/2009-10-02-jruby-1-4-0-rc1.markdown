@@ -1,0 +1,263 @@
+---
+layout: post
+title: JRuby 1.4.0RC1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.4.0RC1.
+ 
+- Homepage: http://www.jruby.org/
+- Download: http://www.jruby.org/download
+ 
+JRuby 1.4.0 Release Candidate 1 ends a long release cycle in which we
+resolved a huge number of issues. The headline feature is a move to
+Ruby 1.8.7 support, in line with Rails' own plans to make 1.8.7 the
+required minimum version of Ruby.
+ 
+We have also gotten more serious about out 1.9 support (--1.9). The
+bigger applications mostly just work at this point, but we still have
+a ways to go on 1.9 support. Please try your 1.9 code in JRuby and
+help us firm things up.
+ 
+Bug reports welcome and requested!
+ 
+**Please try your apps against 1.4.0RC1 ASAP and report problems.**
+ 
+Highlights:
+
+- JRuby is now compatible with 1.8.7 patchlevel 174
+- New YAML parser Yecht (bug-for-bug compatible with Syck!)
+- Improved Java Integration Support
+  - faster
+  - new java_method and java_send methods
+- Windows installer
+- New embedding framework
+  - Java 6 scripting out of the box
+  - New org.jruby.embed package to replace JavaEmbedUtils
+- Many 1.9 mode (--1.9) fixes
+  - updated stdlib to 1.9.2preview2
+  - Rubygems now working
+  -  Rails 2.3.3 simple apps working (2.3.4 has 1.9 bug)
+- rubygems 1.3.5
+- Much better error reporting
+  - shorter backtraces with less Java
+  - Ruby-compatiable syntax error reporting
+- 205 bugs fixed since 1.3.1
+
+We want to give a couple of special acknowledgements for some
+contributors who went the extra mile this release cycle.
+ 
+David Calavera has done a great job wrestling with Rubyspec failures
+and coming up with patches.
+ 
+Yoko Harada has totally revamped our embedding APIs and created a new
+API called Red Bridge. This should address all of the reported
+embedding issues.
+ 
+### Issues Fixed for 1.4.0RC1:
+
+<table summary="" border="0">
+<tr><td>JRUBY-382</td>    <td>Better error output from parser</td></tr>
+<tr><td>JRUBY-937</td>    <td>JRuby does not honor RUBY_OPTS or RUBYOPT</td></tr>
+<tr><td>JRUBY-2232</td>   <td>UNIXSocket doesn't work on Solaris</td></tr>
+<tr><td>JRUBY-2324</td>   <td>AST Node positions and content incorrect when passing down Multibyte content to lexer</td></tr>
+<tr><td>JRUBY-2349</td>   <td>Bug in constant lookup on non Module or Class</td></tr>
+<tr><td>JRUBY-2398</td>   <td>We should strive to implement the 1.8.7 improvements</td></tr>
+<tr><td>JRUBY-2419</td>   <td>Argument application within block is not parsed correctly (for Range literals)</td></tr>
+<tr><td>JRUBY-2525</td>   <td>Dir.glob ordering inconsistent with Matzruby</td></tr>
+<tr><td>JRUBY-2587</td>   <td>[1.8.7] Hash.[] should call to_ary if only one argument is provided</td></tr>
+<tr><td>JRUBY-2604</td>   <td>[1.8.7] Implement Binding#eval method</td></tr>
+<tr><td>JRUBY-2626</td>   <td>Many rubyspec failures for SortedSet</td></tr>
+<tr><td>JRUBY-2654</td>   <td>File pty.rb is not part of the JRuby distro, but is part of the Ruby standard lib</td></tr>
+<tr><td>JRUBY-2666</td>   <td>Issues with Socket#getaddrinfo</td></tr>
+<tr><td>JRUBY-2694</td>   <td>[1.8.7] Ability to specify suffix/extension for Tempfile</td></tr>
+<tr><td>JRUBY-2866</td>   <td>Set .include? method behavior differs between JRuby 1.1.3 and Ruby 1.8.7</td></tr>
+<tr><td>JRUBY-3123</td>   <td>Java primate arrays no longer respond to 'first' (Array) from ruby</td></tr>
+<tr><td>JRUBY-3150</td>   <td>Execution variable $: does not include on the taint check level > 1</td></tr>
+<tr><td>JRUBY-3154</td>   <td>Net::HTTP.read_timeout is ignored, timeout is intinite instead (leading to massive accumulation of sockets and reading threads)</td></tr>
+<tr><td>JRUBY-3159</td>   <td>-e option does not work with iterator blocks</td></tr>
+<tr><td>JRUBY-3165</td>   <td>Add stream/reader based methods to JavaEmbedUtils.RuntimeAdapter as convenience methods</td></tr>
+<tr><td>JRUBY-3215</td>   <td>BSF does not retain local scope between eval calls</td></tr>
+<tr><td>JRUBY-3240</td>   <td>YAML: active_support dump of BigDecimal differs from MRI</td></tr>
+<tr><td>JRUBY-3263</td>   <td>imcompatibility with Ruby-1.8.6 in YAML parsing</td></tr>
+<tr><td>JRUBY-3266</td>   <td>undefined method 'add_ruby_type' for YAML:Module</td></tr>
+<tr><td>JRUBY-3297</td>   <td>Array.new with (size, object=nil) returns the value passed to break</td></tr>
+<tr><td>JRUBY-3306</td>   <td>--1.9 mode doesn't know define_singleton_method</td></tr>
+<tr><td>JRUBY-3319</td>   <td>Date spec failures</td></tr>
+<tr><td>JRUBY-3321</td>   <td>matrix rubyspec failures</td></tr>
+<tr><td>JRUBY-3323</td>   <td>rational rubyspec failures</td></tr>
+<tr><td>JRUBY-3327</td>   <td>Possible YAML parsing error</td></tr>
+<tr><td>JRUBY-3352</td>   <td>JNA-based FFI fails to load for specs on Windows</td></tr>
+<tr><td>JRUBY-3368</td>   <td>java.util.List[range] is broken</td></tr>
+<tr><td>JRUBY-3380</td>   <td>New 1.9 Enumerator methods</td></tr>
+<tr><td>JRUBY-3389</td>   <td>RubySpec: Hash#update raises a TypeError if called on a non-empty, frozen instance</td></tr>
+<tr><td>JRUBY-3403</td>   <td>Socket close_read and close_write should use appropriate methods on java.net.Socket</td></tr>
+<tr><td>JRUBY-3412</td>   <td>YAML.dump loses the timezone when dumping Time instances</td></tr>
+<tr><td>JRUBY-3419</td>   <td>JRuby Fails (MRI 1.8.6 works) in Sinatra "helpers" when no arguments</td></tr>
+<tr><td>JRUBY-3433</td>   <td>Encoding.default_internal and Encoding.default_external missing</td></tr>
+<tr><td>JRUBY-3442</td>   <td>1.9 allows trailing commas in method invocations</td></tr>
+<tr><td>JRUBY-3453</td>   <td>Make import not complain if Java already has already imported the specific Java class</td></tr>
+<tr><td>JRUBY-3473</td>   <td>RubySpec: OpenStruct frozen failures</td></tr>
+<tr><td>JRUBY-3478</td>   <td>Dir.new does not work for directories inside jar file</td></tr>
+<tr><td>JRUBY-3499</td>   <td>File.expand_path (from inside a jar) uses %20 instead of space characters</td></tr>
+<tr><td>JRUBY-3505</td>   <td>Can't install hpricot (0.7) gem</td></tr>
+<tr><td>JRUBY-3518</td>   <td>JRUBY-1786 yaml_initialize not called for subclasses of standard types</td></tr>
+<tr><td>JRUBY-3545</td>   <td>ArrayIndexOutOfBoundsException when opening Bio::FlatFiles (bioruby gem)</td></tr>
+<tr><td>JRUBY-3546</td>   <td>~/.hoerc results in parsing error</td></tr>
+<tr><td>JRUBY-3558</td>   <td>RubySpec: Defining instance methods on an eigenclass define public methods</td></tr>
+<tr><td>JRUBY-3559</td>   <td>the integratated joda time version should be in a distinct package hierarchy</td></tr>
+<tr><td>JRUBY-3575</td>   <td>File permission errors installing gems in 1.9 mode</td></tr>
+<tr><td>JRUBY-3576</td>   <td>utf-8 string becomes macroman on os x</td></tr>
+<tr><td>JRUBY-3577</td>   <td>File and FileTest methods should use to_path to coerce non-string parameters</td></tr>
+<tr><td>JRUBY-3591</td>   <td>Hexadecimal constants do not have the same equal? behaviour between JRuby and CRuby</td></tr>
+<tr><td>JRUBY-3592</td>   <td>Regression test failure (test_grpowned)</td></tr>
+<tr><td>JRUBY-3605</td>   <td>[1.9] IO.initialize missing option hash parsing</td></tr>
+<tr><td>JRUBY-3606</td>   <td>[1.9] IO.set_encoding is stubbed out</td></tr>
+<tr><td>JRUBY-3607</td>   <td>[1.9] IO.external_encoding stubbed out</td></tr>
+<tr><td>JRUBY-3611</td>   <td>RubySpec: "StringIO#sysread when passed no arguments" failures</td></tr>
+<tr><td>JRUBY-3612</td>   <td>RubySpec: Array#to_s returns '[...]' for the embedded array in a recursive array</td></tr>
+<tr><td>JRUBY-3627</td>   <td>Parsing related methods and class/interdace should have ManyVarsDynamicScope to share local variables</td></tr>
+<tr><td>JRUBY-3653</td>   <td>RubySpec: Hash failures "computes equality for complex recursive hashes"</td></tr>
+<tr><td>JRUBY-3654</td>   <td>RubySpec: Array failures relating to recursive arrays</td></tr>
+<tr><td>JRUBY-3662</td>   <td>JavaEmbedUtils should have methods to set/reset Standard I/O</td></tr>
+<tr><td>JRUBY-3682</td>   <td>Hashcodes for Hash objects break compatability with MRI</td></tr>
+<tr><td>JRUBY-3687</td>   <td>Bundle JSR 223 support in JRuby</td></tr>
+<tr><td>JRUBY-3688</td>   <td>IO.read fails to read files in /proc filesystem on Linux</td></tr>
+<tr><td>JRUBY-3700</td>   <td>test/externals/ruby1.8/yaml/test_yaml failures</td></tr>
+<tr><td>JRUBY-3702</td>   <td>The method methods</td></tr>
+<tr><td>JRUBY-3703</td>   <td>TestCommandLineSwitches fails on Windows</td></tr>
+<tr><td>JRUBY-3705</td>   <td>Rubyspec: behavior of $: under safe > 1</td></tr>
+<tr><td>JRUBY-3706</td>   <td>Rubyspec: method arity behavior</td></tr>
+<tr><td>JRUBY-3707</td>   <td>Rubyspec: Process egid behavior</td></tr>
+<tr><td>JRUBY-3718</td>   <td>FFI: put_pointer and put_array_of_pointer fails to send :to_ptr to their argument</td></tr>
+<tr><td>JRUBY-3721</td>   <td>sub-optimal IO#read after IO#getc</td></tr>
+<tr><td>JRUBY-3722</td>   <td>block parameter problem</td></tr>
+<tr><td>JRUBY-3725</td>   <td>Fix for JRUBY-3563 introduces regression in Socket#getnameinfo</td></tr>
+<tr><td>JRUBY-3731</td>   <td>--debug causes problems. Methods are missing.</td></tr>
+<tr><td>JRUBY-3736</td>   <td>JRuby won't load a .jar if a .so is found too.</td></tr>
+<tr><td>JRUBY-3738</td>   <td>jruby 1.3.0 windows vista issues: doesn't output helpful error if JAVA_HOME undefined, and JAVA_HOME path defined in quotes not supported</td></tr>
+<tr><td>JRUBY-3740</td>   <td>Thread#wakeup not working</td></tr>
+<tr><td>JRUBY-3743</td>   <td>Timeout no longer supports sub-second timeouts</td></tr>
+<tr><td>JRUBY-3744</td>   <td>Ruby BigDecimal vulnerability seems to affect JRuby as well</td></tr>
+<tr><td>JRUBY-3745</td>   <td>RubySpec: Hash#rehash causes a RuntimeError to be raised if called inside an iterator block</td></tr>
+<tr><td>JRUBY-3747</td>   <td>String#gsub! with pattern and block raises a RuntimeError when self is frozen</td></tr>
+<tr><td>JRUBY-3748</td>   <td>RubySpec: Kernel.Integer raises an ArgumentError if there is a space between the + and number</td></tr>
+<tr><td>JRUBY-3750</td>   <td>JRUBY_OPTS="--1.9" results in error "jruby: unknown option --1.9"</td></tr>
+<tr><td>JRUBY-3751</td>   <td>YAML.load fails for Struct objects with non-standard initialize</td></tr>
+<tr><td>JRUBY-3757</td>   <td>String.split is broken</td></tr>
+<tr><td>JRUBY-3759</td>   <td>syslog not available for JRuby --1.9</td></tr>
+<tr><td>JRUBY-3761</td>   <td>FileUtils.chown_R produces ArgumentError when the directory contains a symlink</td></tr>
+<tr><td>JRUBY-3766</td>   <td>update .classpath for building jruby with eclipse</td></tr>
+<tr><td>JRUBY-3773</td>   <td>CLONE -custom YAML serialization ignored by JRuby</td></tr>
+<tr><td>JRUBY-3774</td>   <td>&gt;&gt;define_method :name do | &amp;blk | &lt;&lt; ignores</td></tr>
+<tr><td>JRUBY-3776</td>   <td>The install-gems goal throws exceptions</td></tr>
+<tr><td>JRUBY-3777</td>   <td>Exception on Solaris loading ruby gems</td></tr>
+<tr><td>JRUBY-3778</td>   <td>clone of stderr and stdout not working</td></tr>
+<tr><td>JRUBY-3782</td>   <td>BSF interface - apply nonfunctional with parameters</td></tr>
+<tr><td>JRUBY-3783</td>   <td>Timeout.timeout doesn't raise given exception</td></tr>
+<tr><td>JRUBY-3784</td>   <td>More than 2G memory required for jruby -e 'buf = IO.read("/tmp/1GB.txt"); p buf.size'</td></tr>
+<tr><td>JRUBY-3788</td>   <td>argument population of blocks broke in at least one case somewhere between 1.2 and 1.3</td></tr>
+<tr><td>JRUBY-3799</td>   <td>Bug in native timeout module causes hang when waiting on IO</td></tr>
+<tr><td>JRUBY-3800</td>   <td>CLASSPATH environment variable should be ignored if -J-cp or -J-classpath are provided</td></tr>
+<tr><td>JRUBY-3806</td>   <td>Encoding problems with File.expand_path after JRUBY-3576 fix for Macroman issue</td></tr>
+<tr><td>JRUBY-3807</td>   <td>jgem --1.9 broken</td></tr>
+<tr><td>JRUBY-3808</td>   <td>Gem redclothcoderay doesn't installs under jruby</td></tr>
+<tr><td>JRUBY-3809</td>   <td>require 'tmpdir' fails when embedded in a java app that has messed with the classpath</td></tr>
+<tr><td>JRUBY-3810</td>   <td>StringIO#truncate problem</td></tr>
+<tr><td>JRUBY-3811</td>   <td>require 'Complex' fails when running in Ruby 1.9 mode</td></tr>
+<tr><td>JRUBY-3815</td>   <td>Time#strftime breaks with multibyte characters, affects I18n#localize</td></tr>
+<tr><td>JRUBY-3817</td>   <td>Timeouts in Net::HTTP raise Timeout::ExitException instead of Timeout::Error for Ruby 1.8</td></tr>
+<tr><td>JRUBY-3820</td>   <td>timeout library should throw an anonymous exception type while unrolling stack</td></tr>
+<tr><td>JRUBY-3823</td>   <td>Wrong property in netbeans-ant.xml</td></tr>
+<tr><td>JRUBY-3827</td>   <td>WEBrick binds only to localhost, not to requested bind addresses</td></tr>
+<tr><td>JRUBY-3828</td>   <td>JavaUtil.convertRubyToJava fails to convert objects in seemingly random cases</td></tr>
+<tr><td>JRUBY-3832</td>   <td>FFI: apparent memory leak when using callbacks</td></tr>
+<tr><td>JRUBY-3835</td>   <td>FFI AbstractMemory#get_array_of_uint64 is missing</td></tr>
+<tr><td>JRUBY-3836</td>   <td>backquotes can raise IO Error (closed stream)</td></tr>
+<tr><td>JRUBY-3838</td>   <td>Exceptions coming out of eval no longer have line numbers</td></tr>
+<tr><td>JRUBY-3849</td>   <td>Resolv.getaddress is broken on OSX 1.5</td></tr>
+<tr><td>JRUBY-3850</td>   <td>Hash#select returns an Array of entries for which block is true FAILED</td></tr>
+<tr><td>JRUBY-3851</td>   <td>Hash#update raises a TypeError if called on a non-empty, frozen instance ERROR</td></tr>
+<tr><td>JRUBY-3852</td>   <td>Hash#eql? spec failures</td></tr>
+<tr><td>JRUBY-3853</td>   <td>Two Enumerable spec bugs for 1.8.7 (one related to break)</td></tr>
+<tr><td>JRUBY-3854</td>   <td>Five spec failures in ConditionVariable after merge</td></tr>
+<tr><td>JRUBY-3856</td>   <td>YAML.load is broken when loading structs with initialize method with arguments</td></tr>
+<tr><td>JRUBY-3858</td>   <td>NPE in RubyRegexp.java with --1.9</td></tr>
+<tr><td>JRUBY-3859</td>   <td>VariadicInvoker missing a BOOL case</td></tr>
+<tr><td>JRUBY-3860</td>   <td>Rational(3,-4).to_i should return -1</td></tr>
+<tr><td>JRUBY-3861</td>   <td>Shared "box" in DefaultMethod breaking visibility re-checks in some cases</td></tr>
+<tr><td>JRUBY-3862</td>   <td>Socket.pack_sockaddr_in is broken on linux</td></tr>
+<tr><td>JRUBY-3863</td>   <td>Support boolean arguments to and return values from ffi callbacks</td></tr>
+<tr><td>JRUBY-3867</td>   <td>Nailgun not supported in Windows bat files</td></tr>
+<tr><td>JRUBY-3869</td>   <td>'puts []' prints a newline</td></tr>
+<tr><td>JRUBY-3870</td>   <td>Object#singleton_methods(true) doesn't include inherited methods</td></tr>
+<tr><td>JRUBY-3871</td>   <td>strftime doesn't support %h</td></tr>
+<tr><td>JRUBY-3873</td>   <td>StringIndexOutOfBoundsException if the last character in format is '%' in Time.strftime</td></tr>
+<tr><td>JRUBY-3874</td>   <td>it would be nice if LoadService could log where it searches and what it finds</td></tr>
+<tr><td>JRUBY-3875</td>   <td>TypeError when providing nil as the third parameter to TCPSocket.new/TCPSocket.open</td></tr>
+<tr><td>JRUBY-3876</td>   <td>JRuby crashes on using the three-parameter version of TCPSocket.open</td></tr>
+<tr><td>JRUBY-3878</td>   <td>String representation of arrays and symbols does not match ruby 1.9</td></tr>
+<tr><td>JRUBY-3879</td>   <td>Array#pack('d') is incorrect</td></tr>
+<tr><td>JRUBY-3882</td>   <td>Java raised exceptions fail to list JRuby caller method in the backtrace</td></tr>
+<tr><td>JRUBY-3884</td>   <td>Rubyspec failures: Dir#inspect includes the directory name</td></tr>
+<tr><td>JRUBY-3885</td>   <td>Rubyspec failures: Enumerable#none?</td></tr>
+<tr><td>JRUBY-3889</td>   <td>java errors are hidden when an instance of a class is created and we used the method include_package to load the specific java package</td></tr>
+<tr><td>JRUBY-3890</td>   <td>NativeExceptions have ugly stack traces</td></tr>
+<tr><td>JRUBY-3891</td>   <td>JavaSupport.handleNativeException doesn't seem handle superclasses properly</td></tr>
+<tr><td>JRUBY-3892</td>   <td>Running rake rdoc from within jruby-complete.jar results in "undefined method `key' for nil:NilClass"</td></tr>
+<tr><td>JRUBY-3893</td>   <td>Can't require yaml from jruby-complete.jar at head</td></tr>
+<tr><td>JRUBY-3894</td>   <td>Problems with __FILE__ and file loaded from a jar</td></tr>
+<tr><td>JRUBY-3896</td>   <td>'--ng' in JRUBY_OPTS is not passed correctly</td></tr>
+<tr><td>JRUBY-3897</td>   <td>Dir::entries doesn't work within a jar</td></tr>
+<tr><td>JRUBY-3907</td>   <td>Time.strftime allows tokens deriving from GNU C library</td></tr>
+<tr><td>JRUBY-3908</td>   <td>Addendum to JRUBY-3896</td></tr>
+<tr><td>JRUBY-3910</td>   <td>Java List to Ruby Array conversion ~100% slower than primitive array conversion</td></tr>
+<tr><td>JRUBY-3911</td>   <td>hpricot is busted when truncating multibyte strings</td></tr>
+<tr><td>JRUBY-3912</td>   <td>FFI - Some Ruby-FFI specs fail on JRuby</td></tr>
+<tr><td>JRUBY-3913</td>   <td>Date.strftime bug fixes (%u, %w, %s) and addition of %G</td></tr>
+<tr><td>JRUBY-3914</td>   <td>In 1.9 mode, Time.now == nil should return false, not nil</td></tr>
+<tr><td>JRUBY-3916</td>   <td>Clean up nailgun directory a little</td></tr>
+<tr><td>JRUBY-3922</td>   <td>File.basename doesn't cope with UTF8 strings</td></tr>
+<tr><td>JRUBY-3927</td>   <td>Jar complete doesn't compile</td></tr>
+<tr><td>JRUBY-3929</td>   <td>checksums for new versions please</td></tr>
+<tr><td>JRUBY-3932</td>   <td>Set == broken in 1.9</td></tr>
+<tr><td>JRUBY-3933</td>   <td>[19] IO.gets missing additional limit field</td></tr>
+<tr><td>JRUBY-3936</td>   <td>Math.gamma fails on certain values when it shouldn't</td></tr>
+<tr><td>JRUBY-3937</td>   <td>Socket::getaddrinfo() returns incorrect data on solaris</td></tr>
+<tr><td>JRUBY-3941</td>   <td>[19] socket.do_not_reverse_lookup is unimplemented</td></tr>
+<tr><td>JRUBY-3942</td>   <td>[1.9] File.new should accept encoding options within the mode parameter and a hash with options as the third parameter</td></tr>
+<tr><td>JRUBY-3945</td>   <td>[1.9] IO and file initialization should ignore internal encoding when is equal to external encoding</td></tr>
+<tr><td>JRUBY-3946</td>   <td>[1.9] Encoding.default_external should get encoding from default charset when is nil</td></tr>
+<tr><td>JRUBY-3947</td>   <td>[1.9] Domain errors on Math.log(0), Math.log2(0), Math.log10(0), Math.atanh(1), Math.atanh(-1)</td></tr>
+<tr><td>JRUBY-3951</td>   <td>TMail fails to install without modifications mkmf.rb</td></tr>
+<tr><td>JRUBY-3952</td>   <td>Update pom.xml to reflect move from SVN to Git.</td></tr>
+<tr><td>JRUBY-3953</td>   <td>jruby.bat doesn't run on Windows 7</td></tr>
+<tr><td>JRUBY-3954</td>   <td>JRuby operating differently from MRI with andand gem</td></tr>
+<tr><td>JRUBY-3956</td>   <td>Can't do Enumerator#next in --1.9? Not implemented yet?</td></tr>
+<tr><td>JRUBY-3967</td>   <td>remove some duplicated tests that have been added to rubyspecs</td></tr>
+<tr><td>JRUBY-3968</td>   <td>YAML.load produces: allocator undefined for Symbol (TypeError)</td></tr>
+<tr><td>JRUBY-3969</td>   <td>LICENSE.RUBY is missing in bin and source distributive for the JRuby 1.3.1 and 1.3</td></tr>
+<tr><td>JRUBY-3970</td>   <td>jruby.bat errors out with unexpected characters</td></tr>
+<tr><td>JRUBY-3974</td>   <td>In-proc execution loses almost all parent-process config values</td></tr>
+<tr><td>JRUBY-3977</td>   <td>"require" won't load jars with ".so" anywhere in the name</td></tr>
+<tr><td>JRUBY-3981</td>   <td>Cannot connect to ActiveRecord database</td></tr>
+<tr><td>JRUBY-3984</td>   <td>[1.9] Array improvements to solve several specs</td></tr>
+<tr><td>JRUBY-3985</td>   <td>[1.9] ARGF improvements to solve several specs</td></tr>
+<tr><td>JRUBY-3987</td>   <td>[1.9] Bignum improvements to pass some ruby specs</td></tr>
+<tr><td>JRUBY-3988</td>   <td>Fixnums quietly lop off bits when calling methods of lesser precision than long</td></tr>
+<tr><td>JRUBY-3989</td>   <td>nil can't be passed for numeric Java types in some cases, even though nil.to_i treats it as 0</td></tr>
+<tr><td>JRUBY-3990</td>   <td>Fixnums are inconsistently converted when target type is java.lang.Object</td></tr>
+<tr><td>JRUBY-3991</td>   <td>[1.9] Comparable improvements to pass ruby specs</td></tr>
+<tr><td>JRUBY-3993</td>   <td>[1.9] Dir improvements to pass some ruby specs</td></tr>
+<tr><td>JRUBY-3995</td>   <td>ant bails with unrecognized -d32 option on Windows</td></tr>
+<tr><td>JRUBY-3997</td>   <td>IBM JDK does not support some String.format specifiers</td></tr>
+<tr><td>JRUBY-3998</td>   <td>Path separators differ between jruby and jruby --ng on Windows</td></tr>
+<tr><td>JRUBY-3999</td>   <td>[PATCH] Improved Sorting Algorithm</td></tr>
+<tr><td>JRUBY-4000</td>   <td>[1.9] Fixnum improvements to solve ruby specs</td></tr>
+<tr><td>JRUBY-4001</td>   <td>[PATCH] Fixed float rubyspecs</td></tr>
+<tr><td>JRUBY-4003</td>   <td>NegativeArraySizeException in RubyHash.keys</td></tr>
+<tr><td>JRUBY-4004</td>   <td>jrubyc should return a non-zero return code if compilation fails</td></tr>
+<tr><td>JRUBY-4011</td>   <td>IO.binmode should raise an IOError on closed stream</td></tr>
+<tr><td>JRUBY-4017</td>   <td>[1.8] Method#name and UnboundMethod#name should return strings, not symbols</td></tr>
+<tr><td>JRUBY-4019</td>   <td>Build issues when changes from rev 2eef39 are included</td></tr>
+<tr><td>JRUBY-4021</td>   <td>[1.9] undefined methods Hash.compare_by_identity and Hash.compare_by_identity?</td></tr>
+<tr><td>JRUBY-4022</td>   <td>9 rubyspec failures for SecureRandom</td></tr>
+</table>

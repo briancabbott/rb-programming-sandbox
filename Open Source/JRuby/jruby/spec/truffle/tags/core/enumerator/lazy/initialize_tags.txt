@@ -1,0 +1,1 @@
+fails:Enumerator::Lazy#initialize on frozen instance raises a RuntimeError

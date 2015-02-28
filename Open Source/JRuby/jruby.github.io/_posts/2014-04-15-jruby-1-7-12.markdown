@@ -1,0 +1,61 @@
+---
+layout: post
+title: JRuby 1.7.12 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.12
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.12 is our twelfth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 39 issues fixed for 1.7.12
+- Mostly small 1.9.3 compatibility fixes
+- Fixed a small leak if throwing lots of X509Errors
+- Improved loading speed of Ruby files from jar files.
+
+### Github Issues resolved for 1.7.12
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/pull/1626">#1626</a> - Fix compare_to for to_java'ed Ruby objects</li>
+<li><a href="https://github.com/jruby/jruby/pull/1625">#1625</a> - Array#pack(cC) should not raise RangeError when argument is bignum</li>
+<li><a href="https://github.com/jruby/jruby/issues/1618">#1618</a> - Enum.java:238:in `valueOf': java.lang.IllegalArgumentException: No enum constant jnr.constants.platform.AddressFamily.AF_AF_INET</li>
+<li><a href="https://github.com/jruby/jruby/issues/1612">#1612</a> - jruby affected by libyaml CVE-2014-2525?</li>
+<li><a href="https://github.com/jruby/jruby/issues/1608">#1608</a> - Inconsistent parsing of long strings to integers between JRuby and MRI</li>
+<li><a href="https://github.com/jruby/jruby/issues/1607">#1607</a> - index.txt for s3 files</li>
+<li><a href="https://github.com/jruby/jruby/issues/1606">#1606</a> - Exception when comparing Time with nil using ===</li>
+<li><a href="https://github.com/jruby/jruby/issues/1605">#1605</a> - syslog FFI constants not generated for Syslog class on FreeBSD</li>
+<li><a href="https://github.com/jruby/jruby/pull/1603">#1603</a> - Remove [@] syntax to add IBM i compatibility</li>
+<li><a href="https://github.com/jruby/jruby/pull/1600">#1600</a> - Enums.... round three</li>
+<li><a href="https://github.com/jruby/jruby/pull/1599">#1599</a> - Fix dynamic rescue on Java exceptions (issue #1598)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1598">#1598</a> - Dynamic rescue blocks don't catch Java exceptions</li>
+<li><a href="https://github.com/jruby/jruby/issues/1595">#1595</a> - "gem install bundler" fails using 2.0 or 2.1 mode</li>
+<li><a href="https://github.com/jruby/jruby/pull/1592">#1592</a> - Fix definition of JavaUtilities::ModifierShortcuts#static?</li>
+<li><a href="https://github.com/jruby/jruby/pull/1589">#1589</a> - Rand fix master</li>
+<li><a href="https://github.com/jruby/jruby/pull/1588">#1588</a> - fix Random.rand(1.0) behavior</li>
+<li><a href="https://github.com/jruby/jruby/pull/1587">#1587</a> - Refactor channeldescriptor to use FileResource</li>
+<li><a href="https://github.com/jruby/jruby/issues/1583">#1583</a> - Random.rand is broken with floating point values vs 1.9.3</li>
+<li><a href="https://github.com/jruby/jruby/issues/1575">#1575</a> - mvn build error for [INFO] JRuby Lib Setup ................................... FAILURE</li>
+<li><a href="https://github.com/jruby/jruby/pull/1573">#1573</a> - Fix exponential perf degradation in Time.parse and Time.strptime.</li>
+<li><a href="https://github.com/jruby/jruby/pull/1564">#1564</a> - String#{to_r,to_c} should not use backref when calling gsub internally</li>
+<li><a href="https://github.com/jruby/jruby/issues/1563">#1563</a> - Calling String#to_r causes loss of Regexp.last_match data</li>
+<li><a href="https://github.com/jruby/jruby/pull/1557">#1557</a> - Pathname doesn't have to_path in 1.8</li>
+<li><a href="https://github.com/jruby/jruby/issues/1556">#1556</a> - Dir.home returns LOGDIR env var instead of HOME or user.home</li>
+<li><a href="https://github.com/jruby/jruby/pull/1546">#1546</a> - Implement jar directory snapshot caching.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1534">#1534</a> - NPE in RubyIO.fwrite(RubyString buffer)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1532">#1532</a> - Potential runtime leak from X509Error$ErrorException</li>
+<li><a href="https://github.com/jruby/jruby/pull/1529">#1529</a> - Krypt 0.0.2.rc1 update</li>
+<li><a href="https://github.com/jruby/jruby/pull/1526">#1526</a> - Change to use FileResource to get entries for RubyDir</li>
+<li><a href="https://github.com/jruby/jruby/issues/1523">#1523</a> - unexpected ArgumentError in curried Proc</li>
+<li><a href="https://github.com/jruby/jruby/pull/1508">#1508</a> - fix spinning indefinitely on partial TLS record (issue #1280)</li>
+<li><a href="https://github.com/jruby/jruby/pull/1507">#1507</a> - Processdottimesfix</li>
+<li><a href="https://github.com/jruby/jruby/pull/1506">#1506</a> - Better messaging with NameErrors</li>
+<li><a href="https://github.com/jruby/jruby/issues/1478">#1478</a> - Array#pack difference between jruby 1.7.10 and ruby 1.9.3</li>
+<li><a href="https://github.com/jruby/jruby/issues/1460">#1460</a> - org.jruby.ext.pathname.RubyPathname class doesn't properly support instance_variable_set method</li>
+<li><a href="https://github.com/jruby/jruby/issues/1280">#1280</a> - jruby-openssl spins endlessly trying to read from a non-blocking SocketChannel while no data is available.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1210">#1210</a> - Unbundle bouncy-castle-java</li>
+<li><a href="https://github.com/jruby/jruby/issues/1207">#1207</a> - Unbundle krypt libraries</li>
+<li><a href="https://github.com/jruby/jruby/issues/1100">#1100</a> - When inside a .JAR, __FILE__ returns a URI-like string that isn't understood by some keywords</li>
+</ul>

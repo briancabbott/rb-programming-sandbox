@@ -1,0 +1,11 @@
+!.gitignore
+build
+target
+dist
+*.orig
+*.rej
+*~
+nbproject/private
+lib/jruby-parser.jar
+pkg
+.ruby-version
