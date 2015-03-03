@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Manifest-Version: 1.0
 Bundle-Description: JRuby Stdlib @project.version@ OSGi bundle
 Bundle-DocURL: http://jruby.org
@@ -10,3 +11,17 @@ Bundle-SymbolicName: org.jruby.jruby-stdlib
 Bundle-Vendor: JRuby
 Bundle-Version: @project.version@
 Created-By: Apache Maven Bundle Plugin
+=======
+Manifest-Version: 1.0
+Bundle-Description: JRuby Stdlib @project.version@ OSGi bundle
+Bundle-DocURL: http://jruby.org
+Bundle-License: http://www.gnu.org/licenses/gpl-3.0-standalone.html, htt
+ p://www.gnu.org/licenses/lgpl-3.0-standalone.html, http://www.eclipse.o
+ rg/legal/epl-v10.html
+Bundle-ManifestVersion: 2
+Bundle-Name: JRuby Stdlib @project.version@
+Bundle-SymbolicName: org.jruby.jruby-stdlib
+Bundle-Vendor: JRuby
+Bundle-Version: @project.version@
+Created-By: Apache Maven Bundle Plugin
+>>>>>>> c348867bba82f393fba910b694a77b4685430155

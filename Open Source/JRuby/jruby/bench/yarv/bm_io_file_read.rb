@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #
 # Seek and Read file.
 #
@@ -13,3 +14,20 @@ max.times{
   f.seek 0
   f.read
 }
+=======
+#
+# Seek and Read file.
+#
+
+require 'tempfile'
+
+max = 20_000
+str = "Hello world!  " * 1000
+f = Tempfile.new('yarv-benchmark')
+f.write str
+
+max.times{
+  f.seek 0
+  f.read
+}
+>>>>>>> c348867bba82f393fba910b694a77b4685430155

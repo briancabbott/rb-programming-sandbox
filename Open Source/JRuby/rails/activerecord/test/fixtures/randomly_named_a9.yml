@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 first_instance:
   some_attribute: AAA
   another_attribute: 000
@@ -5,3 +6,12 @@ first_instance:
 second_instance:
   some_attribute: BBB
   another_attribute: 999
+=======
+first_instance:
+  some_attribute: AAA
+  another_attribute: 000
+
+second_instance:
+  some_attribute: BBB
+  another_attribute: 999
+>>>>>>> c348867bba82f393fba910b694a77b4685430155

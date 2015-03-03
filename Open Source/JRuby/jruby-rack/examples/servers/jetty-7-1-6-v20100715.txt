@@ -147,7 +147,11 @@ SERVER_SOFTWARE = jetty/7.1.6.v20100715
 java.servlet_context = org.jruby.rack.servlet.DefaultServletRackContext@32645ccb
 java.servlet_request = [GET /sinatra/env]@9171491 org.eclipse.jetty.server.Request@8bf223
 java.servlet_response = HTTP/1.1 200 
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> c348867bba82f393fba910b694a77b4685430155
 jruby.rack.dynamic.requests.only = true
 jruby.rack.jruby.version = 1.6.4
 jruby.rack.rack.release = 1.3
