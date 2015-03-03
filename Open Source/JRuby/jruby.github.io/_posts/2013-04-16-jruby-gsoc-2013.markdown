@@ -1,0 +1,15 @@
+---
+layout: post
+title: JRuby in Google Summer of Code 2013
+---
+We're pleased to announce that JRuby has been accepted as a mentoring organization for [Google Summer of Code 2013](http://www.google-melange.com/gsoc/homepage/google/gsoc2013)!
+
+JRuby participated in last year's Google Summer of Code with eight excellent students. Projects ranged from serialization of our new intermediate representation to improved Android support via the Ruboto project. We're hoping to have another great batch of projects, students, and mentors this year.
+
+The [JRuby GSoC 2013 wiki page](https://github.com/jruby/jruby/wiki/Google-Summer-of-Code-2013) has all the practical details, including dates, contact information, and possible ideas. This week (until April 21) we're looking for mentors interested in helping a student over the summer. From April 22 to May 3, students can submit their proposals, and soon after that we'll get our slot allocations and select projects.
+
+If you are interested in mentoring a project, now's the time to get involved! Apply on the [JRuby GSoC organization page](https://google-melange.appspot.com/gsoc/org/google/gsoc2013/jruby). If you aren't interested in mentoring, please pass the word on to others!
+
+If you'd like to work on a project for JRuby as a student, you should start communicating with us on the [jruby-gsoc Google Group](https://groups.google.com/forum/#!forum/jruby-gsoc) today. We'll help you find a project that suits you and make sure you put together a complete proposal after April 22. You'll also apply on the [JRuby GSoC organization page](https://google-melange.appspot.com/gsoc/org/google/gsoc2013/jruby), but not until after April 21. If you're not a student or won't be able to participate...tell your friends we're looking for them!
+
+Google Summer of Code has been a really exciting and rewarding experience for the JRuby project, and we're looking forward to another excellent year.

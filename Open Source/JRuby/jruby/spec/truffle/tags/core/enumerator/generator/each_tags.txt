@@ -1,0 +1,1 @@
+fails:Enumerator::Generator#each requires multiple arguments

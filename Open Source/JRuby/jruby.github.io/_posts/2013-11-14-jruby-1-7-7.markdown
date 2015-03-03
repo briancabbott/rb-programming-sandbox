@@ -1,0 +1,45 @@
+---
+layout: post
+title: JRuby 1.7.7 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.7
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.7 is our seventh update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+This release was a quick followup release to 1.7.6.  Our main priority is working on our next major version of JRuby, but we want to maintain a partial focus on continuing to fix bugs for JRuby 1.7.x.  A faster release cycle for JRuby 1.7.x will help motivate us to keep fixing bugs on our maintenance branch.  Expect a new release about every 3 weeks...
+
+Changes of note:
+- 21 issues fixed for 1.7.7
+- Fixed Windows 'rails new' regression (bundle install exits)
+- Fixed OpenSSL gem bootstrapping problem
+- Fixed Google App Engine bootstrapping problem
+- A few missing 1.9+ Pathname features added
+
+### Github Issues resolved for 1.7.7
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1214">#1214</a> - Support for ISO-8859-16</li>
+<li><a href="https://github.com/jruby/jruby/pull/1213">#1213</a> - Remove README.md notes on junit.jar</li>
+<li><a href="https://github.com/jruby/jruby/issues/1201">#1201</a> - Pathname#delete alias missing / not working</li>
+<li><a href="https://github.com/jruby/jruby/pull/1199">#1199</a> - Softlink jruby to jruby.bash instead of hard copy.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1182">#1182</a> - incorrect RubyHash multithreaded behaviour when marshalling</li>
+<li><a href="https://github.com/jruby/jruby/pull/1180">#1180</a> - Move the guard before the use of metaclass.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1176">#1176</a> - Array(array) returns a copy instead of array itself</li>
+<li><a href="https://github.com/jruby/jruby/issues/1171">#1171</a> - Rails new failed with JRuby on Windows 7</li>
+<li><a href="https://github.com/jruby/jruby/pull/1170">#1170</a> - `rindex` performance improvement</li>
+<li><a href="https://github.com/jruby/jruby/issues/1167">#1167</a> - "print" called with no arguments prints "nil"</li>
+<li><a href="https://github.com/jruby/jruby/pull/1165">#1165</a> - Bug 1092 fix</li>
+<li><a href="https://github.com/jruby/jruby/issues/1163">#1163</a> - File.expand_path should fail if ENV['HOME'] isn't an absolute path</li>
+<li><a href="https://github.com/jruby/jruby/pull/1157">#1157</a> - Fix compatibility wiht Bouncy Castle 1.49.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1154">#1154</a> - Pathname.new(Dir.new('dir_name')) raises a TypeError</li>
+<li><a href="https://github.com/jruby/jruby/issues/1153">#1153</a> - Dir[*[]] behaves differently in jruby 1.7.6 the in MRI 1.9.3p448</li>
+<li><a href="https://github.com/jruby/jruby/issues/1151">#1151</a> - Too many files in JRuby 1.7.6</li>
+<li><a href="https://github.com/jruby/jruby/issues/1150">#1150</a> - rails 3.2.x with jruby-openssl in Gemfile gives uninitialized constant OpenSSL::Digest::OPENSSL_VERSION_NUMBER</li>
+<li><a href="https://github.com/jruby/jruby/issues/1148">#1148</a> - Commit c7c7c7 broke AppEngine</li>
+<li><a href="https://github.com/jruby/jruby/issues/1139">#1139</a> - ClassCastException when reading non String value from Java System.properties</li>
+<li><a href="https://github.com/jruby/jruby/issues/1136">#1136</a> - JRuby 1.7.5 doesn't compile valid class files</li>
+<li><a href="https://github.com/jruby/jruby/issues/1117">#1117</a> - #name method on java classes strips the outer class</li>
+</ul>

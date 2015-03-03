@@ -1,0 +1,1 @@
+fails:Enumerator#next_values returns an empty array if yield is called without arguments

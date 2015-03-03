@@ -1,0 +1,2 @@
+fails:IO#advise raises a RangeError if offset is too big
+fails:IO#advise raises a RangeError if len is too big

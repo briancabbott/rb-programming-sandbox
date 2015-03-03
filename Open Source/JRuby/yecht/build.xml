@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project basedir="." default="jar" name="yecht">
+  <description>
+    	Yecht is a Syck port, a YAML 1.0 processor for Ruby
+  </description>
+
+  <!-- First try to load machine-specific properties. -->
+  <property file="build.properties"/>
+  
+  <!-- And then load the defaults. It seems backwards to set defaults AFTER 
+       setting local overrides, but that's how Ant works. -->
+  <property file="default.build.properties"/>
+  
+  <path id="build.classpath">
+    <fileset dir="${lib.dir}" includes="*.jar" excludes="yecht*.jar"/>
+  </path>
+
+  <path id="ruby.build.classpath">
+    <fileset dir="${lib.dir}" includes="yecht*.jar"/>
+    <fileset dir="${jruby.lib}" includes="jruby.jar"/>
+  </path>
+
+  <patternset id="java.src.pattern">
+    <include name="**/*.java"/>
+  </patternset>
+
+  <target name="prepare" description="Creates the directories needed for building">
+    <xmlproperty file="build-config.xml" keepRoot="false" collapseAttributes="true"/>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${classes.dir}"/>
+    <mkdir dir="${yecht.classes.dir}"/>
+    <mkdir dir="${test.classes.dir}"/>
+    <mkdir dir="${ruby.classes.dir}"/>
+  </target>
+
+  <target name="ragel" depends="prepare" description="Standalone target that generates all our ragel based source files. Requires ragel to be on the path">
+    <exec executable="ragel" failonerror="true">
+      <arg line="-J"/>
+      <arg line="-o ${main.src.dir}/org/yecht/ImplicitScanner2.java"/>
+      <arg line="${main.src.dir}/org/yecht/ImplicitScanner2.rl"/>
+    </exec>
+  </target>
+
+  <target name="re2j" depends="prepare" description="Standalone target that generates all our re2j based source files. Requires re2j to be on the path">
+    <exec executable="re2j" failonerror="true">
+      <arg line="-o ${main.src.dir}/org/yecht/TokenScanner.java"/>
+      <arg line="${main.src.dir}/org/yecht/TokenScanner.re"/>
+    </exec>
+
+    <exec executable="re2j" failonerror="true">
+      <arg line="-o ${main.src.dir}/org/yecht/ImplicitScanner.java"/>
+      <arg line="${main.src.dir}/org/yecht/ImplicitScanner.re"/>
+    </exec>
+
+    <exec executable="re2j" failonerror="true">
+      <arg line="-o ${main.src.dir}/org/yecht/BytecodeScanner.java"/>
+      <arg line="${main.src.dir}/org/yecht/BytecodeScanner.re"/>
+    </exec>
+  </target>
+
+  <target name="jay" depends="prepare" description="Standalone target that generates all our jay based source files.">
+    <exec executable="${jay.home}/jay" failonerror="true" output="${main.src.dir}/org/yecht/DefaultYAMLParser.java">
+      <arg line="${main.src.dir}/org/yecht/DefaultYAMLParser.y"/>
+      <arg line="parser/skeleton.java"/>
+    </exec>
+
+<!--     <exec executable="ruby" failonerror="true" output="${main.src.dir}/org/yecht/DefaultYAMLParser.java"> -->
+<!--       <arg line="parser/optimize_parser.rb"/> -->
+<!--       <arg line="${main.src.dir}/org/yecht/DefaultYAMLParser.java.1"/> -->
+<!--     </exec> -->
+
+<!--     <delete file="${main.src.dir}/org/yecht/DefaultYAMLParser.java.1" quiet="true"/> -->
+  </target>
+
+  <target name="compile" depends="prepare" description="Compile the source files for the project.">
+    <javac destdir="${yecht.classes.dir}" debug="true" source="${javac.version}" target="${javac.version}">
+      <classpath refid="build.classpath"/>
+      <src path="${main.src.dir}"/>
+      <patternset refid="java.src.pattern"/>
+    </javac>
+  </target>
+
+  <target name="compile-with-gen" depends="re2j, jay, ragel" description="Compile the source files for the project.">
+    <javac destdir="${yecht.classes.dir}" debug="true" source="${javac.version}" target="${javac.version}">
+      <classpath refid="build.classpath"/>
+      <src path="${main.src.dir}"/>
+      <patternset refid="java.src.pattern"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="Create the yecht.jar file">
+    <jar destfile="${lib.dir}/yecht-0.0.2.jar">
+      <fileset dir="${yecht.classes.dir}">
+        <include name="**/*.class"/>
+        <include name="**/*.properties"/>
+      </fileset>
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="ext-ruby-compile" depends="jar" description="Create the JRuby extensions. Requires JRuby to be on the classpath, or in an easy to find place">
+    <javac destdir="${ruby.classes.dir}" debug="true" source="${javac.version}" target="${javac.version}">
+      <classpath refid="ruby.build.classpath"/>
+      <src path="${ruby.src.dir}"/>
+      <patternset refid="java.src.pattern"/>
+    </javac>
+  </target>
+
+  <target name="ext-ruby-jar" depends="ext-ruby-compile" description="Create the yecht-ruby.jar file">
+    <jar destfile="${lib.dir}/yecht-ruby-0.0.2.jar">
+      <fileset dir="${yecht.classes.dir}">
+        <include name="**/*.class"/>
+        <include name="**/*.properties"/>
+      </fileset>
+      <fileset dir="${ruby.classes.dir}">
+        <include name="**/*.class"/>
+      </fileset>
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="dist-bin" depends="jar">
+    <tar destfile="${release.dir}/yecht-bin-0.0.2.tar.gz" compression="gzip">
+      <tarfileset dir="." prefix="yecht-0.0.2">
+        <include name="lib/**"/>
+        <include name="docs/**"/>
+        <include name="LICENSE"/>
+        <include name="README"/>
+        <include name="CREDITS"/>
+      </tarfileset>
+    </tar>
+  </target>
+  
+  <target name="dist-src" depends="jar">
+    <tar destfile="${release.dir}/yecht-src-0.0.2.tar.gz" compression="gzip">
+      <tarfileset dir="." prefix="yecht-0.0.2">
+        <include name="lib/**"/>
+        <include name="docs/**"/>
+        <include name="src/**"/>
+        <include name="build.xml"/>
+        <include name="LICENSE"/>
+        <include name="README"/>
+        <include name="CREDITS"/>
+        <include name="default.build.properties"/>
+      </tarfileset>
+    </tar>
+  </target>
+  
+  <target name="dist" depends="dist-bin,dist-src"/>
+
+  <target name="clean" description="clean almost everything">
+    <delete dir="${build.dir}"/>
+    <delete file="${lib.dir}/yecht-0.0.2.jar" quiet="true"/>
+    <delete file="${lib.dir}/yecht-ruby-0.0.2.jar" quiet="true"/>
+  </target>
+
+  <target name="full-clean" depends="clean" description="clean almost everything">
+    <delete file="${main.src.dir}/org/yecht/TokenScanner.java" quiet="true"/>
+    <delete file="${main.src.dir}/org/yecht/ImplicitScanner.java" quiet="true"/>
+    <delete file="${main.src.dir}/org/yecht/BytecodeScanner.java" quiet="true"/>
+    <delete file="${main.src.dir}/org/yecht/DefaultYAMLParser.java" quiet="true"/>
+  </target>
+</project>

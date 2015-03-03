@@ -1,0 +1,292 @@
+---
+layout: post
+title: JRuby 1.7.0.preview1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.0.preview1.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+This is the first preview release of JRuby 1.7. This release represents a tremendous amount of work by dozens of contributors, and there are improvements in every subsystem. Users on Java 7 should start to see gains from invokedynamic, the JVM's new support for dynamic languages. Users of highly-concurrent applications will see improvements in throughput and raw parallelism. And we have upped our compatibility level to match Ruby 1.9.3.
+
+We have opted for a preview cycle this time due to the significance of changes in this release and our desire to give users more time to test JRuby before releasing 1.7 final. When in doubt, file a bug...we'll sort it out. We want to know issues users have with JRuby 1.7 sooner rather than later.
+
+### Notable Changes:
+
+- 1\.9\.3 is now our default runtime mode (--1.8 is needed for 1.8.7 support)
+- Many 1.9.x compatibility fixes
+- Support for Java 7's invokedynamic\*
+- Performance and concurrency improvements
+- Java 5 support dropped (Java 6+ required)
+- Update to Rubygems 1.8.24
+- Update to Rake 0.9.2.2
+- 259 issues resolved
+
+\*Note on invokedynamic performance:
+
+Invokedynamic is still a new feature for the JVM, so we recommend running as recent a build of Java 7 as possible. Builds of OpenJDK/Oracle JDK prior to "update 2" will show poor performance.
+
+Invokedynamic support can be disabled with -Xcompile.invokedynamic=false (passed to JRuby) for investigating perf issues or bugs.
+
+### Issues resolved:
+
+- JRUBY-928 Java arrays don't inherit from java.lang.Object in Rubified Java class hierarchy
+- JRUBY-2317 File writing is slower in JRuby than MRI
+- JRUBY-2708 JRuby should load relative path reference to AOT classes
+- JRUBY-3293 Cannot reopen a class from an included module
+- JRUBY-3519 Wrong work replacement char with russian charset
+- JRUBY-3797 include_class should be deprecated in favor of java_import (and/or import)
+- JRUBY-3812 Socket::gethostbyname does reverse DNS lookup for IP address and is slow if no DNS reverse lookup reply is received
+- JRUBY-3986 File inconsistency handles file:/// URLs pointing to things inside a JAR
+- JRUBY-4105 Rubyspec: SimpleDelegator send spec fails due to bug in 1.8.7 stdlib
+- JRUBY-4115 cipher.rb:24: superclass must be a Class (Module given) (TypeError)
+- JRUBY-4220 File.dirname(\_\_FILE\_\_) doesn't return correct value when a script is loaded from classpath
+- JRUBY-4236 Please reopen JRUBY-3894
+- JRUBY-4291 UNIXServer#accept can't be interrupted by kill/raise
+- JRUBY-4339 Kernel.load with wrap=true does not protect the global namespace of calling program
+- JRUBY-4484 jruby -rtracer doesn't trace
+- JRUBY-4605 RubyIO#select puts connectable sockets in the read set instead of write set
+- JRUBY-4717 1.9: New digest methods are missing (base64digest and base64digest!)
+- JRUBY-4743 Get a working test-indy target for testing against invokdynamic
+- JRUBY-4843 COPYING file is (partially) incorrect and outdated
+- JRUBY-4887 Problem with ja_JP.eucJP locale
+- JRUBY-5035 Merge JRuby-OSSL
+- JRUBY-5090 java class objectId() overrides .object_id
+- JRUBY-5201 1.9: uncaught timeout seems to cause silent failure
+- JRUBY-5222 Reopening a file descriptor on a socket doesn't work (gives "could not reopen: null (IOError)")
+- JRUBY-5317 Objects loaded via Marshal don't get Java class applied corrected unless passed through fn taking exact type
+- JRUBY-5320 require needs to treat case-insensitive file paths in LOADED_FEATURES as case-insensitive for searching purposes
+- JRUBY-5335 1.9: Random instance marshal data incompatible with CRuby 1.9
+- JRUBY-5348 Process.spawn should fail if wrong args passed
+- JRUBY-5375 1.9: Add "Mark" features to Psych
+- JRUBY-5446 jcodings no longer in sync with current data 1.9.2 is using
+- JRUBY-5459 JRuby launcher does not observe VERIFY_JRUBY env var to skip boot classpath
+- JRUBY-5499 Update to rubygems 1.5.2 since 1.5.0 has severe bugs
+- JRUBY-5512 regular expressions + regexp = incorrect results.
+- JRUBY-5547 add String#byteslice() method
+- JRUBY-5560 JRuby does not detect unix socket
+- JRUBY-5568 Remove MethodFactory "can't load bytecode" logging before 1.6 final
+- JRUBY-5622 Regex string interpolation breaks unicode properties
+- JRUBY-5630 Java calls have lost the Java part of the trace
+- JRUBY-5643 1.9: Array#map and Array#collect produce the same enumerator; should be specific to the method called
+- JRUBY-5647 Missing method Socket::ip_address_list
+- JRUBY-5665 RubySpec: String#scan failures
+- JRUBY-5678 tmpdir cannot be delete when jruby has sudo/root rights
+- JRUBY-5708 IO.select does not block on unix sockets
+- JRUBY-5726 FileUtils#cp (ultimately FileStat.identical? implementations) breaky on Windows
+- JRUBY-5762 Proc#=== is not same as Proc#call in 1.9 mode.
+- JRUBY-5767 add .metadata to .gitignore file
+- JRUBY-5774 ruboto: unsupported Java version: 0.9
+- JRUBY-5775 ruboto: Dir\[\] gives empty array when listing files below the root of the apk
+- JRUBY-5779 $LOADED_FEATURES is updated before loading finished
+- JRUBY-5792 Eval error for hashes containing symbols ending with an equals sign
+- JRUBY-5811 jruby 1.9 fails to load irb
+- JRUBY-5813 FFI::AutoPointer occasionally calls releaser proc when GC'd, even if autorelease is set to false
+- JRUBY-5823 jruby -x bug
+- JRUBY-5835 ruboto: File#read fails with jruby-jars-1.6.2
+- JRUBY-5842 NullPointerException when calling any method on Fiber.current if not explicitly in a created Fiber
+- JRUBY-5845 Add slf4j logging to JRuby
+- JRUBY-5849 make JAVA_VM to be set from environment
+- JRUBY-5852 Can't serialize RubyModule, subclass of RubyBasicObject, which extends Serializable
+- JRUBY-5863 Named captures cause crash when there is no match
+- JRUBY-5866 JRuby can't access nested Java class if the class is called 'id'
+- JRUBY-5874 Kernel#\` and Kernel#system didn't correctly glob when using ruby
+- JRUBY-5876 Socket#syswrite (the non-buffered one) raises SystemCallError on broken pipe
+- JRUBY-5878 Enumerator.map is not yielding all values
+- JRUBY-5881 Update to jnr-constants 0.8
+- JRUBY-5921 Switch all (or most) println logging to slf4j logging.
+- JRUBY-5934 Writing ENV\[\]= changes through to the real ENV (via POSIX) should be configurable per runtime
+- JRUBY-5943 Platform.IS_OPENVMS is unknown in jorg.jruby.ext.posix.util.Platform
+- JRUBY-5953 rvm jruby 1.6.3 freezes after issued \`irb\` or
+- JRUBY-5955 maven build of JRuby 1.6.3 fails on Linux Fedora 15
+- JRUBY-5964 Digest::Base#file does not handle Pathname as parameter when ran in 1.9
+- JRUBY-5968 Mac OSX ant dist failure w/ patch
+- JRUBY-5969 Implemented a new commandline parser in NKF
+- JRUBY-5973 Failure to connect to Nailgun server produces confusing error
+- JRUBY-5977 test_rubyopts_rubygems_cleared_in_child test failure w/ patch
+- JRUBY-5981 Regression: thread-local UTF8_CODER truncates decoded strings to 1024 bytes
+- JRUBY-5987 Regression: IncludedModuleWrapper does not delegate to new Module autoload map
+- JRUBY-5988 Hash.inspect in --1.9 results in ASCII-8BIT encoding
+- JRUBY-5989 MacOSX Installer Build Task Unzip Overwrite Issue w/ patch
+- JRUBY-5993 $CLASSPATH allows array additions
+- JRUBY-5995 \`Readline::HISTORY &lt;&lt; str\` and push should return HISTORY
+- JRUBY-5996 gem update --system crashes with NPE
+- JRUBY-6017 Undocumented windowBits feature of Zlib::Infrate/Deflate
+- JRUBY-6031 ActiveRecord::JDBCError in JRuby 1.6.4
+- JRUBY-6035 Randomly changed hash key in overriden \[\]= method in Hash inherited class
+- JRUBY-6037 org.objectweb.asm.ClassReader is not found under some circumstances.
+- JRUBY-6043 Fix for JRUBY-5965 breaks Mirah macro compilation
+- JRUBY-6048 Array#repeated_permutation(n) enumerates nothing when n is greater than the length
+- JRUBY-6058 JRuby 1.6.4 incompatible with Google App Engine
+- JRUBY-6062 ruboto: regression: Increased stack usage
+- JRUBY-6068 Trunk Build Failure for install_dist_gems task
+- JRUBY-6070 TCPSocket#new issues with local_addr and local_port
+- JRUBY-6075 ant dist fails on both master and jruby-1_6 branches
+- JRUBY-6076 Mixed-case Java package name not resolved
+- JRUBY-6077 Allow loading a Ruby source file from the class path using the fully qualified name
+- JRUBY-6078 Introduce jzlib-based zlib implementation
+- JRUBY-6096 Unable to build completely from source (rdoc missing)
+- JRUBY-6100 NameError Exception if I try to use syck as YAML engine
+- JRUBY-6101 JSR 223 code execution breaks with JRuby 1.6.4/1.6.3 with no error message
+- JRUBY-6103 allocator undefined for NativeException
+- JRUBY-6108 bin/jruby script has incompatible bourne shell syntax
+- JRUBY-6119 Loading a Ruby source file from a subdirectory of a JAR without a directory entry fails
+- JRUBY-6127 Magic comment should start in column 1
+- JRUBY-6129 Multiple assignment with splatted LHS fails to call #to_ary on corresponding objec
+- JRUBY-6130 hash#update calls to_hash method on frozen object (in 1.9 mode)
+- JRUBY-6131 Integer#round can effectively hang jruby for large negative arguments in --1.9 mode
+- JRUBY-6137 Small Leak in Fileno Bookkeeping For STDIO RubyIOs
+- JRUBY-6141 All MatchData objects resulting from an invocation of String#scan are updated with the current match
+- JRUBY-6143 1.9: RubySpec: Regexp Spec failures with /n
+- JRUBY-6145 Cleanup Maven POMs So 'mvn install' Works Again
+- JRUBY-6149 Some native exceptions are wrapped too agressively
+- JRUBY-6165 IO.popen forcibly kills process when io is closed
+- JRUBY-6169 Update 1.9 Standard Library to 1.9.3p0
+- JRUBY-6172 Requiring a file from a JAR that has a path inside the JAR that coincides with a path on the file system that includes a symlink fails
+- JRUBY-6180 "SystemCallError: Unknown error - Connection reset by peer" should be mapped to Errno::ECONNRESET
+- JRUBY-6199 JRuby is hardcoded to use '-mmacos-version-min=10.4' which is not compatible with '-rpath' being used
+- JRUBY-6202 JIT-ed class names only use method names, causing collisions
+- JRUBY-6204 UTF-8 char in XML hangs in Joni
+- JRUBY-6221 json gem encoding/decoding is 2x slower than under MRI
+- JRUBY-6222 Remove rdoc data from dist in favor of rdoc-data gem
+- JRUBY-6227 1.9: Struct#members and Struct::members should return an Array of Symbols in 1.9
+- JRUBY-6229 Allow a way to activate the profiling API when embedding JRuby
+- JRUBY-6230 Cache jar content list to speed up file? operation
+- JRUBY-6234 Kernel.system doesn't work with environement parameters
+- JRUBY-6237 Allow the syntax \`a = b = f 1\`
+- JRUBY-6239 unable to silence warnings
+- JRUBY-6241 Define a read-only global variable $-W
+- JRUBY-6243 Add support for graph profile with HTML output
+- JRUBY-6245 \`ant test\` errors on Windows with test_dir_with_jar_without_dir_entry.rb
+- JRUBY-6248 thread leak
+- JRUBY-6249 Creating binary for jffi
+- JRUBY-6250 When executing an Ant build.xml file, the Ant executable should not be required to live on the environment's $PATH
+- JRUBY-6251 NailGun and 1.9 seem not to be usable at the same time ( --1.9 and --ng)
+- JRUBY-6259 ant test - fails in WinXP: (LoadError) no such file to load -- jruby
+- JRUBY-6265 Setting load path on ScriptingContainer with LocalContextScope.SINGLETON does not work
+- JRUBY-6266 Unicode encoding problem in CSV.foreach
+- JRUBY-6269 JRuby --1.9 cannot load YAML output from JRuby --1.8
+- JRUBY-6277 Dependency to compiler package from org.jruby.Ruby breaks Ruboto
+- JRUBY-6278 Double require bug in the handling of concurrent requires
+- JRUBY-6279 Invokedynamic support is missing 'float_op_equal'
+- JRUBY-6280 Fails to open fifo for writing.
+- JRUBY-6281 Applet does not work in the 1.9 mode
+- JRUBY-6282 Colon is not allowed in a file name on Windows
+- JRUBY-6283 Master crashes when calling an FFI-attached C library function
+- JRUBY-6284 Calls to Kernel#exit result in an exception printed on stderr
+- JRUBY-6285 JRuby 1.7 master on Java7u2 is *slower* running a benchmark than master on Java6
+- JRUBY-6291 Closing One Stream From IO.popen4 Results in Stream Closed Error When Reading Other Streams
+- JRUBY-6292 Massive perf degradation in pack after ByteList update
+- JRUBY-6293 jruby-dist-master does not build C extensions
+- JRUBY-6295 Dir.chdir, $HOME and $LOGDIR behavior
+- JRUBY-6300 TestMethodmissing testcase fails with Java 7
+- JRUBY-6301 scripting_lang.jruby:undefined method in test_loop_1_9.rb
+- JRUBY-6305 C Extension fails to build
+- JRUBY-6307 Powering operation of Integer sometimes gets a wrong calculation when 1.9 mode.
+- JRUBY-6313 jruby-launcher rspecs fail on ubunutu
+- JRUBY-6318 Tempfile#open does not return the value of the block given to it
+- JRUBY-6325 Java::OrgYamlSnakeyamlReader::ReaderException: special characters are not allowed
+- JRUBY-6327 java.lang.StringIndexOutOfBoundsException: String index out of range: 1
+- JRUBY-6328 Ruboto: regression: LoadError with master
+- JRUBY-6334 Import multiple classes via java_import
+- JRUBY-6337 poor error message on importing java class
+- JRUBY-6341 Regression: Enumerable#first on a Java list returns an array, not an element
+- JRUBY-6343 Running Webrick in 1.9 mode is causing IllegalMonitorStateException
+- JRUBY-6344 Embedded \r should not be treated as end of comment line
+- JRUBY-6349 Running 'ant clean-all' in git-free environments fails
+- JRUBY-6371 Mac OS X installer missing from snapshots directory
+- JRUBY-6378 cext fails to compile on 64-bit Ubuntu Oneirc
+- JRUBY-6379 rdoc, ri, rdoc-data and 'generate-ri-cache' ant task
+- JRUBY-6386 time.localtime not taking any arguments
+- JRUBY-6387 Should JRuby 1.7 set 1.9 compatibility as default?
+- JRUBY-6389 TypeError: can't convert Pathname into String - JRuby in 1.9 mode not handling Pathname in $LOAD_PATH consistently with MRI
+- JRUBY-6393 Implement Addrinfo class
+- JRUBY-6394 Socket.new takes symbolic protocol, etc
+- JRUBY-6401 Psych::SyntaxError while installing some gems in 1.9 mode
+- JRUBY-6413 jruby gem install chops off first character from files it extracts
+- JRUBY-6417 exception in rake assets:precompile in jruby-1.6.6
+- JRUBY-6419 GzipReader encodings still not right; breaks "gem install"
+- JRUBY-6421 installing jruby-launcher fails with wrong filenames (zlib error apparently)
+- JRUBY-6438 "TypeError: can't convert Array into String" from ffi code in 1.9 mode
+- JRUBY-6439 cext: Memory leak in String and Array handling
+- JRUBY-6449 connect_nonblock + select needs to eventually finishConnect
+- JRUBY-6450 jruby-win32ole fails under java7 and jruby master; can't find org.jruby.runtime.builtin.IRubyObject.toJava(Class)int
+- JRUBY-6464 Use 'mvn versions:set -DnewVersion=&lt;whatever&gt;' instead of our Ruby rake code for updating poms
+- JRUBY-6475 md5 digest causes thread lock
+- JRUBY-6476 org.jruby.util.Sprintf.rubySprintfToBuffer causing thread locks
+- JRUBY-6477 Tempfile#stat raises java.lang.NullPointerException when unlinked
+- JRUBY-6483 Ruby array to_java does not appear to work
+- JRUBY-6485 :\_\_recursive_key\_\_ left in threadlocals			
+- JRUBY-6492 "InvalidTransformException" on startup of large application
+- JRUBY-6496 Kernel#Hash
+- JRUBY-6498 Net::Http does not close socket when open_timeout is exceeded
+- JRUBY-6501 warning: variable $KCODE is no longer effective on github master JRuby (1.9 mode)
+- JRUBY-6502 "Config" should be deprecated in JRuby 1.7 (1.9 mode)
+- JRUBY-6504 Block parameter syntax issue where the closing | comes at the beginning of the line
+- JRUBY-6511 Timeout doesn't work when https server not responding
+- JRUBY-6512 Time.now shows wrong timezone for Moscow region
+- JRUBY-6517 StringIO#ungetc issue on JRuby 1.6.6 and 1.6.7 in 1.8.7 mode
+- JRUBY-6523 Static ThreadLocals must be weak or soft or not static
+- JRUBY-6526 Socket#accept no such method?
+- JRUBY-6527 Socket#connect_nonblock raises Errno::EINPROGRESS, but MRI raises IO::WaitWritable
+- JRUBY-6528 Socket#connect_nonblock and IO::select appear to be misbehaving?
+- JRUBY-6533 JavaNullPointer Exception instead method_missing		
+- JRUBY-6534 Broken block-local vars in 1.9 mode
+- JRUBY-6538 'obj !~ thing' is not the same as obj.send(:!~, thing)
+- JRUBY-6541 DRb::DRbIdConv difference between 1.8 and 1.9
+- JRUBY-6545 unable to load win32/registry in 1.9 mode
+- JRUBY-6549 JRuby 1.7 HEAD does not properly detect platform under OpenJDK 1.7.0-u4-b228
+- JRUBY-6551 Incorrect Ruby compatibility description displayed
+- JRUBY-6554 \r at the end of String can cause SyntaxError
+- JRUBY-6556 BigDecimal divided by Rational gives nil in --1.9 mode
+- JRUBY-6559 ZLib buggy handling in 1.6.7
+- JRUBY-6560 File.expand_path for path starting with "jar:file:" fails
+- JRUBY-6561 Update to latest rubygems
+- JRUBY-6567 characters to the console aren't echoed after a background then foreground of jruby irb session
+- JRUBY-6570 autoload :Time, 'time' doesn't work
+- JRUBY-6571 StackOverflow when calling java.util.regex.Matcher#end
+- JRUBY-6572 File.open with 'b' options should always 'gets' string with 'ASCII-8BIT' encoding, regardless the value of 'Encoding.default_internal'
+- JRUBY-6574 Socket#bind does not convert nil to 0
+- JRUBY-6582 Encoding when using '%' inconsistent with MRI 1.9			
+- JRUBY-6583 Simple jar built with warbler works in 1.6.7, breaks in 1.7 with require 'haml'
+- JRUBY-6584 File.mtime() is slower than it should be
+- JRUBY-6588 String#encode should not convert binary to mangled UTF-8
+- JRUBY-6589 java.lang.ClassCastException on exit from irb			
+- JRUBY-6590 DelegateClass subclasses can't include Java interfaces
+- JRUBY-6598 to_yaml has garbled text if object contains Chinese or Japanese characters
+- JRUBY-6599 test/test_socket.rb spuriously fails
+- JRUBY-6603 Concurrency bug in org.jruby.util.ShellLauncher.getCurrentEnv
+- JRUBY-6604 Cannot programmatically create regular expression /\[\\x80\]/n
+- JRUBY-6605 java.lang.ClassCastException: jline.console.history.MemoryHistory$EntryImpl cannot be cast to java.lang.String
+- JRUBY-6606 Dir::entries does not support none ascii character
+- JRUBY-6607 TCPSocket connect failure inside Timeout leaves orphaned sockets
+- JRUBY-6611 LoadServiceResource Opens But Never Closes InputStreams When Constructed With a URL
+- JRUBY-6612 some problems with JRuby seeming to not detect Java Long arithmetic overflows
+- JRUBY-6618 NPEs on CI spec run on master
+- JRUBY-6619 NoMethodError 'upcase' on Java string
+- JRUBY-6621 New ThreadLocal recursiveKey breaks usage of runtimes across multiple Java threads
+- JRUBY-6623 In IRB, backslashes are gobbled in the eval loop
+- JRUBY-6624 File#exists? cannot find file in JAR
+- JRUBY-6626 Ruboto: ThreadContext throws NPE in finalizer
+- JRUBY-6627 File#open fails for file in a JAR with a "jar:" prefix in the path
+- JRUBY-6628 #to_date fails on Rails request param with ArrayIndexOutOfBoundsException
+- JRUBY-6630 Tempfile doesn't take a hash in the constructor	
+- JRUBY-6631 Time#nsec always returns 0
+- JRUBY-6634 String.new(string) does not seem to clone the input
+- JRUBY-6637 String encoding difference between jruby --1.9 and MRI 1.9 (force_encoding a no-op in this case?)
+- JRUBY-6641 Java Exceptions Can Only Be Rescued if First in Exception List When Running in Interpreted Mode
+- JRUBY-6642 RubyException.printBacktrace omits the first line
+- JRUBY-6644 Time#strftime doesn't respect %:z
+- JRUBY-6647 Comparison of a self referential struct causes a stack overflow
+- JRUBY-6648 Opening a file with integer flags mixed with hash options raises an exception
+- JRUBY-6649 Opening a file with a hash as options will raise an \`ArgumentError: invalid access mode 4610\` exception
+JRUBY-6652 JVM crash while running rails app on Torquebox from com.kenai.jffi.Foreign.getZeroTerminatedByteArray
+- JRUBY-6654 Using ruby's standard gserver library causes jruby to run out of memory
+- JRUBY-6660 An invalid Makefile is genereated when a 'depend' file exists.
+- JRUBY-6661 strftime should behave the same for datetime and time
+- JRUBY-6668 StringScanner#scan_until spins forever on UTF-8 data
+- JRUBY-6669 failure at test/test_kernel.rb:588 if jruby is in a directory with mixed-case
+- JRUBY-6670 XMLRPC::XMLWriter::Simple has a Problem in 1.9 Mode
+- JRUBY-6671 jruby-launcher fails to compile with GCC 4.6.3 on OSX
+- JRUBY-6675 shadowing outer local variable warning in ffi
+	

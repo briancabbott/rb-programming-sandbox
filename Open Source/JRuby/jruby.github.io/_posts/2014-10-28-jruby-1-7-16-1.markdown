@@ -1,0 +1,15 @@
+---
+layout: post
+title: JRuby 1.7.16.1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.16.1
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.16.1 is our seventeenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  
+
+1.7.16.1 is a security fix release for [CVE-2014-8080](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-8080).  All users are strongly recommended to upgrade.   For more information, check out the excellent write up on [www.ruby-lang.org](https://www.ruby-lang.org/en/news/2014/10/27/rexml-dos-cve-2014-8080/).
+
+There is one other small change in this release to strip out extra unused files from jruby-complete.jar.  jruby-complete.jar is back down to a normal size again.
+

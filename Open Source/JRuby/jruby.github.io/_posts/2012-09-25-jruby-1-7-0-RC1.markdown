@@ -1,0 +1,262 @@
+---
+layout: post
+title: JRuby 1.7.0.RC1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.0.RC1.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+This is the first (and hopefully only) release candidate of JRuby 1.7. The JRuby 1.7 release series represents a tremendous amount of work by dozens of contributors, and there are improvements in every subsystem. Users of highly-concurrent applications will see improvements in throughput and raw parallelism. And we have upped our compatibility level to match Ruby 1.9.3.
+
+We know that there are still pieces of 1.9 support we don't have yet, like Ripper, but we think we are at a stable point where people can use JRuby in 1.9 mode to host production applications.  Barring any significantly serious issues, RC1 will become 1.7.0.  Our plan after the release of 1.7.0 is a set of smaller point releases to address bugs and to add the few missing pieces of Ruby 1.9.
+
+JRuby 1.7 is the first JRuby to support the new "invokedynamic" feature of the JVM. You can enable invokedynamic use on Java 7, but it is disabled normally due to JVM issues. On Java 8 builds, it is enabled by default. http://wiki.jruby.org/PerformanceTuning
+
+Please, please, please test your applications against 1.7.0.RC1.  We want to make 1.7.0 a rock solid release and your contribution is extremely helpful.
+
+### Notable Changes:
+
+- 1\.9\.3 is now our default runtime mode (--1.8 is needed for 1.8.7 support)
+- Many 1.9.x compatibility fixes
+- Several IO transcoding issues
+- Improvements and fixes to Java integration
+- 113 issues resolved
+
+### Issues resolved:
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-3622'>JRUBY-3622</a>] -         newInstance and getDeclaredConstructor fail to respect class overridden in JRuby
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-3765'>JRUBY-3765</a>] -         DummyDynamicScope should never be used for backref storage
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-3786'>JRUBY-3786</a>] -         RubyGems tests are not green; fix remaining failures/errors
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-4732'>JRUBY-4732</a>] -         Clean up anything that calls dataGetStruct on a wrapped Java object to get the object
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-4756'>JRUBY-4756</a>] -         Interface that has abstract methods final in Ruby hierarchy break &quot;real class&quot; implementation
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5226'>JRUBY-5226</a>] -         ri error while installing Rails -- Cannot create a file named &#39;&lt;&#39;
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5284'>JRUBY-5284</a>] -         Create full Exception hierarchy in Java types
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5303'>JRUBY-5303</a>] -         [1.9] Wrong parameters parse for method signatures with default values
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5314'>JRUBY-5314</a>] -         Classloader-sourced &quot;load&quot; will attempt to read a dir as a Ruby file
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5323'>JRUBY-5323</a>] -         control-c in cmd while running webrick rails app does not kill jruby.exe
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5583'>JRUBY-5583</a>] -         Profiling should not bomb out trying to find method name
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5675'>JRUBY-5675</a>] -         Difference in include behaviour in --1.9 mode
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5697'>JRUBY-5697</a>] -         Kernel#rand implementation does not match mri and rbx
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5700'>JRUBY-5700</a>] -         Segmentation fault - IBM JDK
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5848'>JRUBY-5848</a>] -         jruby-core maven artifact has broken dependencies
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5902'>JRUBY-5902</a>] -         STDIN.gets under cygwin doesn&#39;t work
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5908'>JRUBY-5908</a>] -         exec regression in windows since 1.6.0 (?)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6026'>JRUBY-6026</a>] -         OS X install postfligh script does not work with (t)csh
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6074'>JRUBY-6074</a>] -         Re-release jruby-win32ole with Java 5
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6105'>JRUBY-6105</a>] -         become_java! returns nil for Ruby classes that inherit from Java classes 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6106'>JRUBY-6106</a>] -         JRuby 1.9 coverage library reports different results than ruby 1.9
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6126'>JRUBY-6126</a>] -         [1.9] [RubySpec] In 1.9 mode, for should yield only as many values as there are arguments
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6195'>JRUBY-6195</a>] -         [1.9] Process.spawn (and related methods) ignore option hash
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6235'>JRUBY-6235</a>] -         IO#read_nonblock always raises Errno::EAGAIN: Resource temporarily unavailable
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6346'>JRUBY-6346</a>] -         Error establishing SSL connections: OpenSSL::SSL::SSLError: Socket closed
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6447'>JRUBY-6447</a>] -         1.9 patched oniguruma issues a number of warnings (e.g. for character classes, unknown coderanges) we omit silently
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6516'>JRUBY-6516</a>] -         IO.select times out with ssl connection
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6550'>JRUBY-6550</a>] -         [1.9] yield yields incorrect args when splatted args passed as 2nd arg to yield
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6568'>JRUBY-6568</a>] -         A Proc on a symbol like (&amp;:first) works in 1.8, but not in 1.9 mode
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6578'>JRUBY-6578</a>] -         File.readlink with chdir
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6581'>JRUBY-6581</a>] -         &quot;yield called out of block&quot; for Enumerators created with enum_for
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6595'>JRUBY-6595</a>] -         segfault with win32/registry
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6620'>JRUBY-6620</a>] -         On windows if JAVA_HOME ends in a &#39;\&#39; then native launcher bombs
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6622'>JRUBY-6622</a>] -         Unable to Load encrypted Private Key pem file
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6632'>JRUBY-6632</a>] -         BigDecimal.new fails when passed anything but string (Float, BigDecimal, Fixnum)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6636'>JRUBY-6636</a>] -         OpenSSL::X509::Certificate and OpenSSL::PKey::RSA constructors don&#39;t accept File objects
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6640'>JRUBY-6640</a>] -         stat.st_gid unsupported or native support failed to load org/jruby/RubyFileStat.java:432
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6656'>JRUBY-6656</a>] -         JRuby subclass cannot call super with arguments if parent constructor is varargs
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6665'>JRUBY-6665</a>] -         Multicast not working on Windows (see test_socket.rb)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6696'>JRUBY-6696</a>] -         32 bit jruby cannot run with 64 bit JVM installed
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6699'>JRUBY-6699</a>] -         OpenSSL::PKey::RSA.new fails on Windows
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6704'>JRUBY-6704</a>] -         JRuby should provide couterparts of MRI Ruby bundled Gems
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6738'>JRUBY-6738</a>] -         Kernel.load(..., true) --&gt; scope problem
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6744'>JRUBY-6744</a>] -         We are at p204 but 1.9.3 is only at p194
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6773'>JRUBY-6773</a>] -         ERB parsing in JRuby 1.6.6
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6777'>JRUBY-6777</a>] -         RubyFixnum.java - two methods fail to detect some long integer overflows
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6790'>JRUBY-6790</a>] -         Possible long integer overflow in fixnumStep in RubyNumeric.java
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6799'>JRUBY-6799</a>] -         Reopening Java class fails if set with ScriptingContainer#put and Java class
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6810'>JRUBY-6810</a>] -         YAML.load(YAML.dump(lambda{})) should raise TypeError
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6824'>JRUBY-6824</a>] -         Missing files/dirs in source tarball/zip
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6825'>JRUBY-6825</a>] -         ClassReader ClassNotFoundException in verbose mode on jruby-1.7.0-preview2
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6827'>JRUBY-6827</a>] -         ClassCastException with DummyDynamicScope in String#rpartition? with -X+C
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6828'>JRUBY-6828</a>] -         TypeError when returning non-nil from a proc called from Java by interface
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6832'>JRUBY-6832</a>] -         self is wrong in set_trace_func when raising NoMethodErrors
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6833'>JRUBY-6833</a>] -         FFI::Buffer#get_string(off, len) returns trailing NUL byte
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6836'>JRUBY-6836</a>] -         Strange interactions between a break statement and ensure blocks
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6837'>JRUBY-6837</a>] -         Encoding Problems in Rails 3.2
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6839'>JRUBY-6839</a>] -         issuing &#39;jruby -v&#39; causes Java exception &quot;Ruby: org.objectweb.asm.ClassReader  java.lang.ClassNotFoundException: org.objectweb.asm.ClassReader&quot;
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6840'>JRUBY-6840</a>] -         Java package class calls no longer working in 1.7.0-pre2
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6841'>JRUBY-6841</a>] -         State file use in UUID gem causes severe performance degradation
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6843'>JRUBY-6843</a>] -         Encoding::UndefinedConversionError when reading from IO stream given by open-uri&#39;s Kernel#open()
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6849'>JRUBY-6849</a>] -         pp Object.new shows 0x0000000 instead of a unique number for each object.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6851'>JRUBY-6851</a>] -         IO#set_encoding doesn&#39;t work with Encoding object
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6852'>JRUBY-6852</a>] -         Setting compile mode when using ScriptingContainer
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6854'>JRUBY-6854</a>] -         EXCEPTION_ACCESS_VIOLATION
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6855'>JRUBY-6855</a>] -         Signal.list missing &#39;KILL&#39; on Windows
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6858'>JRUBY-6858</a>] -         OpenSSL::HMAC missing reset method
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6859'>JRUBY-6859</a>] -         java.lang.ArrayIndexOutOfBoundsException when using --profile.api .  MAX_PROFILE_METHODS too low?
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6860'>JRUBY-6860</a>] -         String#slice on strings with multibyte chars fails 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6863'>JRUBY-6863</a>] -         multibyte strings after String#slice get wrong result on String#index(rindex)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6865'>JRUBY-6865</a>] -         JRuby allows invalid attr_accessor (MRI raises exception)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6867'>JRUBY-6867</a>] -         Parsing issues with long lines
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6868'>JRUBY-6868</a>] -         Exceptions thrown when running with Coverage enabled
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6871'>JRUBY-6871</a>] -         Encoding::UndefinedConversionError when dropping a mongo database with Mongoid 3
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6872'>JRUBY-6872</a>] -         Behavior of Math.sqrt(Float::NAN) does not match MRI
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6875'>JRUBY-6875</a>] -         JRuby should load &quot;some_path/some_file.jar.rb&quot; if &quot;some_path/some_file.jar&quot; is required and &quot;some_path/some_file.jar&quot; does not exist.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6884'>JRUBY-6884</a>] -         Unexpected stack trace using ARM based linux
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6885'>JRUBY-6885</a>] -         method_missing and private methods behave differently
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6888'>JRUBY-6888</a>] -         Loading a newer joda-time seems to not work
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6891'>JRUBY-6891</a>] -         SSLSocket.accept forces reverse DNS lookup, not required for most SSL and sometimes causes very poor performance
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6892'>JRUBY-6892</a>] -         Calling #drop on an Enumerator doesn&#39;t work properly
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6894'>JRUBY-6894</a>] -         In 1.8 mode, generator.rb refers to non-existent generator_internal
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6896'>JRUBY-6896</a>] -         nil treated as 0 in call to Thread#join
+</li>
+</ul>
+            
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-5380'>JRUBY-5380</a>] -         Use Hotspot-specific features for calculating CPU time when available
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6275'>JRUBY-6275</a>] -         double locking a mutex could use a better error message, line number
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6445'>JRUBY-6445</a>] -         Allow a way to resolve interface methods from with Ruby proxy modules
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6500'>JRUBY-6500</a>] -         Compiler improvements
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6643'>JRUBY-6643</a>] -         jrubyc AOT Java compilation doesn&#39;t identify failure cause
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6890'>JRUBY-6890</a>] -         Rework paths to be similar to MRI + redefinable + defined in one place only
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-4670'>JRUBY-4670</a>] -         Plug ruby2java java2ruby marshalling
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6835'>JRUBY-6835</a>] -         A way to send a block of code across processes.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6883'>JRUBY-6883</a>] -         Enable subclassing of Java classes on Dalvik
+</li>
+</ul>
+        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6466'>JRUBY-6466</a>] -         externalize build_lib dependencies
+</li>
+</ul>
+    
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/JRUBY-6873'>JRUBY-6873</a>] -         jruby-1.7.0.preview2 much slower jruby-1.6.3 (192s vs.60s)
+</li>
+</ul>
+
+<h2>Github Issues</h2>
+
+- #307 Specs for DirectedGraph Library
+- #306 removed snapshot in versions
+- #304 DirectedGraph Specs : Removing a vertex doesn't remove edges from the graph
+- #303 DirectedGraph Specs : Removing a vertex doesn't remove edges from the graph
+- #301 Dynamic String/Symbol/Regexp create too much garbage
+- #300 Symbol table can't look up from ByteList directly
+- #294 no need to report memory/stack as properties
+- #293 Fix for issue #276
+- #282 call Kernel.require ruby method from autoload callback instead of calling internal require
+- #281 call Kernel.require ruby method from autoload callback instead of callin...
+- #280 Kernel require
+- #275 Remove left-over Javadoc params from Java class generator
+- #274 Implicit blocks from Symbol#to_proc does surprising and wrong things (with --1.9)
+- #273 1.6 backport: JRUBY-6810
+- #267 Various fixes for psych
+- #266 When call Kernel#singleton_class. And instance variables disappeared from Kernel#inspect.
+- #265 JRuby19mode behavior is different with CRuby. Fixnum#to_sym
+- #261 Fixnum#to_sym is not defined in Ruby 1.9
+- #259 native threads disabled with C extensions
+- #258 YAML.load_file to empty file gives false 

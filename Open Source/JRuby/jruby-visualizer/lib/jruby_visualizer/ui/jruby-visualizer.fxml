@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <center>
+    <SplitPane dividerPositions="0.6783625730994152" focusTraversable="true" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+      <items>
+        <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+          <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+              <children>
+                <Label text="Abstract Syntax Tree:" />
+                <TreeView fx:id="ast_view" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+            <VBox prefHeight="100.0" prefWidth="414.0">
+              <children>
+                <Label text="Ruby Source:" />
+                <TextArea id="ruby_source" fx:id="ruby_view" editable="false" prefHeight="258.0000999999975" prefWidth="330.0" style="-fx-font-family: monospaced" text="def foo&#10;  puts &quot;bar&quot;&#10;end" wrapText="true" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+          </items>
+        </SplitPane>
+        <VBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label id="compile_information" text="Information" />
+            <ListView fx:id="compile_information" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+          </children>
+        </VBox>
+      </items>
+    </SplitPane>
+  </center>
+  <top>
+    <VBox prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <MenuBar>
+          <menus>
+            <Menu mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#close_app" text="Close" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="View">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#launch_ir_view" text="IR View" />
+                <MenuItem mnemonicParsing="false" onAction="#launch_cfg_view" text="Control Flow Graph" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#launch_about" text="About" />
+              </items>
+            </Menu>
+          </menus>
+        </MenuBar>
+        <ToolBar>
+          <items>
+            <Label text="IRPasses:" />
+            <ComboBox fx:id="ir_passes_box" onAction="#select_ir_pass">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Button mnemonicParsing="false" onAction="#step_ir_pass" text="Step" />
+            <Button mnemonicParsing="false" onAction="#reset_passes" text="Reset" />
+          </items>
+        </ToolBar>
+      </children>
+    </VBox>
+  </top>
+</BorderPane>

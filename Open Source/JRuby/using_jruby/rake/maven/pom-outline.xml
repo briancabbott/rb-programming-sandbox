@@ -1,0 +1,15 @@
+<project>
+  ...
+  <build>
+    ...
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.jruby.plugins</groupId>
+        <artifactId>jruby-rake-plugin</artifactId>
+        <version>1.5.5</version>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>

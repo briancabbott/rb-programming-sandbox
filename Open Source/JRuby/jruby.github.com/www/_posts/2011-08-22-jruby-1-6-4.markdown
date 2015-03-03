@@ -1,0 +1,69 @@
+---
+layout: post
+title: JRuby 1.6.4 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.4.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.3 (and lower) are encouraged to upgrade to 1.6.4.
+
+### Notable Changes:
+- 1\.9 language and core class fixes
+- New Native MacOS installer
+- Overloaded Java method dispatch perf fix
+- Java dispatch block cercion perf fix
+- Disabling native now disables C extension support
+- JRuby can be built with 1.9 mode by default
+- 48 Issues resolved
+
+### 1.6.4 Issues Resolved:
+- JRUBY-928 Java arrays don't inherit from java.lang.Object in Rubified Java class hierarchy
+- JRUBY-4699 Different select() behavior compared to MRI
+- JRUBY-4717 1.9 New digest methods are missing (base64digest and base64digest!)
+- JRUBY-4925 Evaluation of constant happens before rhs of assignment (different to mri)
+- JRUBY-5146 Enumerator#next has performance issues.
+- JRUBY-5441 Attempt to create decimal 2.2250738585072012e-308 sends JVM into tight infinite loop
+- JRUBY-5459 JRuby launcher does not observe VERIFY_JRUBY env var to skip boot classpath
+- JRUBY-5496 Need to split jar for App Engine
+- JRUBY-5546 Using -J-Djruby.reify.classes=true sometimes crashes JRuby 1.6.0RC2
+- JRUBY-5564 become_java! does not create java class which can be loaded by the context-classloader (as of >= 1.6.0.RC1)
+- JRUBY-5593 stat.st_gid unsupported on this platform (NotImplementedError)
+- JRUBY-5622 Regex string interpolation breaks unicode properties
+- JRUBY-5737 error: "Unsupported platform: unknown-darwin" when using JRuby's ffi and Java 1.7 macosx-port build
+- JRUBY-5771 WeakRef::RefError wrongly defined as ::RefError, causing lots of runtime warnings when using weakref
+- JRUBY-5809 1.9 String.inspect produces wrong output on UTF-8 string
+- JRUBY-5896 Could not initialize class com.kenai.jaffl.struct.Struct$Constants
+- JRUBY-5906 jruby.reify.classes fails with NPE
+- JRUBY-5909 Converting range to array with zip results in TypeError
+- JRUBY-5915 "gem build" results in bogus gemspec in --1.9 mode
+- JRUBY-5918 Float marshal depends on locale
+- JRUBY-5922 Magic comment processing blows up on files with only a comment line with no newline
+- JRUBY-5924 Wrong Behavior at MatchData#end and Strings with special characters
+- JRUBY-5926 IO#gets and StringIO#gets both throw exceptions when you pass in a limit in 1.9 mode
+- JRUBY-5931 Wrong handling of "special" letters encoded in utf-8
+- JRUBY-5932 IPSocket.peeraddr should take an argument to note do a lookup
+- JRUBY-5933 ENV\[\]= causes segfault when accessed concurrently from different runtimes
+- JRUBY-5935 Add support for the 'coverage' lib in 1.9 mode
+- JRUBY-5936 IO.select throws ArrayIndexOutOfBoundsException
+- JRUBY-5940 StringIO#set_encoding is not implemented
+- JRUBY-5941 ZeroDivisionError with DateTime strftime("%S")
+- JRUBY-5950 When to_ary from yield does not return an array we ClassCast
+- JRUBY-5954 Incorrect Method#parameters in 1.9 mode
+- JRUBY-5960 Something in rails causes File#each to throw InvalidByteSequenceError in 1.9 mode
+- JRUBY-5963 Performance regression in 1.6.x in using procs as Java interface impls (closure conversion)
+- JRUBY-5965 JavaClass#handleScalaSingletons() raises & catches hundreds of unnecessary NPEs	
+- JRUBY-5967 NPE when loading rails
+- JRUBY-5968 Mac OSX ant dist failure w/ patch
+- JRUBY-5971 Pass Psych taint tests
+- JRUBY-5973 Failure to connect to Nailgun server produces confusing error
+- JRUBY-5975 Support for --oc and --ic option in NKF
+- JRUBY-5979 Process::Status.coredump? implementation w/ patch and ruby test script
+- JRUBY-5980 Unable to call varargs constructor with 0 arguments.
+- JRUBY-5981 Regression: thread-local UTF8_CODER truncates decoded strings to 1024 bytes
+- JRUBY-5984 Java integration broke with latest jruby-1_6 branch HEAD
+- JRUBY-5989 MacOSX Installer Build Task Unzip Overwrite Issue w/ patch
+- JRUBY-5997 Block argument handling is inconsistent in 1.9 mode
+- JRUBY-5998 Enumerator#each on enumerators created with Enumerator.new in 1.9 mode is slow
+- JRUBY-6007 Extract some classes from NKF 

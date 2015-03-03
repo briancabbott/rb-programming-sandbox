@@ -1,0 +1,2 @@
+fails:Enumerable#any? always returns false on empty enumeration
+fails:Enumerable#any? with no block returns true if any element is not false or nil

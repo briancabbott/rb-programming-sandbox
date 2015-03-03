@@ -1,0 +1,81 @@
+---
+layout: post
+title: JRuby 1.7.13 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.13
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.13 is our thirteenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 58 issues fixed for 1.7.13
+- jruby-openssl 0.9.5 bundled
+- Ability to upgrade jruby-openssl as a gem
+- New custom profiler API
+- Several BigDecimal fixes
+
+### Github Issues resolved for 1.7.13
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1757">#1757</a> - new krypt gem release</li>
+<li><a href="https://github.com/jruby/jruby/issues/1749">#1749</a> - ??? jruby-opensll snapshot build not working properly on 1.7 branch</li>
+<li><a href="https://github.com/jruby/jruby/pull/1748">#1748</a> - openssl load 1.8 (and possibly 1.9 compatibility) fix</li>
+<li><a href="https://github.com/jruby/jruby/issues/1747">#1747</a> - Openssl is broken in 1.8 mode due to IO::WaitReadable</li>
+<li><a href="https://github.com/jruby/jruby/issues/1743">#1743</a> - Ruby 1.9+ will use nil not false for type argument of set_trace_func</li>
+<li><a href="https://github.com/jruby/jruby/pull/1731">#1731</a> - [GH-1726] - File.read should raise an Errno::ENOENT when the file is an empty String</li>
+<li><a href="https://github.com/jruby/jruby/issues/1726">#1726</a> - JRuby 1.7.12: File.read("") throws Java ArrayIndexOutOfBoundsException</li>
+<li><a href="https://github.com/jruby/jruby/pull/1725">#1725</a> - Make behavior of Array#eql? more closely match MRI</li>
+<li><a href="https://github.com/jruby/jruby/issues/1722">#1722</a> - Strange FloatDomainError</li>
+<li><a href="https://github.com/jruby/jruby/pull/1714">#1714</a> - String#rindex should handle matchdata strings</li>
+<li><a href="https://github.com/jruby/jruby/pull/1711">#1711</a> - quote variables so works with directories with spaces</li>
+<li><a href="https://github.com/jruby/jruby/pull/1708">#1708</a> - add spec for array coercion</li>
+<li><a href="https://github.com/jruby/jruby/pull/1707">#1707</a> - * Treat SSL NOT_HANDSHAKING as FINISHED.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1705">#1705</a> - jruby-openssl gem version inconsitency</li>
+<li><a href="https://github.com/jruby/jruby/pull/1703">#1703</a> - Fix for issue #1695</li>
+<li><a href="https://github.com/jruby/jruby/pull/1699">#1699</a> - StringIO.set_encoding may change shared ByteList encoding</li>
+<li><a href="https://github.com/jruby/jruby/issues/1698">#1698</a> - jruby-lib build fails in windows</li>
+<li><a href="https://github.com/jruby/jruby/pull/1697">#1697</a> - Do not rescue java.lang.Error using StandardError</li>
+<li><a href="https://github.com/jruby/jruby/issues/1696">#1696</a> - Rescue StandardError rescues Java errors</li>
+<li><a href="https://github.com/jruby/jruby/issues/1688">#1688</a> - String rindex does not work properly with matchdata</li>
+<li><a href="https://github.com/jruby/jruby/pull/1684">#1684</a> - Fix for issue #1517</li>
+<li><a href="https://github.com/jruby/jruby/issues/1679">#1679</a> - Regression in compiling with default 1.8 mode</li>
+<li><a href="https://github.com/jruby/jruby/pull/1677">#1677</a> - Use pwd -P to work on systemlinked locations.</li>
+<li><a href="https://github.com/jruby/jruby/pull/1673">#1673</a> - ArrayJavaProxy#to_a now returns nested arrays where applicable</li>
+<li><a href="https://github.com/jruby/jruby/pull/1670">#1670</a> - (more) OpenSSL cleanup</li>
+<li><a href="https://github.com/jruby/jruby/pull/1667">#1667</a> - Kernel#fail should handle java exceptions</li>
+<li><a href="https://github.com/jruby/jruby/pull/1666">#1666</a> - Fix #1664 for Hash#compare_by_identity and Hash#store</li>
+<li><a href="https://github.com/jruby/jruby/issues/1664">#1664</a> - when Hash#compare_by_identity is called, it should not copy the keys</li>
+<li><a href="https://github.com/jruby/jruby/pull/1663">#1663</a> - BasicSocket#shutdown should accept strings or symbols</li>
+<li><a href="https://github.com/jruby/jruby/pull/1661">#1661</a> - minor (infrastructure) openssl cleanup</li>
+<li><a href="https://github.com/jruby/jruby/issues/1650">#1650</a> - require 'net/https' fails on 1.7.12 and master if jruby.native.enabled=false</li>
+<li><a href="https://github.com/jruby/jruby/issues/1649">#1649</a> - Triplicate BouncyCastle jars in the build</li>
+<li><a href="https://github.com/jruby/jruby/pull/1648">#1648</a> - GH-1633 - BigDecimal operations should throws TypeError when the first argument is nil</li>
+<li><a href="https://github.com/jruby/jruby/pull/1646">#1646</a> - GH-1551 - Fixing: Fixnum#to_s seems to generate strings immune to #[]=</li>
+<li><a href="https://github.com/jruby/jruby/pull/1645">#1645</a> - Fix jar entry path expansion (https://github.com/jruby/jruby/issues/321 issue)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1641">#1641</a> - fail and raise behave differently</li>
+<li><a href="https://github.com/jruby/jruby/issues/1638">#1638</a> - "Regexp Interrrupted" Typo</li>
+<li><a href="https://github.com/jruby/jruby/pull/1636">#1636</a> - Static JavaProxy#getJavaClass needs to clear $!</li>
+<li><a href="https://github.com/jruby/jruby/issues/1633">#1633</a> - Erroneous BigDecimal operations</li>
+<li><a href="https://github.com/jruby/jruby/pull/1631">#1631</a> - BigDecimal#{round,truncate,floor,ceil} with no args returns to_i</li>
+<li><a href="https://github.com/jruby/jruby/pull/1630">#1630</a> - Add support for symbol rounding mode arguments</li>
+<li><a href="https://github.com/jruby/jruby/pull/1622">#1622</a> - Refactor channeldescriptor to use FileResource</li>
+<li><a href="https://github.com/jruby/jruby/pull/1616">#1616</a> - Actually use Java7ClassValue when using Java 7+.</li>
+<li><a href="https://github.com/jruby/jruby/pull/1602">#1602</a> - api for custom profiler</li>
+<li><a href="https://github.com/jruby/jruby/issues/1596">#1596</a> - Uninitialized constant OpenSSL::SSL::SSLContext::METHODS in 1.7.x</li>
+<li><a href="https://github.com/jruby/jruby/issues/1590">#1590</a> - Hash#hash fails when keys &amp; values are the same</li>
+<li><a href="https://github.com/jruby/jruby/issues/1579">#1579</a> - BasicSocket.shutdown() is not compliant for >= 1.9.x</li>
+<li><a href="https://github.com/jruby/jruby/issues/1578">#1578</a> - Result of operation between BigDecimal and Rational differs.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1566">#1566</a> - loading (default) gems varies between jruby 1.7.x versions</li>
+<li><a href="https://github.com/jruby/jruby/issues/1551">#1551</a> - Fixnum#to_s seems to generate strings immune to #[]=</li>
+<li><a href="https://github.com/jruby/jruby/pull/1543">#1543</a> - openssl 'BC' (security provider) leak</li>
+<li><a href="https://github.com/jruby/jruby/pull/1542">#1542</a> - fix initialize visibility</li>
+<li><a href="https://github.com/jruby/jruby/issues/1538">#1538</a> - ArgumentError: comparison of Class with Class failed</li>
+<li><a href="https://github.com/jruby/jruby/issues/1517">#1517</a> - Time#to_s with different UTC offset gives local hour with given offset</li>
+<li><a href="https://github.com/jruby/jruby/issues/1299">#1299</a> - Enumerator.peek throws NullPointerException after the last item (1.7.8)</li>
+<li><a href="https://github.com/jruby/jruby/issues/389">#389</a> - OpenSSL::ASN1.decode results vary from MRI (and fail)</li>
+<li><a href="https://github.com/jruby/jruby/issues/357">#357</a> - OpenSSL::PKey::RSA.new returns the wrong value</li>
+<li><a href="https://github.com/jruby/jruby/issues/210">#210</a> - File.readlink cannot read dangling symlinks</li>
+</ul>

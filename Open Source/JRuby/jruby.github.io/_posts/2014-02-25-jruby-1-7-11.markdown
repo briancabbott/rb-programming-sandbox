@@ -1,0 +1,78 @@
+---
+layout: post
+title: JRuby 1.7.11 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.11
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.11 is our eleventh update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 54 issues fixed for 1.7.11
+- Miscellaneous encoding fixes
+- Several fiber edge cases fixed
+- Fiber thread pool reinstated
+- More Ruby-friendly Java backtraces
+
+
+### Github Issues resolved for 1.7.11
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1519">#1519</a> - Catch/throw and exceptions do not propagate out of fibers</li>
+<li><a href="https://github.com/jruby/jruby/pull/1515">#1515</a> - Make JRuby\'s RubyTime argument checking be same as MRI</li>
+<li><a href="https://github.com/jruby/jruby/pull/1512">#1512</a> - Fixing encoding problem with string format.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1511">#1511</a> - Encoding problem with string format</li>
+<li><a href="https://github.com/jruby/jruby/pull/1510">#1510</a> - Resurrect replacing '\' with '/' in JRubyFile for windows.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1504">#1504</a> - Unreadable stacktraces when exceptions occur within Java code</li>
+<li><a href="https://github.com/jruby/jruby/issues/1501">#1501</a> - Time.utc can't handle hour 24</li>
+<li><a href="https://github.com/jruby/jruby/issues/1499">#1499</a> - Warning in Win32api.rb - check fails in Ruby 2.0 mode</li>
+<li><a href="https://github.com/jruby/jruby/issues/1498">#1498</a> - do not install jruby-launcher on mvn \-Pbootstrap for windows</li>
+<li><a href="https://github.com/jruby/jruby/pull/1494">#1494</a> - Refactor RubyFileStat and RubyFileTest to use FileResources</li>
+<li><a href="https://github.com/jruby/jruby/issues/1489">#1489</a> - Error Installing Gems in jruby 1.7.11-SNAPSHOT java.lang.NoClassDefFoundError: org/bouncycastle/asn1/DERBoolean</li>
+<li><a href="https://github.com/jruby/jruby/issues/1488">#1488</a> - fiber GH-1463 regressed</li>
+<li><a href="https://github.com/jruby/jruby/issues/1485">#1485</a> - NPE not being caught or is printing out for no reason</li>
+<li><a href="https://github.com/jruby/jruby/pull/1483">#1483</a> - Fix uniq/uniq\! with block for array slices</li>
+<li><a href="https://github.com/jruby/jruby/issues/1481">#1481</a> - jruby-complete.jar broken on master</li>
+<li><a href="https://github.com/jruby/jruby/pull/1477">#1477</a> - Bugfix for issue #1248</li>
+<li><a href="https://github.com/jruby/jruby/pull/1475">#1475</a> - BUILDING.md: Added info about incremental compiling, cleaning after switching branches</li>
+<li><a href="https://github.com/jruby/jruby/issues/1474">#1474</a> - Strange encoding differences with UTF-8 strings</li>
+<li><a href="https://github.com/jruby/jruby/issues/1473">#1473</a> - Java NullPointerException raised inside Proc gets printed out even though it was rescued</li>
+<li><a href="https://github.com/jruby/jruby/issues/1470">#1470</a> - Building JRuby: some classes are not rebuilt properly by "mvn package"</li>
+<li><a href="https://github.com/jruby/jruby/pull/1468">#1468</a> - Fix jar globbing for real now.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1463">#1463</a> - Raising an exception on a thread that is in a Fiber causes a NullPointerException</li>
+<li><a href="https://github.com/jruby/jruby/pull/1454">#1454</a> - Removed the custom glob code and added "defacto" expectations</li>
+<li><a href="https://github.com/jruby/jruby/issues/1453">#1453</a> - Dir.glob is broken for files inside jar</li>
+<li><a href="https://github.com/jruby/jruby/pull/1450">#1450</a> - Make warnings show the right line number</li>
+<li><a href="https://github.com/jruby/jruby/pull/1448">#1448</a> - Fix Gem.ruby singleton method on Windows</li>
+<li><a href="https://github.com/jruby/jruby/issues/1446">#1446</a> - Line number in runtime warnings is one greater than the actual line number</li>
+<li><a href="https://github.com/jruby/jruby/pull/1445">#1445</a> - [2.1] Return in a lambda always returns from the block, even when &amp;-ified</li>
+<li><a href="https://github.com/jruby/jruby/issues/1443">#1443</a> - Fibers don't seem to reuse threads</li>
+<li><a href="https://github.com/jruby/jruby/pull/1442">#1442</a> - Fixed issue 1441. Forced check that value was of an appropriate type.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1441">#1441</a> - Subtracting nil from a BigDecimal returns nil</li>
+<li><a href="https://github.com/jruby/jruby/pull/1440">#1440</a> - Enumerator#each_with_object should provide the yielder\'s return value to its block</li>
+<li><a href="https://github.com/jruby/jruby/pull/1439">#1439</a> - Restore hex and random_bytes to SecureRandom 1.8 \- fixes Travis</li>
+<li><a href="https://github.com/jruby/jruby/pull/1436">#1436</a> - Allow Travis on select branches</li>
+<li><a href="https://github.com/jruby/jruby/issues/1434">#1434</a> - uniq! returns nil when it is after a shifting operation.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1424">#1424</a> - Incorrect line number reported in "already initialized constant" warining</li>
+<li><a href="https://github.com/jruby/jruby/issues/1421">#1421</a> - Need ByteList release for 1.7.11.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1417">#1417</a> - Ripper error "lex_p &lt; tokp" caused by multi-byte character</li>
+<li><a href="https://github.com/jruby/jruby/issues/1416">#1416</a> - mvn -Pbootstrap fails to build JRuby Integration Tests?</li>
+<li><a href="https://github.com/jruby/jruby/pull/1414">#1414</a> - Cache DecimalFormatSymbols instances to reduce lock contention</li>
+<li><a href="https://github.com/jruby/jruby/pull/1412">#1412</a> - Fix ffi buffer</li>
+<li><a href="https://github.com/jruby/jruby/issues/1410">#1410</a> - main.inspect returns wrong value.</li>
+<li><a href="https://github.com/jruby/jruby/pull/1406">#1406</a> - Further improvements to SecureRandom</li>
+<li><a href="https://github.com/jruby/jruby/issues/1403">#1403</a> - Hash cleaned when used as named parameters (JRUBY_OPTS=--2.0)</li>
+<li><a href="https://github.com/jruby/jruby/issues/1402">#1402</a> - Opening a class body doesn't reset the value of __method__</li>
+<li><a href="https://github.com/jruby/jruby/issues/1400">#1400</a> - Reduce locking in VariableTableManager#initObjectId</li>
+<li><a href="https://github.com/jruby/jruby/pull/1399">#1399</a> - Reduced the number of String allocations for the NONE parameterList case.</li>
+<li><a href="https://github.com/jruby/jruby/issues/1392">#1392</a> - NullPointerException loading rouge gem</li>
+<li><a href="https://github.com/jruby/jruby/issues/1377">#1377</a> - Implement Addrinfo.getaddrinfo</li>
+<li><a href="https://github.com/jruby/jruby/issues/1361">#1361</a> - invalid bytes in ascii string result in ArrayIndexOutOfBoundsException on chars</li>
+<li><a href="https://github.com/jruby/jruby/issues/1248">#1248</a> - Problems with paths containing space characters</li>
+<li><a href="https://github.com/jruby/jruby/issues/1181">#1181</a> - Thread leak or expected behavior with fibers</li>
+<li><a href="https://github.com/jruby/jruby/issues/1098">#1098</a> - Program that works under C Ruby fails under JRuby</li>
+<li><a href="https://github.com/jruby/jruby/issues/272">#272</a> - Bad error message for block pass through with return statement</li>
+</ul>

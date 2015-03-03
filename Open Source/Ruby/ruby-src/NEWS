@@ -1,0 +1,57 @@
+# -*- rdoc -*-
+
+= NEWS for Ruby 2.3.0
+
+This document is a list of user visible feature changes made between
+releases except for bug fixes.
+
+Note that each entry is kept so brief that no reason behind or
+reference information is supplied with.  For a full list of changes
+with all sufficient information, see the ChangeLog file.
+
+== Changes since the 2.2.0 release
+
+=== Language changes
+
+=== Core classes updates (outstanding ones only)
+
+=== Core classes compatibility issues (excluding feature bug fixes)
+
+* Array
+  * Array#select!, Array#keep_if, Array#reject!, and Array#delete_if
+    no longer changes the receiver array instantly every time the
+    block is called.  [Feature #10714]
+
+  * Array#flatten and Array#flatten! no longer try to call #to_ary
+    method on elements beyond the given level.  [Bug #10748]
+
+* IO
+  * IO#close doesn't raise when the IO object is closed.  [Feature #10718]
+
+=== Stdlib updates (outstanding ones only)
+
+=== Stdlib compatibility issues (excluding feature bug fixes)
+
+* lib/webrick/utils.rb
+ * removed unused argument. https://github.com/ruby/ruby/pull/356
+
+* lib/drb/drb.rb
+ * removed unused argument. https://github.com/ruby/ruby/pull/515
+
+* lib/base64.rb
+ * Base64.urlsafe_encode64: added a "padding" option to suppress
+   the padding character ("=").
+ * Base64.urlsafe_decode64: now it accepts not only correctly-padded
+   input but also unpadded input.
+
+* ext/coverage/coverage.c
+  * Coverage.peek_result: new method to allow coverage to be captured without
+    stopping the coverage tool.
+
+=== Built-in global variables compatibility issues
+
+=== C API updates
+
+=== Build system updates
+
+=== Implementation changes

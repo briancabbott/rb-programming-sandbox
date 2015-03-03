@@ -1,0 +1,9 @@
+*.gem
+.rvmrc
+vendor/
+bin/
+.DS_Store
+example/_site
+Gemfile.lock
+.ruby-version
+.ruby-gemset

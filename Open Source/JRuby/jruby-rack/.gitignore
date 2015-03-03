@@ -1,0 +1,14 @@
+reports
+target
+*.log
+log
+activemq-data
+examples/*/tmp
+examples/*/work
+examples/*/*.war
+examples/*/nbproject
+.rakeTasks
+.redcar
+nbproject
+.idea/
+.rvmrc

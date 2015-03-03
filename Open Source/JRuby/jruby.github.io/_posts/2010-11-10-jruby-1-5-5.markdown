@@ -1,0 +1,33 @@
+---
+layout: post
+title: JRuby 1.5.5 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.5.
+
+(Note: Due to a showstopper bug found after the release jruby-jars gem and
+the inability to remove gem releases from rubygems.org we have skipped 
+from 1.5.3 to 1.5.5.  The 1.5.5 release is the same release that would have
+been 1.5.4 had we been able to re-release jruby-jars.)
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.5.5 is a minor follow-up release to address problems executing
+some commands on Windows, a couple of Marshalling discrepancies with MRI, and
+a few other random production-affecting issues.  We also improved the output
+and accuracy of --profile (try it out).  All users of JRuby 1.5.3 are
+recommended to upgrade to 1.5.5.
+
+### 1.5.5 Issues Resolved:
+- JRUBY-4766 Updated jaffl for YourKit compatibility
+- JRUBY-4865 Ant.load_from_ant is broken on Windows
+- JRUBY-4940 Cucumber Japanese example raises exception on JRuby
+- JRUBY-5064 Marshalled ruby hash gets loaded incorrectly
+- JRUBY-5110 kernel.system not working in 1.5.3 on Windows
+- JRUBY-5112 Cannot run 'jruby -S rake test' for Rails project on Windows in 1.5.3
+- JRUBY-5122 Webrick socket.readline causes 100% cpu usage
+- JRUBY-5123 Marshal dump format error and inconsistencies with MRI
+- JRUBY-5132 java.awt.Component.instance_of?() expects 2 args	
+- JRUBY-5133 Backtick operator does not work on Windows in 1.5.3 
+- JRUBY-5138 requiring 'ffi' defines class method :error on Module
+- JRUBY-5168 Can't include interfaces in a synchronized class

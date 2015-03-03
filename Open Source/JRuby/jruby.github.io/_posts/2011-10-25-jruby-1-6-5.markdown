@@ -1,0 +1,60 @@
+---
+layout: post
+title: JRuby 1.6.5 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.5.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+The primary goal of the 1.6.x series is to round out our 1.9 support by fixing any reported incompatibilities. Of course, as with any JRuby release, we will continue fixing any found incompatibilities and also improve performance. All users of 1.6.4 (and lower) are encouraged to upgrade to 1.6.5.
+
+### Notable Changes:
+- Many --1.9 encoding issues resolved
+- .jrubyrc support for storing convenient execution options
+- New cext.enabled property to turn off only C extentions but not native support
+- C extension support now uses less memory
+- Updated to Rubygems 1.8.9
+- \-rjruby/thread_dump adds a USR2 Ruby thread dumper
+- Improved peformance interacting directly with Java Maps
+- Improved fiber performance and support for JVM coroutines
+- Improved zlib support
+- 36 Issues resolved
+
+### 1.6.5 Issues Resolved:
+- JRUBY-5324 StringScanner should be 1.9 aware
+- JRUBY-5499 Update to rubygems 1.5.2 since 1.5.0 has severe bugs
+- JRUBY-5735 I18n handling of Rails 3.0 differs between 1.9 and 1.8 compatibility mode
+- JRUBY-5758 bundler not working in jruby 1.6.1 (ruby-1.9.2-p136) --- works in 1.8 mode
+- JRUBY-5763 Encoding::CompatibilityError with UTF-8 encoded ERB template
+- JRUBY-5778 net http and gzip decompression in 1.9
+- JRUBY-5793 java.lang.ArrayIndexOutOfBoundsException installing chicken_little gem
+- JRUBY-5794 1.9: Bundler fails to install certain gems from github
+- JRUBY-5861 Installing gems that have unicode characters in the gemspec cause an error in 1.9 mode
+- JRUBY-5885 java.util.Map#\[\]= is up to 20 times slower than #put
+- JRUBY-5927 JRuby in 1.9 mode fails text-hyphen's test/test_bugs.rb the same way that 1.8 mode does
+- JRUBY-5946 IO.select is returning write array with nil elements
+- JRUBY-5994 Bad performance using hash accessors on ConcurrentMap
+- JRUBY-6017 Undocumented windowBits feature of Zlib::Infrate/Deflate
+- JRUBY-6019 A Ruby instance is not fully unregistered from the BeanManager on teardown
+- JRUBY-6030 After calling const_set, setting const name didn't set Class.name
+- JRUBY-6031 ActiveRecord::JDBCError in JRuby 1.6.4
+- JRUBY-6034 NullPointerException at RubyProc.java:248
+- JRUBY-6036 REXML fails on XML with UTF-8-chars on jruby in 1.9-mode	
+- JRUBY-6049 Bignum#\[\] returns an incorrect result when Bignum is given
+- JRUBY-6050 Fixnum#\[\] blows when small Bignum is given
+- JRUBY-6053 \[1\].pack("b2") returns an 1-length string
+- JRUBY-6060 NKF converts strings into wrong encoding
+- JRUBY-6064 Builder gem incompatible in --1.9 mode
+- JRUBY-6070 TCPSocket#new issues with local_addr and local_port
+- JRUBY-6075 ant dist fails on both master and jruby-1_6 branches
+- JRUBY-6077 Allow loading a Ruby source file from the class path using the fully qualified name
+- JRUBY-6079 gherkin.lexer.LexingError running cucumber example i18n/it jruby using compatibilty mode 1.9
+- JRUBY-6101 JSR 223 code execution breaks with JRuby 1.6.4/1.6.3 with no error message
+- JRUBY-6108 bin/jruby script has incompatible bourne shell syntax			
+- JRUBY-6116 Errors on String#lines
+- JRUBY-6118 Dir.glob duplicate folder names
+- JRUBY-6135 CASEFOLD systems magically screw up globs with . or .. in them
+- JRUBY-6139 JRuby 1.9 mode encoding problem on to_yaml method			
+- JRUBY-6141 All MatchData objects resulting from an invocation of String#scan are updated with the current match
+- JRUBY-6144 1.9 RubySpec failures on BEGIN 

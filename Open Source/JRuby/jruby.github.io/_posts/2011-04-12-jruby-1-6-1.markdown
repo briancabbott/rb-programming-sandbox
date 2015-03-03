@@ -1,0 +1,73 @@
+---
+layout: post
+title: JRuby 1.6.1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.1.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.1 is our first update to 1.6.0.  The primary goal of the 1.6.x 
+series is to round out our 1.9 support by fixing any reported 
+incompatibilities.  Of course, as with any JRuby release, we will continue
+fixing any found incompatibilities and also improve performance. All users 
+of 1.6.0 (and lower) are encouraged to upgrade to 1.6.1.
+
+### Notable Changes:
+
+- Numerous 1.9-mode features and bugs fixed
+- Various fixes to installing and running C extensions
+- Kernel.exec on windows does a native exec (CreateProcess)
+- Performance fixes for non-blocking IO methods
+- Performance tweaks for Array, String, and a few other core classes
+- Updated JSR292 (invokedynamic) support
+- 193 commits and 47 issues resolved since 1.6.0
+
+### 1.6.1 Issues Resolved:
+- JRUBY-2126 jirb outputs ???? instead of Japanese characters
+- JRUBY-2488 Ctrl-D does not work in 'jirb'
+- JRUBY-3943 19: IO objects should use internal encoding to transcode output strings
+- JRUBY-4791 IRB with readline "leaks" streams, leaving GC to clean them up
+- JRUBY-5044 JRuby throws invalid runtime exception when loading C extensions in different runtimes
+- JRUBY-5285 jruby-rake-plugin doesn't play nice with bundler
+- JRUBY-5396 19: YAML anchors & alias merging regression
+- JRUBY-5590 IRB completion fails in 1.9 with multiple dot notation elements
+- JRUBY-5591 Kconv.kconv throws an NPE
+- JRUBY-5592 JRuby 1.6 done blowed up RUBYOPT
+- JRUBY-5594 Seeing ConnectionPendingException in my code
+- JRUBY-5596 Improve Dalli IO performance
+- JRUBY-5597 assignment to Java::byte\[\] creates range error for values greater than 127
+JRUBY-5598 cext/src/invoke.cpp doesn't include alloca.h
+- JRUBY-5599 install-dev-gems target has gems ordered incorrectly
+- JRUBY-5600 dist-bin ant target fails because rspec is not installed.
+- JRUBY-5601 C extension fails to build on Solaris with newer GCC because of -std=c99
+- JRUBY-5602 IndexOutOfBoundsException in Dir.glob_helper for file: path
+- JRUBY-5604 JRuby version string should use MRI's format
+- JRUBY-5606 asprintf does not exist on Solaris, so C extensions do not build
+- JRUBY-5607 Installing Maven artifacts via rubygems fails: de.saumya.mojo:ruby-tools:jar:0.6-SNAPSHOT is missing
+- JRUBY-5608 java.lang.ClassFormatError under IBM JVM
+- JRUBY-5609 rubygems maven support does not install artifact from extra repositories
+- JRUBY-5610 Socket#accept_nonblock unconditionally raises Errno::EAGAIN
+- JRUBY-5624 Class.new { p eval("self", binding) }
+- JRUBY-5627 JRuby flock silently converts LOCK_EX to LOCK_SH on read-only files
+- JRUBY-5628 Missing write_array_of_&lt;foo&gt;() methods
+- JRUBY-5629 Backtraces report modules as classes
+- JRUBY-5632 19: Incompatible behaviour of splat operator (\*) with objects that implement #to_a (w.r.t. MRI)
+- JRUBY-5634 File.new (and related paths) unconditionally calling to_int on first arg
+- JRUBY-5637 Default exception message uses singleton class when it should not
+- JRUBY-5640 Dir#pos= dies if negative value provided
+- JRUBY-5641 String.each_line: Newline handling differs between 1.9 and 1.8 compatibility mode
+- JRUBY-5646 RubyString.newUnicodeString in 1.9 mode produces ASCII-8BIT
+- JRUBY-5648 Method#source_location is nil for methods whose visibility is overridden
+JRUBY-5649 requiring 'jruby/profiler' on a Rakefile causes exception
+- JRUBY-5651 java.util.ConcurrentModificationException still occurs
+- JRUBY-5680 eval("self", Kernel.binding)
+- JRUBY-5682 Bundler fails to read some gemspecs under JRuby in 1.9 mode
+- JRUBY-5685 IO.popen4 does not work when arguments contain \* 
+- JRUBY-5686 'Stabby' lambdas throw NullPointerException
+- JRUBY-5687 Process::Status#exitstatus does not return correct exit status
+- JRUBY-5688 Process::Status#pid is missing
+- JRUBY-5690 cext GC collects classes and modules that are still in use
+- JRUBY-5693 19: Fixnum#** sometimes returns wrong Bignum
+- JRUBY-5694 DATA points to wrong file
+- JRUBY-5705 Open3.popen3 fails under --1.9 mode

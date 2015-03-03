@@ -1,0 +1,114 @@
+---
+layout: post
+title: JRuby 1.6.0.RC3 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.0.RC3.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.0.RC3 is the last release candidate of JRuby 1.6.0.
+
+JRuby 1.6.0 is the largest release of JRuby to date. This release
+fixes hundreds of user issues and brings compatibility with Ruby 1.9.2
+to a very high level. We have made Windows a primary supported
+platform by adding it as a continuous integration platform, and JRuby
+1.6 will provide Windows-based Ruby users with the best experience
+yet. This release integrates experimental support for C extensions
+based on Ruby's C API. And as with all major releases, we have
+improved stability and performance across the board in response to
+real-world user input.
+
+We are going to seriously try and make this our last RC before going final.
+Unless we find something devestatingly bad we will release 1.6.0 and then
+try and spin smaller point builds every 2-3 weeks to address reported 
+problems.
+
+### Notable changes since 1.6.0.RC2:
+- New readable backtrace format
+- Easier to embed in OSGi environment
+- Fixed regression which slowed down jar-based requires
+- Add native JFFI bits for x86_64 SunOS (Solaris)
+- More platforms with pre-built C extension support
+- New jruby-core and jruby-stdlib maven artifacts
+- More 1.9 compatibility fixes
+
+### Major Features:
+
+- Ruby 1.9.2 language and API compatibility
+
+  - Not implemented Encoding::Converter, ripper
+- Improved Ruby call performance
+- Built-in profiler (--profile, --profile.graph)
+- RSpec no longer bundled
+- C Extension support (experimental)
+- RubyGems Maven support (preview)
+- Improved compatibility and user experience on Windows
+- jruby-complete.jar now includes 1.9 standard library
+- Embedding API refinements
+- Over 2000 commits and 265 issues resolved.
+
+### Issues fixed since 1.6.0.RC2
+
+Key     Summary
+- JRUBY-5491 jruby.reify.classes fails with optparse.rb (trinidad) 			
+- JRUBY-5502 RubyUNIXSocket#recvfrom overflows temporary buffer  
+- JRUBY-5337 No such file to load -- rack when booting JRuby 1.6.0RC1 Rails app in Tomcat
+- JRUBY-5472 JRuby bash script no longer supports -X-C and similar options  
+- JRUBY-5534 Performance issue with JRuby 1.6
+- JRUBY-5393 1.9: Can't run debugger
+- JRUBY-5481 Marshal specs failing in 1.8 mode
+- JRUBY-5509 gem update_rubygems Fails on JRuby 1.5.3
+- JRUBY-5477 Caller stacks now include AbstractScript.java
+- JRUBY-4544 JRuby + Java Web Start gems can't be loaded
+- JRUBY-5479 Socket#pack_sockaddr_in fails for port numbers greater than 32383
+- JRUBY-5483 become_java! only works on the first subclass of a deep class hierarchy
+- JRUBY-5397 1.9: Make String#gsub encoding aware for ruby files
+- JRUBY-5503 Timeout::timeout makes IO#close block if there's a #read present
+- JRUBY-5471 private method verify_mode= called with Bundler, net/https, jruby-openssl and RubyGems 1.5
+- JRUBY-2513 Stack traces for exceptions do not show the correct line number
+- JRUBY-5455 StringIO::ungetc can't handle the ";" character correctly.
+- JRUBY-5405 FileStat chardev does not work on Solaris 10 x86
+- JRUBY-5463 Process.getpriority should raise an error with an invalid process type
+- JRUBY-5490 JSR223: propagate the exceptions
+- JRUBY-5487 Kernel#select's read_array parameter is not respected
+- JRUBY-5484 Thread#status isn't set to "sleep" when blocking on a TCPSocket#read
+- JRUBY-5473 Use of -Werror when compiling C extension support causes error on OpenBSD amd64
+- JRUBY-5480 jrubyc compile loop do .... end error
+- JRUBY-5474 Compiling cext support on OpenBSD amd64 uses wrong directory
+- JRUBY-5469 Compiling cext support on OpenBSD puts the library under FreeBSD
+- JRUBY-5517 RUBYOPT is pulled from system env always, even for in-process child
+- JRUBY-4433 win: Writing to a pipe with closed source raises wrong exception
+- JRUBY-5501 When embedding jruby the FORCE compile option breaks constants
+- JRUBY-5281 jruby-complete jar not working from directory with spaces
+- JRUBY-4618 Backtick execution pauses the process
+- JRUBY-4469 Process.spawn seems to be completely broken 
+- JRUBY-2167 Regexp parse errors should not be rescueable
+- JRUBY-5190 BigDecimal#to_f always returns 0.0 for large precisions
+- JRUBY-4446 windows: File.grpowned? fails RubySpecs
+- JRUBY-5468 rb_time_new prototype doesn't match definition
+- JRUBY-3431 String#encode (and decode?) missing from Ruby 1.9 String
+- JRUBY-5434 Random "Detected invalid array contents due to unsynchronized modifications with concurrent users" with Rails 3.0
+- JRUBY-1166 'public_instance_methods' different from MRI within Rake (breaking Needle)
+- JRUBY-4156 1.9: jruby -S rake spec fails to find 'spec/rake/spectask'
+- JRUBY-5447 maven gem support not working on windows?
+- JRUBY-4788 Stackoverflow when calling code from java with wrong parameters
+- JRUBY-4914 Process.spawn gives wrong pid in windows
+- JRUBY-5498 important JRuby 1.6 startup time regression launching JRuby script from JSR223 (12 sec -&gt; 45 sec)
+- JRUBY-5554 Simplify jirb_swing script
+- JRUBY-5525 NPE Loading OSEnvironment on Windows
+- JRUBY-5552 Method#source_location is nil for methods defined via define_method or define_singleton_method
+- JRUBY-5528 JDBC Driver Unloading should be configurable
+- JRUBY-5550 Using shoulda prevents Rails from running tests in ruby1.9 mode
+- JRUBY-5557 SnakeYAML dependency missing from Maven poms
+- JRUBY-5548 rb_call_super causes SystemStackError when used in both current class and ancestor class in a C extension
+- JRUBY-5545 JRuby 1.6RC 2 is missing Solaris 10 x86 64bit JFFI support
+- JRUBY-5541 Problem with java_import on Android (Ruboto)
+- JRUBY-5539 marshal fails in 1.9 with strings
+- JRUBY-5532 IO.foreach: Can't convert Hash into String
+- JRUBY-5531 Process.spawn("ruby") gives garbage PID
+- JRUBY-5514 Errno::EBADF is sometimes raised instead of IOError when TCPSocket#readline is called after TCPSocket#close
+- JRUBY-5515 Digest::SHA2 NameError in (1.6.RC2 -- 1.9 mode)
+- JRUBY-5384 org.jruby.embed.osgi suport in OSGi for ruby code and java code loaded from OSGi bundles
+- JRUBY-5522 system("@command") should work in windows
+- JRUBY-2519 Dir instance object caches directory contents

@@ -1,0 +1,42 @@
+---
+layout: post
+title: JRuby 1.7.16 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.16
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.16 is our sixteenth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+Changes of note:
+
+- 20 issues fixed for 1.7.16
+- Fixed regression which improperly wrote wrong version for OSGi bundles
+- Fixed several regressions involving symbolic links and Ruby loading
+- Doubled performance of FileTest.directory?
+
+### Github Issues resolved for 1.7.16
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1997">#1997</a> - Tempfile behavior change in 1.7.15</li>
+<li><a href="https://github.com/jruby/jruby/issues/1995">#1995</a> - Regexp regression in 1.7.15 from 1.7.13</li>
+<li><a href="https://github.com/jruby/jruby/issues/1994">#1994</a> - Snapshot builds of jruby-1_7 jruby-jars.gem have the wrong file name</li>
+<li><a href="https://github.com/jruby/jruby/issues/1991">#1991</a> - Allow launch.inproc=true to expand glob patterns</li>
+<li><a href="https://github.com/jruby/jruby/issues/1989">#1989</a> - Files in axiom-types and descendants_tracker gems use 400 and 440 modes</li>
+<li><a href="https://github.com/jruby/jruby/issues/1986">#1986</a> - String#slice on multibyte chars raise Exception</li>
+<li><a href="https://github.com/jruby/jruby/issues/1983">#1983</a> - java -jar jruby-complete.jar -S irb doesn't work anymore</li>
+<li><a href="https://github.com/jruby/jruby/issues/1977">#1977</a> - jrubycomplete - OSGi DynamicImport-Package breaks Adobe AEM</li>
+<li><a href="https://github.com/jruby/jruby/issues/1975">#1975</a> - nil TypError on bundle install, regression 1.7.14+</li>
+<li><a href="https://github.com/jruby/jruby/issues/1973">#1973</a> - Bundle package broken after 1.7.14</li>
+<li><a href="https://github.com/jruby/jruby/issues/1971">#1971</a> - jruby-core 1.7.14 isn't a valid OSGI bundle anymore</li>
+<li><a href="https://github.com/jruby/jruby/issues/1965">#1965</a> - Gemfiles that use `:path` broken between 1.7.13 and 1.7.15</li>
+<li><a href="https://github.com/jruby/jruby/issues/1963">#1963</a> - Array#product does not coerce incoming arguments properly</li>
+<li><a href="https://github.com/jruby/jruby/issues/1953">#1953</a> - openssl ignores OpenSSL::X509::DEFAULT_CERT_FILE</li>
+<li><a href="https://github.com/jruby/jruby/issues/1950">#1950</a> - All RubyFileTest methods have a race condition</li>
+<li><a href="https://github.com/jruby/jruby/issues/1945">#1945</a> - File.exists?("broken_symlink") returns true</li>
+<li><a href="https://github.com/jruby/jruby/issues/1942">#1942</a> - Bundle not working with two gemspecs - bug introduced in 1.7.14</li>
+<li><a href="https://github.com/jruby/jruby/issues/1715">#1715</a> - IOError with OpenSSL #connect_nonblock: Writing not possible during handshake</li>
+<li><a href="https://github.com/jruby/jruby/issues/1700">#1700</a> - NPE in Ripper with $ special variables</li>
+<li><a href="https://github.com/jruby/jruby/issues/541">#541</a> - JRuby 1.7.2 with authlogic 3.x fails to boot (OpenSSL)</li>
+</ul>

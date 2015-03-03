@@ -1,0 +1,13 @@
+#!/bin/sh
+
+MODE=`grep ^ruby $1/Gemfile | cut -c 7-9`
+cat << EOF
+---
+addons:
+config_vars:
+  PATH: bin:jruby/bin:/usr/bin:/bin
+  RACK_ENV: production
+  RAILS_ENV: production
+  JRUBY_OPTS: --$MODE -J-Xmx400m -J-XX:+UseCompressedOops -J-noverify
+default_process_types:
+EOF

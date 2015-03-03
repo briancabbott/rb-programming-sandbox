@@ -1,0 +1,2 @@
+fails:RUBY_COPYRIGHT is a String
+fails:RUBY_REVISION is a Fixnum

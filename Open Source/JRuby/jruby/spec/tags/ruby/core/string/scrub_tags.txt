@@ -1,0 +1,2 @@
+fails:String#scrub! modifies self for valid strings
+fails:String#scrub! accepts blocks

@@ -1,0 +1,22 @@
+---
+layout: none
+---
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="http://jruby.org/tryjruby" href="irb.jnlp" spec="1.0+">
+    <information>
+        <title>IRB Console</title>
+        <vendor>headius</vendor>
+        <homepage href=""/>
+        <description>An IRB Console running in JRuby</description>
+        <description kind="short">IRB Console</description>
+    <offline-allowed/>
+</information>
+<security>
+<all-permissions/>
+</security>
+    <resources>
+<j2se version="1.6+"/>
+    <jar eager="true" href="{{ site.urls.tryjruby }}/jruby-complete-signed.jar" main="true"/>
+</resources>
+<application-desc main-class="org.jruby.demo.IRBConsole">
+</jnlp>

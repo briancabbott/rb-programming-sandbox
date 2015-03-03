@@ -1,0 +1,41 @@
+---
+layout: post
+title: JRuby 1.7.19 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.19
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.19 is our twenty-second update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.
+
+This release was pushed forward quicker than planned to address issues running Rails 4.2 (issue [#2438](https://github.com/jruby/jruby/issues/2438)).
+
+Highlights:
+
+- 17 issues fixed for 1.7.19
+- Time.getlocal accepts fixnum as an argument (Rails 4.2 blocker)
+- A few encoding fixes
+- Socket.read(0) does not block (1.9)
+
+### Github Issues resolved for 1.7.19
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/2528">#2528</a> - RegexpError: invalid multibyte character</li>
+<li><a href="https://github.com/jruby/jruby/pull/2451">#2451</a> - No need to synchronise a newly created local RubyArray</li>
+<li><a href="https://github.com/jruby/jruby/issues/2446">#2446</a> - ConcurrentModificationException from ThreadGroup.list</li>
+<li><a href="https://github.com/jruby/jruby/issues/2438">#2438</a> - Time#getlocal should accept Fixnum as an argument</li>
+<li><a href="https://github.com/jruby/jruby/issues/2434">#2434</a> - String#start_with? inconsistent with other Ruby implementations</li>
+<li><a href="https://github.com/jruby/jruby/issues/2426">#2426</a> - NullPointerException when trying to assign UnboundMethod using define_method &amp; to_proc</li>
+<li><a href="https://github.com/jruby/jruby/issues/2419">#2419</a> - Encoding issue after v1.7.6</li>
+<li><a href="https://github.com/jruby/jruby/pull/2402">#2402</a> - (MAINT) fix jnr-constants version in pom</li>
+<li><a href="https://github.com/jruby/jruby/pull/2401">#2401</a> - (MAINT) Fix pom deps re: asm</li>
+<li><a href="https://github.com/jruby/jruby/issues/2386">#2386</a> - JRuby fails to display Java splash at startup on OS X</li>
+<li><a href="https://github.com/jruby/jruby/pull/2349">#2349</a> - Fix for issue 1675 on jruby-1_7: String#casecmp on UTF-16LE encoded string</li>
+<li><a href="https://github.com/jruby/jruby/issues/2343">#2343</a> - some error with RG with embedded JRuby</li>
+<li><a href="https://github.com/jruby/jruby/issues/2338">#2338</a> - String#b improperly updates encoding of source string</li>
+<li><a href="https://github.com/jruby/jruby/issues/2333">#2333</a> - ChannelDescriptor leak after close of ScriptingContainer</li>
+<li><a href="https://github.com/jruby/jruby/pull/2292">#2292</a> - Remove unnecessary puts for GC::Profiler.total_time</li>
+<li><a href="https://github.com/jruby/jruby/issues/1675">#1675</a> - casecmp on UTF-16LE encoded string produces ArrayIndexOutOfBoundsException</li>
+<li><a href="https://github.com/jruby/jruby/issues/1637">#1637</a> - Socket.read(0) blocks caller (but not in MRI)</li>
+</ul>

@@ -1,0 +1,11 @@
+<% unless User.current.login == '' %>
+  <% unless @issue.nil? || @issue[:id].nil? %>
+    <div id="vote" class="vote-area" data-issue="<%=@issue[:id] %>">
+        <div><a class="vote-button" href="#" data-point="1">▲</a></div>
+        <div class="vote-point">-</div>
+        <div><a class="vote-button" href="#" data-point="-1">▼</a></div>
+    </div>
+    <label id="label_vote_count" style="display:none"><%=l(:label_vote_count)%></label>
+  <% end %>
+  <input type="hidden" id="vote-base-url" value="<%=url_for :controller => 'welcome' %>" />
+<% end %>

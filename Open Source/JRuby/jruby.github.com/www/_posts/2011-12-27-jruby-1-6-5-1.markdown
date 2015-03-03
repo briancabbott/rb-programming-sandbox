@@ -1,0 +1,58 @@
+---
+layout: post
+title: JRuby 1.6.5.1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.5.1.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.5.1 is a special release with a single patch applied to our JRuby 1.6.5 source to correct CERT vulnerability [CERT-2011-003](http://www.ocert.org/advisories/ocert-2011-003.html).  All users are recommended to upgrade to JRuby 1.6.5.1 to get this security fix.
+
+A fuller JRuby 1.6.6 with bug fixes from the last two months will be released mid-January...
+
+**Background for the CERT advisory:**
+
+(for the impatient: predictable hashing algorithm and open access to a hash from a server can possibly allow Denial of Service (DOS) attacks)
+
+**Hashing 101**
+
+Hash tables apply a math function (hashing function) to the key of a key-value pair. The result of the hashing function is a location to a hash bucket which stores the key/value pair internally:
+
+    a[:heh] = 1
+    hashing_function(:heh) -> store :heh/1 in hash bucket #3
+    a[:foo] = 2
+    hashing_function(:foo) -> store :foo/2 in hash bucket #13
+    a[:bar] = 3
+    hashing_function(:bar) -> store :bar/3 in hash bucket #1
+
+Hashes have many buckets and in theory all key/value pairs added to a hash will get spread out evenly across the hashes buckets.  In practice, some number of keys will end up hashing into the same hash bucket (known as a hashing collision).  As you get more key/value pairs stored to the same hash bucket the time to access those particular key/value pairs will slow down.  This is because you need to walk some portion of the entries in the bucket to find the specific one you are looking for (hash structures will often make entries in an individual bucket a simple list structure).
+
+    a[:gar] = 4
+    hashing_function(:gar) -> store gar/4 in hash bucket #3 (same bucket as :heh)
+
+In this example, accessing a\[:gar\] and a\[:heh\] may take longer than the other keys because they are sharing a hash bucket.
+
+**The Attack**
+
+The general application of the attack is for "the bad guys" to figure out a large set of values which will hash to the same hash bucket.  Once they create this list they will send all those values to a server.  The server will store them in a hash (think parameter list in Rack, for example).  The act of storing or accessing any of those values takes longer and longer as the number of entries in a single hash bucket grows.  The result will be a Denial Of Service (DOS) attack if enough values get stored.
+
+    hashing_function(:hostname) -> hash bucket #3
+    hashing_function(:aZ1) -> hash bucket #3
+    hashing_function(:cvg) -> hash bucket #3
+    hashing_function(:azr) -> hash bucket #3
+    ... # many elided
+    hashing_function(:1fr) -> hash bucket #3
+    hashing_function(:yu3) -> hash bucket #3
+    hashing_function(:hyX) -> hash bucket #3
+
+    host = params[:hostname] # Uh oh! need to find this amongst many bucket buddies
+
+**The Fix**
+
+Adding a little bit of randomization to the hashing algorithm ends up making it much, much more difficult to figure out how to generate this type of attack.  JRuby 1.6.5.1 (and all later JRuby releases) all have this additional randomization built into the hashing algorithm.  The result should be decent hash bucket distribution that is difficult for attackers to predict.
+More information
+
+This vulnerability is not exclusively an issue of JRuby.  Other Ruby implementations also have a similar issue (also patched today).  In fact, Java and PHP also appear to be susceptible to this style of attack.  For more information, please see the [CERT](http://www.ocert.org/advisories/ocert-2011-003.html) announcement.
+
+Also, consider that language implementations are really only susceptible to this attack via frameworks which allow an external hacker to store arbitrary and/or unbounded key/values into a hash.  Ruby Rack had this vulnerability, but they have fixed things so that the amount of parameters stored is bounded by a size to remove the possibility of a DOS attack.  Rack users should upgrade to the latest version.

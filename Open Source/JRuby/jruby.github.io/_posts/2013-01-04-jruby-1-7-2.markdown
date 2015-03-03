@@ -1,0 +1,59 @@
+---
+layout: post
+title: JRuby 1.7.2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.2
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.2 is our second update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The feedback we have gotten (along with patches) has ended up being a subtantial release.
+
+Changes of note:
+- Reworked openssl ext to allow updating from gem
+- Improved performance of constants and global variables
+- Improved performance of Java arrays accessed from Ruby
+- Many miscellaneous 1.9 compatibility fixes
+- 32 issues fixed for 1.7.2
+
+### Jira Issues resolved for 1.7.2
+
+<ul>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-6973">JRUBY-6973</a> - Release jruby-openssl-0.8.0 gem</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7039">JRUBY-7039</a> - net/protocol in Ruby 1.8 mode loads Ruby 1.9 version of socket</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-6951">JRUBY-6951</a> - Unable to encrypt data and then decrypt it in MRI Ruby</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7017">JRUBY-7017</a> - OpenSSL::HMAC transcodes data to iso-8895-1 before signing</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7018">JRUBY-7018</a> - sha1 library file, SHA1 top level class, and sha1 class method missing in Ruby 1.8 mode</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7032">JRUBY-7032</a> - Time#strftime %3N doesn't limit sub-seconds to 3 digits</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7029">JRUBY-7029</a> - add_parameter_annotation broken</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7037">JRUBY-7037</a> - Files containing literal '[' or ']' will not be required from LOAD_PATH</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-6953">JRUBY-6953</a> - --ng-server fails if you have JRUBY_OPTS set</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7046">JRUBY-7046</a> - unable to copy files > 2GB</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7043">JRUBY-7043</a> - Test failures, again.</li>
+<li><a href="https://jira.codehaus.org/browse/JRUBY-7016">JRUBY-7016</a> - There's a "t" missing in the output from --profile.json</li>
+</ul>
+
+### Github Issues resolved for 1.7.2
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/473">#473</a> - File.truncate should not move write pointer</li>
+<li><a href="https://github.com/jruby/jruby/issues/467">#467</a> - glib2 doesn't compile under jruby 1.9.7</li>
+<li><a href="https://github.com/jruby/jruby/issues/452">#452</a> - Implement loaded feature caching to reduce load path searching.</li>
+<li><a href="https://github.com/jruby/jruby/issues/447">#447</a> - Javadocs mangles some HTML in org.jruby.util.Pack</li>
+<li><a href="https://github.com/jruby/jruby/issues/445">#445</a> - Requiring an empty string causes AIOOB with RubyGems active</li>
+<li><a href="https://github.com/jruby/jruby/issues/441">#441</a> - jruby-7029: fix add_parameter_annotation, it was untested and broken.</li>
+<li><a href="https://github.com/jruby/jruby/issues/440">#440</a> - Constant lookup falls off top scope in new compiler scoping logic</li>
+<li><a href="https://github.com/jruby/jruby/issues/439">#439</a> - String#upcase and downcase fail for multibyte characters</li>
+<li><a href="https://github.com/jruby/jruby/issues/436">#436</a> - Fix Readline.get_screen_size before Readline.readline</li>
+<li><a href="https://github.com/jruby/jruby/issues/434">#434</a> - Update psych to tenderlove/psych@d5757ea </li>
+<li><a href="https://github.com/jruby/jruby/issues/433">#433</a> - strftime does not implement %-flag in 1.8 mode.</li>
+<li><a href="https://github.com/jruby/jruby/issues/431">#431</a> - Include runtime version in site dir</li>
+<li><a href="https://github.com/jruby/jruby/issues/429">#429</a> - Setup .gitattributes for eol normalization</li>
+<li><a href="https://github.com/jruby/jruby/issues/428">#428</a> - Directed graph library specs</li>
+<li><a href="https://github.com/jruby/jruby/issues/427">#427</a> - Don't override default_exec_format method for rubygems</li>
+<li><a href="https://github.com/jruby/jruby/issues/426">#426</a> - Trie impl is slower on JRuby than other Rubies</li>
+<li><a href="https://github.com/jruby/jruby/issues/425">#425</a> - Fixed implicitly creating a vertex if it is absent while removing a edge or vertex</li>
+<li><a href="https://github.com/jruby/jruby/issues/360">#360</a> - Non-ASCII character escape sequence in string_content results in SyntaxError</li>
+<li><a href="https://github.com/jruby/jruby/issues/215">#215</a> - 10 argument variant of `Time.local` mishandles timezone.</li>
+<li><a href="https://github.com/jruby/jruby/issues/174">#174</a> - [JRUBY-6668] StringScanner#scan_until spins forever on UTF-8 data</li>
+</ul>

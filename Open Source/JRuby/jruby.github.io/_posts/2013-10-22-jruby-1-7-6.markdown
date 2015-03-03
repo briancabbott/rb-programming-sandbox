@@ -1,0 +1,37 @@
+---
+layout: post
+title: JRuby 1.7.6 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.7.6
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.7.6 is our sixth update release since JRuby 1.7.0.  The primary goal of 1.7 point releases is to fill out any missing compatibility issues with Ruby 1.9.3.  The community participation lately has been great.  Keep reporting issues and sending pull requests.
+
+This release was a quick followup release to 1.7.5.  Our main priority is working on our next major version of JRuby, but we want to maintain a partial focus on continuing to fix bugs for JRuby 1.7.x.  A faster release cycle for JRuby 1.7.x will help motivate us to keep fixing bugs on our maintenance branch.  Expect a new release about every 3 weeks...
+
+Changes of note:
+- 14 issues fixed for 1.7.6
+- Restored some missing .bat files for Windows
+- Fibers no longer throwing uncatchable errors
+- Removal of already initialized warnings from OpenSSL
+
+### Issues resolved for 1.7.6
+
+<ul>
+<li><a href="https://github.com/jruby/jruby/issues/1145">#1145</a> - Process.respond_to?(:fork) returns true when profiling is enabled</li>
+<li><a href="https://github.com/jruby/jruby/pull/1142">#1142</a> - Threading fixes</li>
+<li><a href="https://github.com/jruby/jruby/issues/1141">#1141</a> - Error Messages Seem Different Compared to YARV</li>
+<li><a href="https://github.com/jruby/jruby/issues/1138">#1138</a> - Files missing from JRuby 1.7.5</li>
+<li><a href="https://github.com/jruby/jruby/issues/1135">#1135</a> - Round method not consistent with jruby 1.7.5 compared to 1.7.3</li>
+<li><a href="https://github.com/jruby/jruby/issues/1133">#1133</a> - Tempfile no longer unlinks created files upon garbage collection</li>
+<li><a href="https://github.com/jruby/jruby/issues/1128">#1128</a> - strformat corrupt cyrillic symbols</li>
+<li><a href="https://github.com/jruby/jruby/issues/1121">#1121</a> - Bigdeciment 1.9+: to_s sometimes has extra trailing zeroes</li>
+<li><a href="https://github.com/jruby/jruby/issues/1118">#1118</a> - Arrays duplicated by splats (e.g. a_dup = [*a]) share structure, but shouldn't</li>
+<li><a href="https://github.com/jruby/jruby/issues/1116">#1116</a> - Ignore AccessControlException while setting network stack system property</li>
+<li><a href="https://github.com/jruby/jruby/issues/1106">#1106</a> - Java exceptions raised in fibers cause the fiber to die without notifying parent</li>
+<li><a href="https://github.com/jruby/jruby/issues/1088">#1088</a> - JZlibRubyGzipWriter doesn't handle nil arguments gracefully</li>
+<li><a href="https://github.com/jruby/jruby/issues/1071">#1071</a> - Lots of already initialized errors from jruby-openssl</li>
+<li><a href="https://github.com/jruby/jruby/pull/1044">#1044</a> - Allow whitespace between -> and () in lambdas in 2.0</li>
+</ul>

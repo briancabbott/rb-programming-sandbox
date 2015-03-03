@@ -1,0 +1,25 @@
+---
+layout: post
+title: JRuby 1.5.6 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.6.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.5.6 is a minor follow-up release to address problems with mirroring
+of 1.5.5 in maven, update to 1.0.3 of jruby native launcher, and a few 
+undesirable issues in windows.  All users of JRuby 1.5.5 (and lower)
+are recommended to upgrade to 1.5.6.
+
+### 1.5.6 Issues Resolved:
+- JRUBY-4352 Rbconfig's Config::CONFIG provides wrong name for Windows 2008 Server, based on input from Rakesh Arora. (See 07fb757.)
+- JRUBY-4774 Fix classpath and load path issues related to file paths containing spaces
+- JRUBY-4898 java.util.ConcurrentModificationException 			
+- JRUBY-5127 become_java! doesn't add Ruby class methods as statics on the resulting Java class
+- JRUBY-5223 Marshal.load fails when Kernel.read is defined
+
+### Not in our tracking system:
+- ant.bat should be specified on Windows
+
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title><%= title %></title>
+<% @version_names.each do |version_name| %>
+  <link rel="search"
+        type="<%= h(open_search_description_mime_type) %>"
+        title="<%= h(site_title(version_name)) %>"
+        href="<%= h(open_search_description_path(version_name)) %>" />
+<% end %>
+  <link rel="stylesheet" href="<%= full_path('css', 'rurema.css') %>"
+        type="text/css" media="all" />
+  <link rel="stylesheet"
+        href="<%= full_path('css', 'smoothness', 'jquery-ui.css') %>"
+        type="text/css" media="all" />
+  <link rel="shortcut icon" href="<%= full_path('favicon.ico') %>" />
+  <script src="<%= full_path('javascripts/jquery.min.js') %>"
+          type="text/javascript"></script>
+  <script src="<%= full_path('javascripts/jquery-ui.min.js') %>"
+          type="text/javascript"></script>
+</head>
+<body>
+  <div id="top" class="header">
+    <%= header %>
+  </div>
+  <div class="content">
+    <%= body %>
+  </div>
+  <div class="footer">
+    <p class="rurema">
+     検索対象のドキュメントは
+     <a href="http://bugs.ruby-lang.org/projects/rurema">るりまプロジェクト</a>
+     の成果物です。
+    </p>
+    <p class="powered-by">
+      検索エンジンは
+      <a href="http://groonga.org/">Groonga</a>
+      <%= h(groonga_version) %>
+      を使っています。
+    <p class="powered-by">
+      Groongaは
+      <a href="http://ranguba.org/">Rroonga</a>
+      <%= h(Groonga::BINDINGS_VERSION.join(".")) %>
+      経由で利用しています。
+    </p>
+    <p class="powered-by">
+      Powered by
+      <a href="http://www.ruby-lang.org/">Ruby</a> <%= h(RUBY_VERSION) %>.
+    </p>
+    <p class="powered-by">
+      <a href="https://github.com/clear-code/rurema-search/">るりまサーチのリポジトリ</a>
+      は
+      <a href="https://github.com/">GitHub</a>
+      上にあります。
+    </p>
+  </div>
+<%= analyze %>
+</body>
+</html>

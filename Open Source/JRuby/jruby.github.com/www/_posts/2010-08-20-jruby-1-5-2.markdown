@@ -1,0 +1,21 @@
+---
+layout: post
+title: JRuby 1.5.2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.5.2 is a minor follow-up release to address a few file descriptor and 
+class loading leaks.  There is also a security fix for users of Webrick (see 
+http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-0541).  All users of 
+JRuby 1.5.1 are recommended to upgrade to 1.5.2.
+
+### 1.5.2 Issues Resolved:
+
+- JRUBY-4767 JRuby and open-uri File handle issue
+- JRUBY-4981 Anonymous classes are piling up and filling up PErmGen, eventually causing a crash
+- JRUBY-4841 CLONE -Memory Leak when extending Java class with additional Ruby instance variable
+- JRUBY-5007 XSS in WEBrick (CVE-2010-0541)
+- JRUBY-5018 SSLSocket holds selectors, keys, preventing quick cleanup of resources when dereferenced

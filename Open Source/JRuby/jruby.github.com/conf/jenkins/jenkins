@@ -1,0 +1,34 @@
+#!/sbin/runscript
+# Copyright 2004, 2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License, v2 or later
+# $Header: /var/cvsroot/gentoo-x86/dev-util/subversion/files/svnserve.initd,v 1.2 2005/08/25 13:59:48 pauldv Exp $
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting jenkins"
+	# Ensure that we run from a readable working dir, and that we do not
+	# lock filesystems when being run from such a location.
+	cd /
+	start-stop-daemon --start --quiet --background --make-pidfile \
+		--pidfile /var/run/jenkins.pid --exec $JAVA_HOME/bin/java \
+		--chuid $USER:$USER -- $JAVA_OPTS $JENKINS_OPTS
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping jenkins"
+	start-stop-daemon --stop --quiet --pidfile /var/run/jenkins.pid
+	eend $?
+}
+
+restart() {
+  if ! service_stopped "${SVCNAME}" ; then
+    svc_stop || return "$?"
+  fi
+  while $JAVA_HOME/bin/jps | grep jenkins > /dev/null; do sleep 2; done
+  svc_start
+}
+

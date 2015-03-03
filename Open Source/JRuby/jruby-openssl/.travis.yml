@@ -1,0 +1,23 @@
+language: ruby
+sudo: false
+rvm:
+  - jruby
+jdk:
+  - openjdk6
+  - oraclejdk7
+  - oraclejdk8
+env:
+  - TEST_PROFILE=test-1.6.8
+  - TEST_PROFILE=test-1.7.4
+  - TEST_PROFILE=test-1.7.13
+  - TEST_PROFILE=test-1.7.18
+  - TEST_PROFILE=test-1.7.19
+  - TEST_PROFILE=test-9000
+script: mvn verify -P $TEST_PROFILE
+matrix:
+  # NOTE: 9k needs a compatible runit version (due minitest changes) !
+  allow_failures:
+    - env: TEST_PROFILE=test-9000
+  exclude:
+    - jdk: openjdk6
+      env: TEST_PROFILE=test-9000

@@ -1,0 +1,1 @@
+fails:Enumerator#each requires multiple arguments

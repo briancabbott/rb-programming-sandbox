@@ -1,0 +1,16 @@
+script: 'ci/travis.rb'
+before_install:
+  - travis_retry gem install bundler
+rvm:
+  - jruby-head
+env:
+  - "GEM=railties"
+  - "GEM=ap,am,amo,as,av"
+#  - "GEM=ar:mysql"
+#  - "GEM=ar:mysql2"
+#  - "GEM=ar:sqlite3"
+#  - "GEM=ar:postgresql"
+matrix:
+  allow_failures:
+    - rvm: jruby-head
+bundler_args: --path vendor/bundle --without test

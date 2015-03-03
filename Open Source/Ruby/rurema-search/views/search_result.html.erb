@@ -1,0 +1,88 @@
+<div class="drilldowns">
+<% @drilldown_items.each do |item| %>
+  <div class="drilldown list-box">
+    <h2 class="drilldown-<%= h(item[:key]) %>">
+       <%= h(item[:label] || parameter_label(item[:key])) %>
+    </h2>
+    <ul class="drilldown-items">
+  <% item[:entries].each do |entry| %>
+      <li class="drilldown-item-<%= h(entry[:label]) %>">
+        <%= link_drilldown_entry(item[:key], entry) %>
+        (<%= h(entry[:n_records]) %>)
+      </li>
+  <% end %>
+    </ul>
+  </div>
+<% end %>
+</div>
+
+<div class="result">
+  <h2>検索結果</h2>
+  <div class="leading-link-box">
+    <h3 class="leading-link-title">
+      先頭<%= @leading_grouped_entries.size %>件
+    </h3>
+    <ol class="leading-links">
+<%    @leading_grouped_entries.each_with_index do |(represent_entry, entries), i| %>
+    <li><a href="#entry-<%= i %>"><%= entry_label(represent_entry) %></a></li>
+<%    end %>
+    </ol>
+  </div>
+
+<%= paginate %>
+
+  <dl class="entries">
+<%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
+    <dt class="entry-name" id="entry-<%= i %>">
+      <h3>
+        <span class="signature">
+          <%= link_entry_if(entries.size == 1, represent_entry) %>
+        </span>
+        <span class="score">(<%= h(represent_entry.score) %>)</span>
+      </h3>
+    </dt>
+    <dd>
+      <ul class="entry-links">
+<%    entries.each do |entry| %>
+        <li class="entry-version">
+          <%= link_entry(entry, :label => h(entry.version.key)) %>
+        </li>
+<%    end %>
+      </ul>
+      <ul class="entry-metadata">
+        <li class="entry-type">
+          <span class="entry-<%= h(represent_entry.type.key) %>">
+            <%= link_type(represent_entry) %>
+          </span>
+        </li>
+      </ul>
+      <div class="entry-summary">
+        <p><%= h(remove_markup(represent_entry.summary)) %></p>
+      </div>
+      <div class="entry-document">
+<%    grouped_entries_description_snippets(entries).each do |snippet| %>
+        <div class="entry-snippets">
+          <%= snippet %>
+        </div>
+<%    end %>
+      </div>
+      <ul class="entry-related-entries">
+<%    collect_related_entries(entries).each_with_index do |related_entry, j| %>
+<%      if j < 20 %>
+        <li class="entry-related-entry-<%= h(related_entry[:type]) %>">
+          <%= link_related_entry(related_entry) %>
+        </li>
+<%      else %>
+        <li class="entry-related-entry-abbrev">...</li>
+<%        break %>
+<%      end %>
+<%    end %>
+      </ul>
+<%    if ((i + 1) % 5).zero? %>
+      <p class="jump-to-top"><a href="#top">絞り込み条件を変える</a></p>
+<%    end %>
+    </dd>
+<%  end %>
+  </dl>
+<%= paginate %>
+</div>

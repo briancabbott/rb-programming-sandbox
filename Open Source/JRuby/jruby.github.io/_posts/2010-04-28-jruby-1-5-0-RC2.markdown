@@ -1,0 +1,69 @@
+---
+layout: post
+title: JRuby 1.5.0.RC2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.0.RC2
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+This development cycle has been our longest cycle yet (nearly 5 months), but it also has the most fixes.  It also includes many new notable features (see below).  Most of our bug fixes have been more of what we consider fine-tuning, since we keep getting into smaller corner-cases of compatibility for individual Ruby methods.  In that sense, we expect if you had a good experience with JRuby 1.4.0 then 1.5.0.RC2 will be a no-brainer upgrade.  If you haven't tried JRuby in a while with your application, then please give us another try.  Odds are whatever issue you were having before no longer exists!  And we would really like help making sure JRuby 1.5.0 final is a solid release...so please try and report back with any problems.
+
+### 1.5.0 Highlights:
+
+- New native access framework designed for performance and better FFI support
+- Native launcher for \*NIX platforms
+- Ant support and Rake-Ant integration
+- Better and better support for Windows
+- Multiple performance improvements for Ruby-to-Java calling, improving correctness, memory, and speed.
+- Embedding API improvements based on user input (JSR-223, BSF, RedBridge, etc)
+- Software updates: Ruby 1.8.7 standard library update, RubyGems 1.3.6, RSpec 1.3.0
+- ruby-debug installed by default
+- Many fixes for Rails 3
+- Various improvements to startup time
+- Improved performance for Object#object\_id/\_\_id\_\_
+- Reduced memory use for Java class metadata and faster loading of Java classes
+- jar-in-jar support in the classloader
+- The "open4" library now works properly
+- jruby.jit.codeCache=dir to save jitted scripts/methods to disk in a sha1-hashed .class file
+- New logic for interface implementation that produces "real" classes
+- jruby.ji.objectProxyCache to turn off OPC for extra performance
+- JRuby::Synchronized module for making a class and its subclasses 100% synchronized on all calls
+- Miscellaneous perf improvements to core classes and minor improvements in the JIT
+- No more ObjectSpace during IRB
+- Cleaned up maven artifacts
+- Windows Installer fixes for x64 and Windows 7 security
+- Over 1250 commits since JRuby 1.4
+
+### Issues resolved since 1.5.0.RC1:
+
+- JRUBY-3153: IO rubyspec failures under IBM JDK6 Linux
+- JRUBY-3208: ant task api-docs runs out of memory, patch included
+- JRUBY-4677: Java exceptions can't be rescued with "rescue Exception"
+- JRUBY-4680: jirb_swing broken: JRuby picking wrong constructor, with no obvious work around
+- JRUBY-4704: "Java wrapper with no contents" error when subclassing a Runnable class in JRuby
+- JRUBY-4710: Problems importing classes in default package
+- JRUBY-4715: FFI::StructByValue missing layout and struct_class methods.
+- JRUBY-4721: FFI::Platform::CONF_DIR looks in wrong location for PPC Macs.
+- JRUBY-4724: Java class equality operator is order dependent
+- JRUBY-4725: to_java_object no longer exists
+- JRUBY-4729: System properties to set bindir and default rubygems paths
+- JRUBY-4730: Unix jruby-1.5.0.RC1 distro includes rubygems/default/jruby_native.rb without native launcher
+- JRUBY-4731: Mismatched default compilation prefix
+- JRUBY-4733: Allow compilation of Ruby files for a specificic JVM version
+- JRUBY-4734: Reduce "multiple Java method" warnings in unambiguous cases
+- JRUBY-4735: install-gems ant target should not count on successful installation of jruby-launcher
+- JRUBY-4737: Compatibility issue with Spring property from 1.4.0 to 1.5.0.RC1
+- JRUBY-4738: test/testapp/testapp.exe appears twice in jruby-src-1.5.0.RC1.tar.gz
+- JRUBY-4742: File::Stat throws a NPE when it doesn't find a file into a jar
+- JRUBY-4747: read_nonblock error with couchrest
+- JRUBY-4749: require 'rbconfig' fails on GAE because of NullPointerException
+- JRUBY-4750: ant-to-rake: &lt;rake&gt; task does not work when classpath is defined via taskdef's attribute
+- JRUBY-4751: Java call to RubyBignum.to_s() returns generic object representation
+- JRUBY-4754: NotImplementedError: the MD5() function is unimplemented on this machine
+- JRUBY-4757: addressable gem doesn't work with --fast
+- JRUBY-4760: File.open throws Errno::ENOENT when file inside jar is accessed using ".." (doubledot) in the path
+- JRUBY-4761: 1.9.2: Thread#backtrace
+
+We always appreciate community contributions. This cycle we've had more help than ever: David Calavera, Stephen Bannasch, Daniel Luz, Ian Dees, Koichiro Ohba,
+Hongli Lai, Hiroshi Nakamura, Colin Jones, Takeru Sasaki, Roger Pack, Matjaz Gregoric, Joseph LaFata, Frederic Jean, Alex Coles, Lars Westergren

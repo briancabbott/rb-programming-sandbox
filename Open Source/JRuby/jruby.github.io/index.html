@@ -1,0 +1,92 @@
+---
+layout: home
+title: Home
+---
+<div id="hero">
+  <div id="carousel">
+    <div class="panelContainer">
+
+      <div class="panel" title="Why JRuby?" id="why_jruby">
+        <div class="wrapper">          
+          <div class="feature java" id="feature_1">
+            <h3>The Best of the JVM</h3>
+            <ul>
+              <li>High performance</li>
+              <li>Real threading</li>
+              <li>Vast array of libraries</li>
+            </ul>
+          </div>
+          <div class="feature ruby" id="feature_2">
+            <h3>It's Just Ruby</h3>
+            
+              Ruby 2.2 compatible
+            
+          </div>
+          <div class="feature platform" id="feature_3">
+            <h3>Platform Independent</h3>
+            <ul>
+              <li>Easy to install</li>
+              <li>Easy migration</li>
+              <li>No hassles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" title="Get Started" id="download">
+        <div class="wrapper">
+          <div id="link">
+            <a href="/download"><img src="/images/download_icon_big.png"/></a>
+            <p class="trackDownloads"><a href="/download" class="button">&darr; Download JRuby</a></p>
+          </div>
+          <div id="instructions">
+            <ol>
+              <li>Extract JRuby into a directory.</li>
+
+              <li>Add that directory's bin subdirectory to 
+              the end of your path. </li>
+
+              <li>Test it: <code>jruby -v</code></li>
+            </ol>
+            <a href="/getting-started">Detailed instructions &rarr;</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel" title="Learn" id="learn">
+        <div class="wrapper">
+          
+          <div class="feature" id="feature_1">
+            <a href="{{ site.urls.wiki }}">
+              <img src="/images/wiki_thumb.png"/>
+              <h3>JRuby Wiki</h3>
+            </a>
+          </div>
+          <div class="feature" id="feature_2">
+            <a href="/blogs">
+              <img src="/images/blogs_thumb.png"/>
+              <h3>JRuby Blogs</h3>
+            </a>
+          </div>
+          <div class="feature" id="feature_3">
+            <a href="documentation">
+              <img src="/images/docs_thumb.png"/>
+              <h3>JavaDocs and RDocs</h3>
+            </a>
+          </div>                
+        </div>
+      </div>
+      
+      <div class="panel" title="Get Involved" id="get_involved">
+        <div class="wrapper">
+          <ul>
+            <li id="repo"><a href="{{ site.urls.github }}">Source Repo <img src="/images/outbound.png"/></a></li>
+            <li id="mailing_lists"><a href="http://wiki.jruby.org/MailingLists">Join the Mailing Lists <img src="/images/outbound.png"/></a></li>
+            <li id="issue_tracker"><a href="{{ site.urls.bugs }}">Issue Tracker <img src="/images/outbound.png"/></a></li>
+            <li id="irc"><a href="http://wiki.jruby.org/IRC">(#jruby) irc.freenode.net</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

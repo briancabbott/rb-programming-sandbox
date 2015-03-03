@@ -1,0 +1,140 @@
+---
+layout: post
+title: JRuby 1.6.0.RC2 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.6.0.RC2.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.6.0.RC2 is the second release candidate of JRuby 1.6.0.
+
+JRuby 1.6.0 is the largest release of JRuby to date. This release
+fixes hundreds of user issues and brings compatibility with Ruby 1.9.2
+to a very high level. We have made Windows a primary supported
+platform by adding it as a continuous integration platform, and JRuby
+1.6 will provide Windows-based Ruby users with the best experience
+yet. This release integrates experimental support for C extensions
+based on Ruby's C API. And as with all major releases, we have
+improved stability and performance across the board in response to
+real-world user input.
+
+We encourage Ruby and JRuby users alike to test out 1.6.0.RC2 to help
+us shake out remaining issues. It would be especially helpful if users
+would test out 1.9 mode (by passing --1.9 flag) to help us round out
+our 1.9.2 compatibility before the final 1.6.0 release.
+
+### Notable changes since 1.6.0.RC1:
+- Large number of 1.9 compatibility issues addressed
+  - Encoding issues (especially involving Regexp)
+  - Fiddle implementation
+  - non-ASCII identifiers
+- irb (1.8.7, 1.9.2) and command prompt added to Windows installer
+- Compiler handles all 1.9 syntax now
+- Fixes for new backtrace accuracy, reliability
+- Removed all GPL or LGPL-only dependencies
+- Updated to RubyGems 1.5.0
+- C extension support prebuilt for OS X, Linux (32/64), Windows (32)
+- 83 issues resolved since RC1
+
+### Major Features:
+
+- Ruby 1.9.2 language and API compatibility
+
+  - Not implemented Encoding::Converter, ripper
+- Improved Ruby call performance
+- Built-in profiler (--profile, --profile.graph)
+- RSpec no longer bundled
+- C Extension support (experimental)
+- RubyGems Maven support (preview)
+- Improved compatibility and user experience on Windows
+- jruby-complete.jar now includes 1.9 standard library
+- Embedding API refinements
+- Over 2000 commits and 265 issues resolved.
+
+### Issues fixed since 1.6.0.RC1
+
+- JRUBY-5382 Timeout is firing late under load
+- JRUBY-4764 Leaking fileno to ChannelDescriptor mappings in Ruby.retainedDescriptors.
+- JRUBY-5345 require 'ffi' breaks in windows jar when the path to the jar contains spaces/special chars
+- JRUBY-5229 Interpreter is slower for microbenchmarks after "backtrace" merge
+- JRUBY-5354 undefined method 'map' for {}:Java::JavaUtil::HashMap
+- JRUBY-5341 1.9 Rescuing a specific error throws up a Java Exception when $DEBUG is true
+- JRUBY-3331 to_f near Float::MAX
+- JRUBY-5460 ant test-1.9 doesn't run any test at all
+- JRUBY-5353 new map proxy's inspect method doesn't work when Map object is created in Ruby
+- JRUBY-2564 File.open interprets '/dir' as './dir' on Windows
+- JRUBY-5347 Float#round(int) isn't implemented in 1.9 mode
+- JRUBY-5358 Arg-passing or splatting error in jitted execution
+- JRUBY-5365 java.util.HashMap.new.kind_of? java.util.Map returns false
+- JRUBY-5372 Failures in 1.9 test/ruby/test_alias
+- JRUBY-4878 Can't run ruby file with utf-8 characters
+- JRUBY-5377 Class.__subclasses__ incompatible with Rails
+- JRUBY-4816 Very simple bug with character replacing
+- JRUBY-5368 Star and unnamed restarg treated differently in 1.9 mode Proc#parameters
+- JRUBY-5342 Add Scala-specific JI logic
+- JRUBY-5387 Unable to run Rails tests since we use Psych as default yaml lib
+- JRUBY-5315 Time constructors don't support fractional seconds
+- JRUBY-4580 unable to run jirb in --fast
+- JRUBY-4178 gzip oddity
+- JRUBY-5395 camelCase to snake_case conversion regression
+- JRUBY-4904 Aliased method fails equality test
+- JRUBY-4871 1.9 Attempt to invoke any method on Delegator leads to ClassCastException
+- JRUBY-3434 Ruby 1.9 mode should guess system encoding if not specified
+- JRUBY-5399 1.9: Dir#\[\] doesn't convert Pathname args to String
+- JRUBY-5219 Problem w/ JRuby, Warbler & Weblogic 10
+- JRUBY-4722 ant bails with unrecognized -d32 option on OS X on some architecture/os-version/java-version combinations
+- JRUBY-4946 Having an attribute named timeout breaks factory_girl under jruby
+- JRUBY-5366 jruby 1.6 RC1 ruby 1.9: org.jruby.RubyBasicObject cannot be cast to org.jruby.RubyObject
+- JRUBY-5417 Nil backtrace when overriding method_missing and calling super
+- JRUBY-5326 1.9: Java error in Psych when running "gem build" command
+- JRUBY-5412 Strange each_slice/with_index combo exception
+- JRUBY-5016 1.9: SyntaxError when a block var shadows local var
+- JRUBY-5356 --profile.graph sometimes shows wrong methods
+- JRUBY-5363 Kernel#caller behavior is different for files with .rbw extension
+- JRUBY-5261 RSpec &gt;= 2.2 around hooks trigger runtime NPE
+- JRUBY-5406 1.9: String#encode does not support "locale" as an encoding
+- JRUBY-5418 Getting NativeException: org.jruby.RubyContinuation$Continuation: null with RSpec 2 and EventMachine
+- JRUBY-5346 jruby 1.6.0.RC1 doesn't recognize multibyte strings in 1.9 branch
+- JRUBY-5389 IO.popen doesn't support Array of String's arg in 1.9 mode
+- JRUBY-5433 Process.abort should only accept string arguments
+- JRUBY-5431 Kernel#exit! without arg causes wrong process exit code
+- JRUBY-5236 test/org/jruby/util/shell_launcher_test is not getting +x set in src dist
+- JRUBY-5394 1.9: Array#join using to_a instead of to_s when both defined
+- JRUBY-5436 File.open mode doesn't accept "r:ENC:-"
+- JRUBY-5407 add_method_signature causes a VerifyError if used for more than return type.
+- JRUBY-5364 become_java! / RubyClass.reify regression
+- JRUBY-5429 jruby-complete.jar relocates org.objectweb.asm, but jruby.jar does not
+- JRUBY-5143 Encoding of ByteList is not set
+- JRUBY-5444 IOJavaAddons.AnyIO pollutes Object unnecessarily
+- JRUBY-5450 Marshal.load and Marshal.dump not implemented?
+- JRUBY-5355 1.9: defined? does not yet compile, is used by RubyGems
+- JRUBY-4749 require 'rbconfig' fails on GAE because of NullPointerException
+- JRUBY-4849 Provide or update links to source/project, attribution, and license info for *all* libraries ship with JRuby
+- JRUBY-5203 included Module is not picked up by runtime
+- JRUBY-4907 popen4 reports wrong PID on Windows
+- JRUBY-5343 ScriptingContainer throws LoadError when there are spaces in the classpath (Ruby 1.9 mode only)
+- JRUBY-5367 Rake/Gem::PackageTask fails with the rubygems 1.4 upgrade, when using java platform
+- JRUBY-5410 JRuby needs to provide a dist free of GPLed libraries, for GPL-sensitive consumers like Apache
+- JRUBY-5388 Requiring a filename with accented characters fails
+- JRUBY-5376 singleton_class.define_method creates private methods
+- JRUBY-5378 Memory Leak With JRuby/Tomcat
+- JRUBY-5413 Bundled version of Rubygems (1.4.2) fails when behind a proxy
+- JRUBY-5281 jruby-complete jar not working from directory with spaces
+- JRUBY-5213 --profile needs to dump even on ^C, other means of getting info, multi-thread
+- JRUBY-5453 NullPointerException in ScriptingContainer.setCurrentDirectory()
+- JRUBY-4910 jruby.exe + multibyte-character is broken
+- JRUBY-5448 Maven gem support should report and abort when using &lt;mvn3
+- JRUBY-5336 jruby --1.9 Object#id should raise NoMethodError
+- JRUBY-5391 MongoMapper's usage of defined? is handled incorrectly
+- JRUBY-4488 Joni matches \[^\w\] incorrectly, and differently to MRI/187
+- JRUBY-5340 Non-greedy item can cause Regexp to get stuck
+- JRUBY-4951 1.9: Thread#backtrace should apply to the thread in question
+- JRUBY-5108 Regex incompatibility between MRI and JRuby
+- JRUBY-4768 'jruby -X' should be more friendly
+- JRUBY-5398 Generated Javadoc for ScriptingContainer cuts off in the middle
+- JRUBY-5430 RubyHash view objects should be static
+- JRUBY-5334 Abbrev.abbrev with multi-byte strings returns another result
+- JRUBY-5445 JRuby cannot parse a magic comment like #-*- mode: ruby; -*-
+- JRUBY-4949 Make ARGV via embedding work same as it does when running jruby itself
+- JRUBY-4271 interfaces on reified classes patch was incomplete and broke instances being passed to java code.

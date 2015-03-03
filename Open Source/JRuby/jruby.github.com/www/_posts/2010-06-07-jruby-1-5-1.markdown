@@ -1,0 +1,25 @@
+---
+layout: post
+title: JRuby 1.5.1 Released
+---
+The JRuby community is pleased to announce the release of JRuby 1.5.1.
+
+- Homepage: [http://www.jruby.org/](http://www.jruby.org/)
+- Download: [http://www.jruby.org/download](http://www.jruby.org/download)
+
+JRuby 1.5.0 was a long overdue and huge release. JRuby 1.5.1 is a minor follow-up release to address some of the more visible issues discovered after the release of 1.5.0.  Everyone is encouraged to move to 1.5.1. Users of JRuby's Java integration or those deploying on Google AppEngine will need to upgrade to 1.5.1.
+
+### 1.5.1 Issues Resolved:
+
+- JRUBY-4799: Uncaught AccessibleObject.setAccessible fails on App Engine
+- JRUBY-4839: ObjectSpace.undefine_finalizer does not work
+- JRUBY-4838: JRuby exit hangs on ChannelStream.finalize
+- JRUBY-4795: regression: JRuby 1.5 doesn't pick up JDBC drivers from CLASSPATH
+- JRUBY-4832: Memory Leak when extending Java class with additional Ruby instance variable
+- JRUBY-4790: Regression processing __END__ between JRuby 1.4 and 1.5
+- JRUBY-4803: Known bug in net/http.rb
+- JRUBY-4844: jruby behaves differently from MRI with (rails 2.3.8) activerecord associations
+- JRUBY-4837: FileUtils.touch does not update the mtime of directories on Windows
+- JRUBY-4821: IO#open(&amp;block) + close sets $! which disables Test::Unit::Autorunner
+- JRUBY-4831: Multiple block args to ActiveRecord association proxy are splatted incorrectly
+- JRUBY-4825: __FILE__ is not expanded when it is used from within a a compiled ruby script used as the main class of an executable jar
