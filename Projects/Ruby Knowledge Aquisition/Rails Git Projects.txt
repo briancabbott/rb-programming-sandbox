@@ -1,0 +1,94 @@
+
+
+rails - Ruby on Rails
+sprockets - Rack-based asset packaging system
+turbolinks - Turbolinks makes following links in your web application faster (use with Rails Asset Pipeline)
+weblog
+web-console - forked from gsamokovarov/web-console - Rails Console on the Browser.
+docrails - Rails branch for quick doc fixes, please DO NOT OPEN PULL REQUESTS IN HERE
+execjs - Run JavaScript code from Ruby
+jbuilder - Create JSON structures via a Builder-style DSL
+activeresource - Connects business objects and REST web services
+rails.github.com
+rails-dom-testing - Extracting DomAssertions and SelectorAssertions from ActionView.
+protected_attributes - Protect attributes from mass-assignment in ActiveRecord models.
+sass-rails - Ruby on Rails stylesheet engine for Sass
+rails-html-sanitizer
+ruby-coffee-script - Ruby CoffeeScript Compiler
+jquery-ujs - Ruby on Rails unobtrusive scripting adapter for jQuery
+prototype-rails - Add RJS, Prototype, and Scriptaculous helpers to Rails 3.1+ apps
+actionform - forked from m-Peter/activeform
+spring - Rails application preloader
+arel - forked from brynary/arel - A Relational Algebra
+
+
+record_tag_helper - ActionView Record Tag Helpers
+globalid - Identify app models with a URI
+sprockets-rails - Sprockets Rails integration
+actionpack-page_caching - Static page caching for Action Pack (removed from core in Rails 4.0)
+activerecord-session_store - Active Record's Session Store extracted from Rails
+rails-docs-server
+rails-dev-box - A virtual machine for Ruby on Rails core development
+rails-deprecated_sanitizer - forked from kaspth/rails-deprecated_sanitizer - Deprecated sanitizer API extracted from Action View.
+strong_parameters - Taint and required checking for Action Pack and enforcement in Active Model
+actionpack-action_caching - Action caching for Action Pack (removed from core in Rails 4.0)
+jquery-rails - A gem to automate using jQuery with Rails
+coffee-rails - forked from spastorino/coffee-rails
+pjax_rails - PJAX integration for Rails
+rails-observers - Rails observer (removed from core in Rails 4.0)
+conductor - forked from NewRosies/conductor - Conductor is a Rails engine that lets you do through a web UI what you'd normally do with the rails shell command.
+activerecord-deprecated_finders
+actionpack-xml_parser - XML parameters parser for Action Pack (removed from core in Rails 4.0)
+rails-perftest - Benchmark and profile your Rails apps
+cache_digests
+activejob - Declare job classes that can be run by a variety of queueing backends
+
+
+activemodel-globalid - Serializing models to a single string makes it easy to pass references around
+activesupport-json_encoder
+gsoc2014 - Project website and wiki for Ruby on Rails proposals to Google Summer of Code 2014
+journey - A router for rails
+etagger - Declare what goes in to your ETags: asset versions, account ID, etc.
+gsoc2013 - Project website and wiki for Ruby on Rails proposals to Google Summer of Code 2013
+commands - Run Rake/Rails commands through the console
+rails_xss - forked from NZKoz/rails_xss - A plugin for rails 2.3 apps which switches the default to escape by default
+rails_upgrade - forked from jm/rails_upgrade - Plugin to run checks on your Rails 2.x/3.x to check for obvious upgrade points on the path to 3.0
+routing_concerns - Abstract common routing resource concerns to cut down on duplication.
+prototype-ujs
+open_id_authentication - NOTICE: official repository moved to https://github.com/Velir/open_id_authentication
+dynamic_form - NOTICE: official repository moved to https://github.com/joelmoss/dynamic_form
+prototype_legacy_helper - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+verification - NOTICE: official repository moved to https://github.com/sikachu/verification
+country_select - NOTICE: official repository moved to https://github.com/stefanpenner/country_select
+exception_notification - NOTICE: official repository moved to https://github.com/smartinez87/exception_notification
+acts_as_list - NOTICE: official repository moved to https://github.com/swanandp/acts_as_list
+hide_action - NOTICE: official repository moved to https://github.com/sikachu/hide_action
+asset_server - NOTICE: official repository moved to https://github.com/andhapp/asset_server
+
+
+
+
+fcgi_handler - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+sqlite2_adapter - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+in_place_editing - NOTICE: official repository moved to https://github.com/amerine/in_place_editing
+irs_process_scripts - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core. The extracted inspector, reaper, and spawner scripts from script/process/*
+request_profiler - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core. Request profiler based on integration test scripts
+render_component - NOTICE: official repository moved to https://github.com/malev/render_component. Components allow you to call other actions for their rendered response while executing another action
+deadlock_retry - NOTICE: official repository moved to https://github.com/heaps/deadlock_retry
+iso-3166-country-select - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+tzinfo_timezone - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+upload_progress - NOTICE: official repository moved to https://github.com/rishav/upload_progress
+tztime - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+token_generator - NOTICE: official repository moved to https://github.com/bbommarito/token_generator
+ssl_requirement - NOTICE: official repository moved to https://github.com/retr0h/ssl_requirement
+scriptaculous_slider - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+scaffolding - NOTICE: official repository moved to https://github.com/KeysetTS/scaffolding
+localization - NOTICE: official repository moved to https://github.com/malev/localization
+javascript_test - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+http_authentication - NOTICE: official repository moved to https://github.com/dshimy/http_authentication
+continuous_builder - WARNING: this repo is not maintained anymore, if you want to maintain it, please send an mail to rails-core
+auto_complete - NOTICE: official repository moved to https://github.com/david-kerins/auto_complete
+
+
+
+

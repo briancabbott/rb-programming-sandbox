@@ -1,0 +1,6 @@
+HowToDebug		2008/01/14 17:54
+
+buildFlashDebug.bat test.as
+%FLEX_HOME%\bin\fdb.exe
+Enter "run file:///C:/Documents/my/2007/HotRuby/ActionScript/HotRubyFlash.swf"
+Enter "continue"
